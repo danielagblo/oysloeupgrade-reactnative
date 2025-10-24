@@ -37,7 +37,7 @@ export default function OnboardingScreen() {
         opacity.value = withTiming(1, { duration: 150 });
       });
     } else {
-      router.replace('/(tabs)');
+      router.replace('/login');
     }
   };
 
