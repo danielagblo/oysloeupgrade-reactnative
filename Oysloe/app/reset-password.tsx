@@ -11,7 +11,7 @@ export default function ResetPasswordScreen() {
   const [showPopup, setShowPopup] = useState(false);
 
   const handleSubmit = () => {
-    // TODO: Implement password reset logic
+
     console.log('Reset password for:', email);
     setShowPopup(true);
   };
@@ -35,10 +35,10 @@ export default function ResetPasswordScreen() {
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.content}>
-        {/* Title */}
+        
         <Text style={styles.title}>Reset password</Text>
 
-        {/* Email Input */}
+        
         <View style={styles.inputContainer}>
           <Image
             source={require('@/oysloe-assets/Auth/email.png')}
@@ -57,17 +57,17 @@ export default function ResetPasswordScreen() {
           />
         </View>
 
-        {/* Instruction Text */}
+        
         <Text style={styles.instructionText}>
           We'll send you a link to the email provided to reset your password.
         </Text>
 
-        {/* Submit Button */}
+        
         <TouchableOpacity style={styles.submitButton} onPress={handleSubmit}>
           <Text style={styles.submitButtonText}>Submit</Text>
         </TouchableOpacity>
 
-        {/* Can't Login Section */}
+        
         <Text style={styles.cantLoginText}>Cant Login?</Text>
         
         <View style={styles.helpButtonsContainer}>
@@ -80,7 +80,7 @@ export default function ResetPasswordScreen() {
           </TouchableOpacity>
         </View>
 
-        {/* Sign Up Link */}
+        
         <View style={styles.signUpContainer}>
           <Text style={styles.signUpText}>Don't have an account ? </Text>
           <TouchableOpacity onPress={handleSignUp}>
@@ -89,7 +89,7 @@ export default function ResetPasswordScreen() {
         </View>
       </View>
 
-      {/* Success Popup Modal */}
+      
       <Modal
         visible={showPopup}
         transparent={true}
@@ -98,17 +98,17 @@ export default function ResetPasswordScreen() {
       >
         <View style={styles.modalOverlay}>
           <View style={styles.popupContainer}>
-            {/* Mail GIF */}
+            
             <Image
               source={require('@/gifs/mail.gif')}
               style={styles.popupIcon}
               contentFit="contain"
             />
             
-            {/* Message Text */}
+            
             <Text style={styles.popupMessage}>Reset link sent to your email</Text>
             
-            {/* Close Button */}
+            
             <TouchableOpacity style={styles.closeButton} onPress={handleClosePopup}>
               <Text style={styles.closeButtonText}>Close</Text>
             </TouchableOpacity>
@@ -240,7 +240,7 @@ const styles = StyleSheet.create({
     color: '#333333',
     fontWeight: '600',
   },
-  // Popup Modal Styles
+
   modalOverlay: {
     flex: 1,
     backgroundColor: 'rgba(0, 0, 0, 0.5)',

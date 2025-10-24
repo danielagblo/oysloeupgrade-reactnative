@@ -37,10 +37,10 @@ export default function LoginScreen() {
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.content}>
-        {/* Welcome Title */}
+        
         <Text style={styles.title}>Welcome!</Text>
 
-        {/* Email Input */}
+        
         <View style={styles.inputContainer}>
           <Image
             source={require('@/oysloe-assets/Auth/email.png')}
@@ -59,7 +59,7 @@ export default function LoginScreen() {
           />
         </View>
 
-        {/* Password Input */}
+        
         <View style={styles.inputContainer}>
           <Image
             source={require('@/oysloe-assets/Auth/passwordkey.png')}
@@ -78,12 +78,12 @@ export default function LoginScreen() {
           />
         </View>
 
-        {/* Login Button */}
+        
         <TouchableOpacity style={styles.loginButton} onPress={handleLogin}>
           <Text style={styles.loginButtonText}>Login</Text>
         </TouchableOpacity>
 
-        {/* Google Login Button */}
+        
         <TouchableOpacity style={styles.googleButton} onPress={handleGoogleLogin}>
           <Image
             source={require('@/oysloe-assets/login/google.png')}
@@ -93,7 +93,7 @@ export default function LoginScreen() {
           <Text style={styles.googleButtonText}>login using google</Text>
         </TouchableOpacity>
 
-        {/* Can't Login Section */}
+        
         <Text style={styles.cantLoginText}>Cant Login?</Text>
         
         <View style={styles.helpButtonsContainer}>
@@ -106,7 +106,7 @@ export default function LoginScreen() {
           </TouchableOpacity>
         </View>
 
-        {/* Sign Up Link */}
+        
         <View style={styles.signUpContainer}>
           <Text style={styles.signUpText}>Don't have an account ? </Text>
           <TouchableOpacity onPress={handleSignUp}>

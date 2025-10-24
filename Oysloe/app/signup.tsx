@@ -15,13 +15,13 @@ export default function SignUpScreen() {
   const [agreedToTerms, setAgreedToTerms] = useState(false);
 
   const handleSignUp = () => {
-    // TODO: Implement sign up logic
+
     console.log('Sign up with:', { name, email, phone, password, retypePassword, agreedToTerms });
     router.replace('/(tabs)');
   };
 
   const handleGoogleSignUp = () => {
-    // TODO: Implement Google sign up logic
+
     console.log('Google sign up');
     router.replace('/(tabs)');
   };
@@ -31,22 +31,22 @@ export default function SignUpScreen() {
   };
 
   const handlePrivacyPolicy = () => {
-    // TODO: Navigate to privacy policy
+
     console.log('Privacy policy');
   };
 
   const handleTermsConditions = () => {
-    // TODO: Navigate to terms & conditions
+
     console.log('Terms & conditions');
   };
 
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.content}>
-        {/* Title */}
+        
         <Text style={styles.title}>Get Started</Text>
 
-        {/* Name Input */}
+        
         <View style={styles.inputContainer}>
           <Image
             source={require('@/oysloe-assets/Auth/name.png')}
@@ -64,7 +64,7 @@ export default function SignUpScreen() {
           />
         </View>
 
-        {/* Email Input */}
+        
         <View style={styles.inputContainer}>
           <Image
             source={require('@/oysloe-assets/Auth/email.png')}
@@ -83,7 +83,7 @@ export default function SignUpScreen() {
           />
         </View>
 
-        {/* Phone Input */}
+        
         <View style={styles.inputContainer}>
           <Image
             source={require('@/oysloe-assets/Auth/phone.png')}
@@ -101,7 +101,7 @@ export default function SignUpScreen() {
           />
         </View>
 
-        {/* Password Input */}
+        
         <View style={styles.inputContainer}>
           <Image
             source={require('@/oysloe-assets/Auth/passwordkey.png')}
@@ -120,7 +120,7 @@ export default function SignUpScreen() {
           />
         </View>
 
-        {/* Retype Password Input */}
+        
         <View style={styles.inputContainer}>
           <Image
             source={require('@/oysloe-assets/Auth/passwordkey.png')}
@@ -139,7 +139,7 @@ export default function SignUpScreen() {
           />
         </View>
 
-        {/* Terms and Conditions */}
+        
         <View style={styles.termsContainer}>
           <View style={styles.termsRow}>
             <Text style={[styles.termsText, { backgroundColor: 'transparent' }]}>I have agreed to the </Text>
@@ -163,12 +163,12 @@ export default function SignUpScreen() {
           </View>
         </View>
 
-        {/* Sign Up Button */}
+        
         <TouchableOpacity style={styles.signUpButton} onPress={handleSignUp}>
           <Text style={styles.signUpButtonText}>Sign up</Text>
         </TouchableOpacity>
 
-        {/* Google Sign Up Button */}
+        
         <TouchableOpacity style={styles.googleButton} onPress={handleGoogleSignUp}>
           <Image
             source={require('@/oysloe-assets/login/google.png')}
@@ -178,7 +178,7 @@ export default function SignUpScreen() {
           <Text style={styles.googleButtonText}>sign up with google</Text>
         </TouchableOpacity>
 
-        {/* Login Link */}
+        
         <View style={styles.loginContainer}>
           <Text style={styles.loginText}>I have an account already? </Text>
           <TouchableOpacity onPress={handleLogin}>

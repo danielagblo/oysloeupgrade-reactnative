@@ -15,7 +15,7 @@ export default function OTPLoginScreen() {
   const handleResend = () => {
     console.log('Resend OTP');
     setShowResendPopup(true);
-    // TODO: Implement OTP resend logic
+
   };
 
   const handleCloseResendPopup = () => {
@@ -27,14 +27,14 @@ export default function OTPLoginScreen() {
     newOtp[index] = value;
     setOtp(newOtp);
 
-    // Auto-focus next input if value is entered
+
     if (value && index < 5) {
       inputRefs.current[index + 1]?.focus();
     }
   };
 
   const handleKeyPress = (key: string, index: number) => {
-    // Handle backspace - move to previous input if current is empty
+
     if (key === 'Backspace' && !otp[index] && index > 0) {
       inputRefs.current[index - 1]?.focus();
     }
@@ -72,10 +72,10 @@ export default function OTPLoginScreen() {
             keyboardShouldPersistTaps="handled"
             showsVerticalScrollIndicator={false}
           >
-            {/* OTP Login Title */}
+            
             <Text style={styles.title}>OTP Login</Text>
 
-            {/* OTP Input Boxes */}
+            
             <View style={styles.otpContainer}>
               {otp.map((digit, index) => (
                 <TextInput
@@ -98,12 +98,12 @@ export default function OTPLoginScreen() {
               ))}
             </View>
 
-            {/* Instructional Text */}
+            
             <Text style={styles.instructionText}>
               We'll send a verification code to the number if it's being in our system
             </Text>
 
-            {/* Resend Button */}
+            
             <TouchableOpacity 
               style={[
                 styles.resendButton, 
@@ -118,7 +118,7 @@ export default function OTPLoginScreen() {
               ]}>Resend</Text>
             </TouchableOpacity>
 
-            {/* Can't Login Section */}
+            
             <Text style={styles.cantLoginText}>Cant Login?</Text>
             
             <View style={styles.helpButtonsContainer}>
@@ -131,7 +131,7 @@ export default function OTPLoginScreen() {
               </TouchableOpacity>
             </View>
 
-            {/* Sign Up Link */}
+            
             <View style={styles.signUpContainer}>
               <Text style={styles.signUpText}>Don't have an account ? </Text>
               <TouchableOpacity onPress={handleSignUp}>
@@ -142,7 +142,7 @@ export default function OTPLoginScreen() {
         </KeyboardAvoidingView>
       </SafeAreaView>
 
-      {/* Resend Success Popup Modal */}
+      
       <Modal
         visible={showResendPopup}
         transparent={true}
@@ -151,18 +151,18 @@ export default function OTPLoginScreen() {
       >
         <View style={styles.modalOverlay}>
           <View style={styles.popupContainer}>
-            {/* Success Icon */}
+            
             <View style={styles.successIconContainer}>
               <Text style={styles.successIcon}>✓</Text>
             </View>
             
-            {/* Success Message */}
+            
             <Text style={styles.popupTitle}>OTP Resent Successfully!</Text>
             <Text style={styles.popupMessage}>
               A new verification code has been sent to your registered phone number.
             </Text>
             
-            {/* Close Button */}
+            
             <TouchableOpacity style={styles.closeButton} onPress={handleCloseResendPopup}>
               <Text style={styles.closeButtonText}>Close</Text>
             </TouchableOpacity>
@@ -297,7 +297,7 @@ const styles = StyleSheet.create({
     color: '#333333',
     fontWeight: '600',
   },
-  // Resend Success Popup Styles
+
   modalOverlay: {
     flex: 1,
     backgroundColor: 'rgba(0, 0, 0, 0.5)',
