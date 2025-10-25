@@ -1,5 +1,6 @@
 import { Tabs } from 'expo-router';
 import React from 'react';
+import { Image } from 'expo-image';
 
 import { HapticTab } from '@/components/haptic-tab';
 import { IconSymbol } from '@/components/ui/icon-symbol';
@@ -12,7 +13,13 @@ export default function TabLayout() {
   return (
     <Tabs
       screenOptions={{
-        tabBarActiveTintColor: Colors[colorScheme ?? 'light'].tint,
+        tabBarActiveTintColor: '#333',
+        tabBarInactiveTintColor: '#999',
+        tabBarStyle: {
+          backgroundColor: '#fff',
+          borderTopWidth: 1,
+          borderTopColor: '#e0e0e0',
+        },
         headerShown: false,
         tabBarButton: HapticTab,
       }}>
@@ -20,14 +27,60 @@ export default function TabLayout() {
         name="index"
         options={{
           title: 'Home',
-          tabBarIcon: ({ color }) => <IconSymbol size={28} name="house.fill" color={color} />,
+          tabBarIcon: ({ color, focused }) => (
+            <Image
+              source={require('@/oysloe-assets/bottom menu/home.png')}
+              style={{ width: 24, height: 24, tintColor: focused ? color : '#666' }}
+            />
+          ),
         }}
       />
       <Tabs.Screen
         name="explore"
         options={{
-          title: 'Explore',
-          tabBarIcon: ({ color }) => <IconSymbol size={28} name="paperplane.fill" color={color} />,
+          title: 'Ads',
+          tabBarIcon: ({ color, focused }) => (
+            <Image
+              source={require('@/oysloe-assets/bottom menu/alert.png')}
+              style={{ width: 24, height: 24, tintColor: focused ? color : '#666' }}
+            />
+          ),
+        }}
+      />
+      <Tabs.Screen
+        name="post-ad"
+        options={{
+          title: 'Post Ad',
+          tabBarIcon: ({ color, focused }) => (
+            <Image
+              source={require('@/oysloe-assets/bottom menu/Post.png')}
+              style={{ width: 24, height: 24, tintColor: focused ? color : '#666' }}
+            />
+          ),
+        }}
+      />
+      <Tabs.Screen
+        name="chat"
+        options={{
+          title: 'Chat',
+          tabBarIcon: ({ color, focused }) => (
+            <Image
+              source={require('@/oysloe-assets/bottom menu/inbox.png')}
+              style={{ width: 24, height: 24, tintColor: focused ? color : '#666' }}
+            />
+          ),
+        }}
+      />
+      <Tabs.Screen
+        name="profile"
+        options={{
+          title: 'Profile',
+          tabBarIcon: ({ color, focused }) => (
+            <Image
+              source={require('@/oysloe-assets/bottom menu/profile.png')}
+              style={{ width: 24, height: 24, tintColor: focused ? color : '#666' }}
+            />
+          ),
         }}
       />
     </Tabs>
