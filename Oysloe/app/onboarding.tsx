@@ -122,8 +122,8 @@ const styles = StyleSheet.create({
     paddingBottom: 20,
   },
   animation: {
-    width: width * 0.8,
-    height: height * 0.35,
+    width: width,
+    height: height * 0.45,
   },
   textContainer: {
     flex: 0.5,
