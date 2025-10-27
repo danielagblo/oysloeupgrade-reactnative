@@ -22,6 +22,7 @@ export default function TabLayout() {
         },
         headerShown: false,
         tabBarButton: HapticTab,
+        cardOverlayEnabled: false,
       }}>
       <Tabs.Screen
         name="index"
@@ -75,6 +76,9 @@ export default function TabLayout() {
         name="profile"
         options={{
           title: 'Profile',
+          presentation: 'modal',
+          animationEnabled: false,
+          detachPreviousScreen: false,
           tabBarIcon: ({ color, focused }) => (
             <Image
               source={require('@/oysloe-assets/bottom menu/profile.png')}

@@ -11,6 +11,7 @@ import {
   Animated
 } from 'react-native';
 import { Image } from 'expo-image';
+import { router } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { LinearGradient } from 'expo-linear-gradient';
 
@@ -82,7 +83,6 @@ const ads = [
   },
 ];
 
-// Circular Progress Component
 const CircularProgress = ({ progress, size = 50, item }: { progress: number; size?: number; item: any }) => {
   const animatedValue = useRef(new Animated.Value(0)).current;
   const [isVisible, setIsVisible] = React.useState(false);
@@ -102,7 +102,6 @@ const CircularProgress = ({ progress, size = 50, item }: { progress: number; siz
     }
   }, [isVisible, progress]);
 
-  // Trigger animation on mount
   useEffect(() => {
     setIsVisible(true);
   }, []);
@@ -115,7 +114,7 @@ const CircularProgress = ({ progress, size = 50, item }: { progress: number; siz
   return (
     <View style={[styles.progressContainer, { width: size, height: size }]}>
       <View style={[styles.progressBackground, { width: size, height: size, borderRadius: size / 2 }]}>
-        {/* Progress Arc */}
+        {}
         <View style={styles.progressArcContainer}>
           <Animated.View 
             style={[
@@ -129,7 +128,7 @@ const CircularProgress = ({ progress, size = 50, item }: { progress: number; siz
             ]} 
           />
         </View>
-        {/* Center Content */}
+        {}
         <View style={styles.progressContent}>
           <Text style={styles.progressText}>{item.name}</Text>
           <Text style={styles.progressCount}>{item.count}</Text>
@@ -142,7 +141,6 @@ const CircularProgress = ({ progress, size = 50, item }: { progress: number; siz
 export default function HomeScreen() {
   const [animationKey, setAnimationKey] = React.useState(0);
 
-  // Reset animation when scrolling back to filters
   const resetAnimation = () => {
     setAnimationKey(prev => prev + 1);
   };
@@ -162,7 +160,14 @@ export default function HomeScreen() {
   );
 
   const renderAd = ({ item }: { item: typeof ads[0] }) => (
-    <TouchableOpacity style={styles.adCard}>
+    <TouchableOpacity 
+      style={styles.adCard}
+      onPress={() => {
+        if (item.id === 5) {
+          router.push('/ad-details');
+        }
+      }}
+    >
       <Image source={item.image} style={styles.adImage} />
       <TouchableOpacity style={styles.locationButton}>
         <Image 
@@ -176,7 +181,6 @@ export default function HomeScreen() {
     </TouchableOpacity>
   );
 
-  // Re-animate circles when scrolling back into view
   React.useEffect(() => {
     const interval = setInterval(() => {
       setAnimationKey(prev => prev + 1);
@@ -188,7 +192,7 @@ export default function HomeScreen() {
   return (
     <View style={styles.container}>
       <ScrollView style={styles.scrollView} showsVerticalScrollIndicator={false}>
-        {/* Header */}
+        {}
         <View style={styles.header}>
           <Text style={styles.appTitle}>Oysloe</Text>
           <LinearGradient
@@ -211,7 +215,7 @@ export default function HomeScreen() {
           </LinearGradient>
         </View>
 
-        {/* Categories Grid */}
+        {}
         <View style={styles.categoriesContainer}>
           <FlatList
             data={categories}
@@ -223,7 +227,7 @@ export default function HomeScreen() {
           />
         </View>
 
-        {/* Explore Ads Section */}
+        {}
         <View style={styles.exploreSection}>
           <View style={styles.exploreHeader}>
             <Text style={styles.exploreTitle}>Explore Ads</Text>
@@ -232,7 +236,7 @@ export default function HomeScreen() {
             </TouchableOpacity>
           </View>
 
-          {/* Filter Buttons with Circular Progress */}
+          {}
           <FlatList
             data={filters}
             renderItem={renderFilter}
@@ -243,7 +247,7 @@ export default function HomeScreen() {
             contentContainerStyle={styles.filtersContent}
           />
 
-          {/* Ads Grid */}
+          {}
           <FlatList
             data={ads}
             renderItem={renderAd}
