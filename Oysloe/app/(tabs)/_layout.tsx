@@ -39,7 +39,7 @@ export default function TabLayout() {
       <Tabs.Screen
         name="explore"
         options={{
-          title: 'Ads',
+          title: 'Alerts',
           tabBarIcon: ({ color, focused }) => (
             <Image
               source={require('@/oysloe-assets/bottom menu/alert.png')}
@@ -63,7 +63,7 @@ export default function TabLayout() {
       <Tabs.Screen
         name="chat"
         options={{
-          title: 'Chat',
+          title: 'Inbox',
           tabBarIcon: ({ color, focused }) => (
             <Image
               source={require('@/oysloe-assets/bottom menu/inbox.png')}
@@ -85,6 +85,21 @@ export default function TabLayout() {
               style={{ width: 24, height: 24, tintColor: focused ? color : '#666' }}
             />
           ),
+        }}
+      />
+      <Tabs.Screen
+        name="favorites"
+        options={{
+          // Hide from the tab bar but keep bottom tabs visible when pushed
+          href: null,
+        }}
+      />
+      <Tabs.Screen
+        name="ads"
+        options={{
+          // Hidden route that still displays the shared bottom tabs
+          href: null,
+          headerShown: false,
         }}
       />
     </Tabs>

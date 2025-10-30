@@ -125,10 +125,10 @@ export default function ProfileScreen() {
 
             {}
             <View style={styles.statsContainer}>
-              <View style={styles.statCard}>
+              <TouchableOpacity style={styles.statCard} onPress={() => router.push('/ads?initialTab=active')}>
                 <Text style={styles.statNumber}>900k</Text>
                 <Text style={styles.statLabel}>Active Ads</Text>
-              </View>
+              </TouchableOpacity>
               <View style={styles.statCard}>
                 <Text style={styles.statNumber}>900k</Text>
                 <Text style={styles.statLabel}>Taken Ads</Text>
@@ -156,7 +156,7 @@ export default function ProfileScreen() {
             <View style={styles.section}>
               <Text style={styles.sectionTitle}>Business</Text>
               
-              <TouchableOpacity style={styles.menuItem}>
+              <TouchableOpacity style={styles.menuItem} onPress={() => router.push('/ads')}>
                 <Image
                   source={require('@/oysloe-assets/side menu/ads.png')}
                   style={styles.menuIcon}
@@ -164,7 +164,7 @@ export default function ProfileScreen() {
                 <Text style={styles.menuText}>Ads</Text>
               </TouchableOpacity>
 
-              <TouchableOpacity style={styles.menuItem}>
+              <TouchableOpacity style={styles.menuItem} onPress={() => router.push('/(tabs)/favorites')}>
                 <Image
                   source={require('@/oysloe-assets/side menu/favorite.png')}
                   style={styles.menuIcon}

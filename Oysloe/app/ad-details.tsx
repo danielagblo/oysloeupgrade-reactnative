@@ -7,20 +7,51 @@ import {
   TouchableOpacity,
   Dimensions,
   TextInput,
+  Image as RNImage,
 } from 'react-native';
 import { Image } from 'expo-image';
 import { router } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import ReviewsBox from './components/ReviewsBox';
 
 const { width, height } = Dimensions.get('window');
+
+type Message = {
+  author: string;
+  text: string;
+};
 
 export default function AdDetailsScreen() {
   const [currentImageIndex, setCurrentImageIndex] = useState(1); // 2/4 means index 1
   const [isFavorited, setIsFavorited] = useState(false);
   const [chatInput, setChatInput] = useState('');
+  const [chatMessages, setChatMessages] = useState<Message[]>([]);
+
+  function onSendMessage() {
+    if(chatInput.trim()) {
+      setChatMessages([ ...chatMessages, { author: 'me', text: chatInput } ]);
+      setChatInput('');
+    }
+  }
+
+  function onQuickQuestion(q: string) {
+    setChatMessages([ ...chatMessages, { author: 'me', text: q } ]);
+  }
 
   const handleBack = () => {
     router.back();
+  };
+
+  const aggregatedReviews = {
+    averageRating: 4.2,
+    totalReviews: 12,
+    ratingBreakdown: {
+      5: 7,
+      4: 3,
+      3: 2,
+      2: 0,
+      1: 0
+    }
   };
 
   return (
@@ -257,43 +288,54 @@ export default function AdDetailsScreen() {
         {}
         <View style={styles.sectionCard}>
           <Text style={styles.sectionTitle}>Quick Chat</Text>
-          <View style={styles.quickChatQuestions}>
-            <TouchableOpacity style={styles.quickChatQuestionBtn}>
-              <Text style={styles.quickChatQuestionText}>Is this original?</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.quickChatQuestionBtn}>
-              <Text style={styles.quickChatQuestionText}>Do you have delivery?</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.quickChatQuestionBtn}>
-              <Text style={styles.quickChatQuestionText}>Can you confirm the condition?</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.quickChatQuestionBtn}>
-              <Text style={styles.quickChatQuestionText}>Do you have delivery?</Text>
-            </TouchableOpacity>
+
+          {/* Chat messages */}
+          <View style={{maxHeight:150,minHeight:40,marginBottom:7}}>
+            {chatMessages.map((msg, i) => (
+              <View key={i} style={{alignSelf: msg.author==='me'?'flex-end':'flex-start', backgroundColor:'#f2f6ff',borderRadius:16,paddingHorizontal:15,paddingVertical:7,marginVertical:2,maxWidth:'80%'}}>
+                <Text style={{color:'#374957',fontSize:15}}>{msg.text}</Text>
+              </View>
+            ))}
           </View>
-          <View style={styles.chatInputContainer}>
-            <Text style={styles.chatPlaceholder}>Start a chat</Text>
-            <View style={styles.chatIconsContainer}>
-              <Image 
-                source={require('@/oysloe-assets/Ad details screen/quick chat.png')}
-                style={styles.chatIcon}
+
+          {/* Quick Chat Buttons */}
+          <View style={styles.quickChatQuestions}>
+            {["Is this original?","Do you have delivery?","Can you confirm the condition?"].map((q,index)=>(
+              <TouchableOpacity key={q+index} style={styles.quickChatQuestionBtn} onPress={()=>onQuickQuestion(q)}>
+                <Text style={styles.quickChatQuestionText}>{q}</Text>
+              </TouchableOpacity>
+            ))}
+          </View>
+
+          {/* Redesigned Chat Input Row */}
+          <View style={{flexDirection:'row',alignItems:'center',marginTop:15}}>
+            <View style={{flex:1,flexDirection:'row',backgroundColor:'#fff',borderRadius:20,alignItems:'center',borderWidth:1,borderColor:'#dbe3ea',paddingHorizontal:15}}>
+              <TextInput
+                style={{flex:1,fontSize:16,paddingVertical:10}}
+                placeholder="Start a chat"
+                value={chatInput}
+                onChangeText={setChatInput}
+                onSubmitEditing={onSendMessage}
+                returnKeyType="send"
               />
-              <Image 
-                source={require('@/oysloe-assets/Ad details screen/search.png')}
-                style={styles.chatIcon}
-              />
+              <TouchableOpacity onPress={onSendMessage} style={{paddingLeft:10,paddingVertical:6}}>
+                <RNImage source={require('@/oysloe-assets/Ad details screen/send.png')} style={{width:27, height:27}} />
+              </TouchableOpacity>
+            </View>
+            <View style={{width:52,alignItems:'center',marginLeft:10}}>
+              <TouchableOpacity style={{width:48,height:48,backgroundColor:'#fff',borderRadius:16,justifyContent:'center',alignItems:'center',borderWidth:1,borderColor:'#dbe3ea'}}>
+                {/* voice.png was missing in assets; fall back to quick chat icon */}
+                <RNImage source={require('@/oysloe-assets/Ad details screen/quick chat.png')} style={{width:23,height:23}} />
+              </TouchableOpacity>
             </View>
           </View>
+
+          {/* Chat security note as below */}
           <View style={styles.securityMessageRow}>
-            <Image 
-              source={require('@/oysloe-assets/Ad details screen/shield.png')}
-              style={styles.securityIcon}
-            />
+            <RNImage source={require('@/oysloe-assets/Ad details screen/shield.png')} style={styles.securityIcon} />
             <Text style={styles.securityText}>Chat is secured</Text>
             <View style={styles.safetyReminderBox}>
-              <Text style={styles.safetyReminderText}>
-                Always chat here for safety reasons!
-              </Text>
+              <Text style={styles.safetyReminderText}>Always chat here for safety reasons!</Text>
             </View>
           </View>
         </View>
@@ -354,94 +396,7 @@ export default function AdDetailsScreen() {
           </View>
 
           {}
-          <Text style={styles.overallRatingText}>4.5</Text>
-          <View style={styles.starsRow}>
-            <Image
-              source={require('@/oysloe-assets/Ad details screen/favorited.png')}
-              style={styles.ratingStar}
-            />
-            <Image
-              source={require('@/oysloe-assets/Ad details screen/favorited.png')}
-              style={styles.ratingStar}
-            />
-            <Image
-              source={require('@/oysloe-assets/Ad details screen/favorited.png')}
-              style={styles.ratingStar}
-            />
-            <Image
-              source={require('@/oysloe-assets/Ad details screen/favorited.png')}
-              style={styles.ratingStar}
-            />
-            <Image
-              source={require('@/oysloe-assets/Ad details screen/favorited.png')}
-              style={styles.ratingStar}
-            />
-          </View>
-          <Text style={styles.reviewsCountText}>234 Reviews</Text>
-
-          {}
-          {[
-            { stars: 5, fill: 50 },
-            { stars: 4, fill: 50 },
-            { stars: 3, fill: 50 },
-            { stars: 2, fill: 50 },
-            { stars: 1, fill: 50 },
-          ].map((rating, index) => (
-            <View key={index} style={styles.ratingBreakdownRow}>
-              <Text style={styles.ratingBreakdownStars}>{rating.stars}</Text>
-              <View style={styles.ratingBreakdownBarContainer}>
-                <View style={styles.ratingBreakdownBarBackground} />
-                <View style={[styles.ratingBreakdownBarFill, { width: `${rating.fill}%` }]} />
-              </View>
-              <Text style={styles.ratingBreakdownPercentage}>50%</Text>
-            </View>
-          ))}
-
-          {}
-          <View style={styles.reviewFilters}>
-            <TouchableOpacity style={styles.reviewFilterBtn}>
-              <Image 
-                source={require('@/oysloe-assets/Ad details screen/favorited.png')}
-                style={styles.reviewFilterIcon}
-              />
-              <Text style={styles.reviewFilterText}>All</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.reviewFilterBtn}>
-              <Image 
-                source={require('@/oysloe-assets/Ad details screen/favorited.png')}
-                style={styles.reviewFilterIcon}
-              />
-              <Text style={styles.reviewFilterText}>1</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.reviewFilterBtn}>
-              <Image 
-                source={require('@/oysloe-assets/Ad details screen/favorited.png')}
-                style={styles.reviewFilterIcon}
-              />
-              <Text style={styles.reviewFilterText}>2</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.reviewFilterBtn}>
-              <Image 
-                source={require('@/oysloe-assets/Ad details screen/favorited.png')}
-                style={styles.reviewFilterIcon}
-              />
-              <Text style={styles.reviewFilterText}>3</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.reviewFilterBtn}>
-              <Image 
-                source={require('@/oysloe-assets/Ad details screen/favorited.png')}
-                style={styles.reviewFilterIcon}
-              />
-              <Text style={styles.reviewFilterText}>4</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.reviewFilterBtn}>
-              <Image 
-                source={require('@/oysloe-assets/Ad details screen/favorited.png')}
-                style={styles.reviewFilterIcon}
-              />
-              <Text style={styles.reviewFilterText}>5</Text>
-            </TouchableOpacity>
-          </View>
+          <ReviewsBox aggregatedReviews={aggregatedReviews} />
         </View>
 
         {}
