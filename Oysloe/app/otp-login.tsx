@@ -1,16 +1,16 @@
 import React, { useState, useRef } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, TextInput, Dimensions, StatusBar, ScrollView, KeyboardAvoidingView, Platform, Modal } from 'react-native';
-import { Image } from 'expo-image';
+
 import { router } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { Stack } from 'expo-router';
+import { Stack } from 'expo-router';import { jsx as _jsx, jsxs as _jsxs, Fragment as _Fragment } from "react/jsx-runtime";
 
 const { width } = Dimensions.get('window');
 
 export default function OTPLoginScreen() {
   const [otp, setOtp] = useState(['', '', '', '', '', '']);
   const [showResendPopup, setShowResendPopup] = useState(false);
-  const inputRefs = useRef<TextInput[]>([]);
+  const inputRefs = useRef([]);
 
   const handleResend = () => {
     console.log('Resend OTP');
@@ -22,7 +22,7 @@ export default function OTPLoginScreen() {
     setShowResendPopup(false);
   };
 
-  const handleOtpChange = (value: string, index: number) => {
+  const handleOtpChange = (value, index) => {
     const newOtp = [...otp];
     newOtp[index] = value;
     setOtp(newOtp);
@@ -33,7 +33,7 @@ export default function OTPLoginScreen() {
     }
   };
 
-  const handleKeyPress = (key: string, index: number) => {
+  const handleKeyPress = (key, index) => {
 
     if (key === 'Backspace' && !otp[index] && index > 0) {
       inputRefs.current[index - 1]?.focus();
@@ -41,7 +41,7 @@ export default function OTPLoginScreen() {
   };
 
   const isOtpComplete = () => {
-    return otp.every(digit => digit !== '');
+    return otp.every((digit) => digit !== '');
   };
 
   const handlePasswordReset = () => {
@@ -57,151 +57,151 @@ export default function OTPLoginScreen() {
   };
 
   return (
-    <>
-      <Stack.Screen options={{ headerShown: false }} />
-      <StatusBar hidden />
-      <SafeAreaView style={styles.container}>
-        <KeyboardAvoidingView 
-          style={styles.keyboardAvoidingView}
-          behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-          keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : 20}
-        >
-          <ScrollView 
-            style={styles.scrollView}
-            contentContainerStyle={styles.scrollContent}
-            keyboardShouldPersistTaps="handled"
-            showsVerticalScrollIndicator={false}
-          >
-            
-            <Text style={styles.title}>OTP Login</Text>
+    _jsxs(_Fragment, { children: [
+      _jsx(Stack.Screen, { options: { headerShown: false } }),
+      _jsx(StatusBar, { hidden: true }),
+      _jsx(SafeAreaView, { style: styles.container, children:
+        _jsx(KeyboardAvoidingView, {
+          style: styles.keyboardAvoidingView,
+          behavior: Platform.OS === 'ios' ? 'padding' : 'height',
+          keyboardVerticalOffset: Platform.OS === 'ios' ? 0 : 20, children:
 
-            
-            <View style={styles.otpContainer}>
-              {otp.map((digit, index) => (
-                <TextInput
-                  key={index}
-                  ref={(ref) => {
-                    if (ref) {
-                      inputRefs.current[index] = ref;
-                    }
-                  }}
-                  style={styles.otpBox}
-                  value={digit}
-                  onChangeText={(value) => handleOtpChange(value, index)}
-                  onKeyPress={({ nativeEvent }) => handleKeyPress(nativeEvent.key, index)}
-                  keyboardType="numeric"
-                  maxLength={1}
-                  textAlign="center"
-                  autoCapitalize="none"
-                  autoCorrect={false}
-                />
-              ))}
-            </View>
+          _jsxs(ScrollView, {
+            style: styles.scrollView,
+            contentContainerStyle: styles.scrollContent,
+            keyboardShouldPersistTaps: "handled",
+            showsVerticalScrollIndicator: false, children: [
 
-            
-            <Text style={styles.instructionText}>
-              We'll send a verification code to the number if it's being in our system
-            </Text>
 
-            
-            <TouchableOpacity 
-              style={[
-                styles.resendButton, 
-                !isOtpComplete() && styles.resendButtonDisabled
-              ]} 
-              onPress={handleResend}
-              disabled={!isOtpComplete()}
-            >
-              <Text style={[
+            _jsx(Text, { style: styles.title, children: "OTP Login" }),
+
+
+            _jsx(View, { style: styles.otpContainer, children:
+              otp.map((digit, index) =>
+              _jsx(TextInput, {
+
+                ref: (ref) => {
+                  if (ref) {
+                    inputRefs.current[index] = ref;
+                  }
+                },
+                style: styles.otpBox,
+                value: digit,
+                onChangeText: (value) => handleOtpChange(value, index),
+                onKeyPress: ({ nativeEvent }) => handleKeyPress(nativeEvent.key, index),
+                keyboardType: "numeric",
+                maxLength: 1,
+                textAlign: "center",
+                autoCapitalize: "none",
+                autoCorrect: false }, index
+              )
+              ) }
+            ),
+
+
+            _jsx(Text, { style: styles.instructionText, children: "We'll send a verification code to the number if it's being in our system" }
+
+            ),
+
+
+            _jsx(TouchableOpacity, {
+              style: [
+              styles.resendButton,
+              !isOtpComplete() && styles.resendButtonDisabled],
+
+              onPress: handleResend,
+              disabled: !isOtpComplete(), children:
+
+              _jsx(Text, { style: [
                 styles.resendButtonText,
-                !isOtpComplete() && styles.resendButtonTextDisabled
-              ]}>Resend</Text>
-            </TouchableOpacity>
+                !isOtpComplete() && styles.resendButtonTextDisabled], children:
+                "Resend" }) }
+            ),
 
-            
-            <Text style={styles.cantLoginText}>Cant Login?</Text>
-            
-            <View style={styles.helpButtonsContainer}>
-              <TouchableOpacity style={styles.helpButton} onPress={handlePasswordReset}>
-                <Text style={styles.helpButtonText}>Password Reset</Text>
-              </TouchableOpacity>
-              
-              <TouchableOpacity style={styles.helpButton} onPress={handleLogin}>
-                <Text style={styles.helpButtonText}>Login</Text>
-              </TouchableOpacity>
-            </View>
 
-            
-            <View style={styles.signUpContainer}>
-              <Text style={styles.signUpText}>Don't have an account ? </Text>
-              <TouchableOpacity onPress={handleSignUp}>
-                <Text style={styles.signUpLink}>Sign up</Text>
-              </TouchableOpacity>
-            </View>
-          </ScrollView>
-        </KeyboardAvoidingView>
-      </SafeAreaView>
+            _jsx(Text, { style: styles.cantLoginText, children: "Cant Login?" }),
 
-      
-      <Modal
-        visible={showResendPopup}
-        transparent={true}
-        animationType="fade"
-        onRequestClose={handleCloseResendPopup}
-      >
-        <View style={styles.modalOverlay}>
-          <View style={styles.popupContainer}>
-            
-            <View style={styles.successIconContainer}>
-              <Text style={styles.successIcon}>✓</Text>
-            </View>
-            
-            
-            <Text style={styles.popupTitle}>OTP Resent Successfully!</Text>
-            <Text style={styles.popupMessage}>
-              A new verification code has been sent to your registered phone number.
-            </Text>
-            
-            
-            <TouchableOpacity style={styles.closeButton} onPress={handleCloseResendPopup}>
-              <Text style={styles.closeButtonText}>Close</Text>
-            </TouchableOpacity>
-          </View>
-        </View>
-      </Modal>
-    </>
-  );
+            _jsxs(View, { style: styles.helpButtonsContainer, children: [
+              _jsx(TouchableOpacity, { style: styles.helpButton, onPress: handlePasswordReset, children:
+                _jsx(Text, { style: styles.helpButtonText, children: "Password Reset" }) }
+              ),
+
+              _jsx(TouchableOpacity, { style: styles.helpButton, onPress: handleLogin, children:
+                _jsx(Text, { style: styles.helpButtonText, children: "Login" }) }
+              )] }
+            ),
+
+
+            _jsxs(View, { style: styles.signUpContainer, children: [
+              _jsx(Text, { style: styles.signUpText, children: "Don't have an account ? " }),
+              _jsx(TouchableOpacity, { onPress: handleSignUp, children:
+                _jsx(Text, { style: styles.signUpLink, children: "Sign up" }) }
+              )] }
+            )] }
+          ) }
+        ) }
+      ),
+
+
+      _jsx(Modal, {
+        visible: showResendPopup,
+        transparent: true,
+        animationType: "fade",
+        onRequestClose: handleCloseResendPopup, children:
+
+        _jsx(View, { style: styles.modalOverlay, children:
+          _jsxs(View, { style: styles.popupContainer, children: [
+
+            _jsx(View, { style: styles.successIconContainer, children:
+              _jsx(Text, { style: styles.successIcon, children: "\u2713" }) }
+            ),
+
+
+            _jsx(Text, { style: styles.popupTitle, children: "OTP Resent Successfully!" }),
+            _jsx(Text, { style: styles.popupMessage, children: "A new verification code has been sent to your registered phone number." }
+
+            ),
+
+
+            _jsx(TouchableOpacity, { style: styles.closeButton, onPress: handleCloseResendPopup, children:
+              _jsx(Text, { style: styles.closeButtonText, children: "Close" }) }
+            )] }
+          ) }
+        ) }
+      )] }
+    ));
+
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#F8F8F8',
+    backgroundColor: '#F8F8F8'
   },
   keyboardAvoidingView: {
-    flex: 1,
+    flex: 1
   },
   scrollView: {
-    flex: 1,
+    flex: 1
   },
   scrollContent: {
     flexGrow: 1,
     paddingHorizontal: 30,
     justifyContent: 'center',
-    paddingVertical: 20,
+    paddingVertical: 20
   },
   title: {
     fontSize: 24,
     fontWeight: '500',
     color: '#333333',
     textAlign: 'center',
-    marginBottom: 40,
+    marginBottom: 40
   },
   otpContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     marginBottom: 20,
-    paddingHorizontal: 10,
+    paddingHorizontal: 10
   },
   otpBox: {
     width: 45,
@@ -213,14 +213,14 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: '500',
     color: '#333333',
-    textAlign: 'center',
+    textAlign: 'center'
   },
   instructionText: {
     fontSize: 14,
     color: '#333333',
     textAlign: 'center',
     marginBottom: 30,
-    lineHeight: 20,
+    lineHeight: 20
   },
   resendButton: {
     backgroundColor: '#66FF99',
@@ -231,34 +231,34 @@ const styles = StyleSheet.create({
     shadowColor: '#000',
     shadowOffset: {
       width: 0,
-      height: 2,
+      height: 2
     },
     shadowOpacity: 0.1,
     shadowRadius: 4,
-    elevation: 3,
+    elevation: 3
   },
   resendButtonText: {
     color: '#474444ff',
     fontSize: 18,
-    fontWeight: '600',
+    fontWeight: '600'
   },
   resendButtonDisabled: {
     backgroundColor: '#CCCCCC',
-    opacity: 0.6,
+    opacity: 0.6
   },
   resendButtonTextDisabled: {
-    color: '#999999',
+    color: '#999999'
   },
   cantLoginText: {
     fontSize: 16,
     color: '#333333',
     textAlign: 'center',
-    marginBottom: 16,
+    marginBottom: 16
   },
   helpButtonsContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginBottom: 40,
+    marginBottom: 40
   },
   helpButton: {
     backgroundColor: '#FFFFFF',
@@ -272,30 +272,30 @@ const styles = StyleSheet.create({
     shadowColor: '#000',
     shadowOffset: {
       width: 0,
-      height: 2,
+      height: 2
     },
     shadowOpacity: 0.1,
     shadowRadius: 4,
-    elevation: 3,
+    elevation: 3
   },
   helpButtonText: {
     color: '#333333',
     fontSize: 14,
-    fontWeight: '400',
+    fontWeight: '400'
   },
   signUpContainer: {
     flexDirection: 'row',
     justifyContent: 'center',
-    alignItems: 'center',
+    alignItems: 'center'
   },
   signUpText: {
     fontSize: 16,
-    color: '#333333',
+    color: '#333333'
   },
   signUpLink: {
     fontSize: 16,
     color: '#333333',
-    fontWeight: '600',
+    fontWeight: '600'
   },
 
   modalOverlay: {
@@ -303,7 +303,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(0, 0, 0, 0.5)',
     justifyContent: 'center',
     alignItems: 'center',
-    paddingHorizontal: 20,
+    paddingHorizontal: 20
   },
   popupContainer: {
     backgroundColor: '#FFFFFF',
@@ -316,11 +316,11 @@ const styles = StyleSheet.create({
     shadowColor: '#000',
     shadowOffset: {
       width: 0,
-      height: 8,
+      height: 8
     },
     shadowOpacity: 0.3,
     shadowRadius: 12,
-    elevation: 12,
+    elevation: 12
   },
   successIconContainer: {
     width: 80,
@@ -333,23 +333,23 @@ const styles = StyleSheet.create({
     shadowColor: '#66FF99',
     shadowOffset: {
       width: 0,
-      height: 4,
+      height: 4
     },
     shadowOpacity: 0.3,
     shadowRadius: 8,
-    elevation: 8,
+    elevation: 8
   },
   successIcon: {
     fontSize: 40,
     color: '#FFFFFF',
-    fontWeight: 'bold',
+    fontWeight: 'bold'
   },
   popupTitle: {
     fontSize: 22,
     fontWeight: '700',
     color: '#333333',
     textAlign: 'center',
-    marginBottom: 16,
+    marginBottom: 16
   },
   popupMessage: {
     fontSize: 16,
@@ -357,7 +357,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     marginBottom: 32,
     lineHeight: 24,
-    paddingHorizontal: 10,
+    paddingHorizontal: 10
   },
   closeButton: {
     backgroundColor: '#66FF99',
@@ -369,15 +369,15 @@ const styles = StyleSheet.create({
     shadowColor: '#000',
     shadowOffset: {
       width: 0,
-      height: 2,
+      height: 2
     },
     shadowOpacity: 0.1,
     shadowRadius: 4,
-    elevation: 3,
+    elevation: 3
   },
   closeButtonText: {
     fontSize: 16,
     fontWeight: '600',
-    color: '#FFFFFF',
-  },
+    color: '#FFFFFF'
+  }
 });

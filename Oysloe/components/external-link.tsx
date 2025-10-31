@@ -1,25 +1,25 @@
-import { Href, Link } from 'expo-router';
-import { openBrowserAsync, WebBrowserPresentationStyle } from 'expo-web-browser';
-import { type ComponentProps } from 'react';
+import { Link } from 'expo-router';
+import { openBrowserAsync, WebBrowserPresentationStyle } from 'expo-web-browser';import { jsx as _jsx } from "react/jsx-runtime";
 
-type Props = Omit<ComponentProps<typeof Link>, 'href'> & { href: Href & string };
 
-export function ExternalLink({ href, ...rest }: Props) {
+
+
+export function ExternalLink({ href, ...rest }: { href: string; [key: string]: any }) {
   return (
-    <Link
-      target="_blank"
-      {...rest}
-      href={href}
-      onPress={async (event) => {
+    _jsx(Link, {
+      target: "_blank", ...
+      rest,
+      href: href,
+      onPress: async (event: any) => {
         if (process.env.EXPO_OS !== 'web') {
 
           event.preventDefault();
 
           await openBrowserAsync(href, {
-            presentationStyle: WebBrowserPresentationStyle.AUTOMATIC,
+            presentationStyle: WebBrowserPresentationStyle.AUTOMATIC
           });
         }
-      }}
-    />
-  );
+      } }
+    ));
+
 }

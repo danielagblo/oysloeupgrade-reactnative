@@ -2,110 +2,110 @@ import React from 'react';
 import { View, Text, StyleSheet, FlatList, TouchableOpacity } from 'react-native';
 import { Image } from 'expo-image';
 import { router } from 'expo-router';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { SafeAreaView } from 'react-native-safe-area-context';import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 
-type FavoriteAd = {
-  id: string;
-  title: string;
-  price: string;
-  image: any;
-};
 
-const MOCK_FAVORITES: FavoriteAd[] = [
-  {
-    id: '1',
-    title: 'Mercedes Benz S CLASS 2023',
-    price: '€ 023,000',
-    image: require('@/oysloe-assets/Ad images/grey-ocar.png'),
-  },
-  {
-    id: '2',
-    title: 'Mercedes Benz S CLASS 2023',
-    price: '€ 023,000',
-    image: require('@/oysloe-assets/Ad images/grey-ocar.png'),
-  },
-  {
-    id: '3',
-    title: 'Mercedes Benz S CLASS 2023',
-    price: '€ 023,000',
-    image: require('@/oysloe-assets/Ad images/grey-ocar.png'),
-  },
-];
+
+
+
+
+
+
+const MOCK_FAVORITES = [
+{
+  id: '1',
+  title: 'Mercedes Benz S CLASS 2023',
+  price: '€ 023,000',
+  image: require('@/oysloe-assets/Ad images/grey-ocar.png')
+},
+{
+  id: '2',
+  title: 'Mercedes Benz S CLASS 2023',
+  price: '€ 023,000',
+  image: require('@/oysloe-assets/Ad images/grey-ocar.png')
+},
+{
+  id: '3',
+  title: 'Mercedes Benz S CLASS 2023',
+  price: '€ 023,000',
+  image: require('@/oysloe-assets/Ad images/grey-ocar.png')
+}];
+
 
 export default function FavoritesScreen() {
-  const [favorites, setFavorites] = React.useState<FavoriteAd[]>(MOCK_FAVORITES);
+  const [favorites, setFavorites] = React.useState(MOCK_FAVORITES);
 
-  const handleToggleFavorite = (id: string) => {
+  const handleToggleFavorite = (id) => {
     setFavorites((prev) => prev.filter((f) => f.id !== id));
   };
 
-  const renderItem = ({ item }: { item: FavoriteAd }) => (
-    <View style={styles.card}>
-      <Image source={item.image} style={styles.cardImage} contentFit="cover" />
-      <View style={styles.cardInfo}>
-        <Text style={styles.cardTitle} numberOfLines={1}>{item.title}</Text>
-        <Text style={styles.cardPrice}>{item.price}</Text>
-      </View>
-      <TouchableOpacity style={styles.heartButton}>
-        <Image
-          source={require('@/oysloe-assets/Ad details screen/favorited.png')}
-          style={styles.heartIcon}
-        />
-      </TouchableOpacity>
-    </View>
+  const renderItem = ({ item }) =>
+  _jsxs(View, { style: styles.card, children: [
+    _jsx(Image, { source: item.image, style: styles.cardImage, contentFit: "cover" }),
+    _jsxs(View, { style: styles.cardInfo, children: [
+      _jsx(Text, { style: styles.cardTitle, numberOfLines: 1, children: item.title }),
+      _jsx(Text, { style: styles.cardPrice, children: item.price })] }
+    ),
+    _jsx(TouchableOpacity, { style: styles.heartButton, children:
+      _jsx(Image, {
+        source: require('@/oysloe-assets/Ad details screen/favorited.png'),
+        style: styles.heartIcon }
+      ) }
+    )] }
   );
+
 
   return (
-    <View style={styles.container}>
-      <SafeAreaView edges={['top']} style={styles.safeTop}>
-        <View style={styles.header}>
-          <TouchableOpacity onPress={() => router.back()} style={styles.backBtn}>
-            <Text style={styles.backText}>← Back</Text>
-          </TouchableOpacity>
-          <Text style={styles.headerTitle}>Favorite</Text>
-          <View style={{ width: 48 }} />
-        </View>
-      </SafeAreaView>
+    _jsxs(View, { style: styles.container, children: [
+      _jsx(SafeAreaView, { edges: ['top'], style: styles.safeTop, children:
+        _jsxs(View, { style: styles.header, children: [
+          _jsx(TouchableOpacity, { onPress: () => router.back(), style: styles.backBtn, children:
+            _jsx(Text, { style: styles.backText, children: "\u2190 Back" }) }
+          ),
+          _jsx(Text, { style: styles.headerTitle, children: "Favorite" }),
+          _jsx(View, { style: { width: 48 } })] }
+        ) }
+      ),
 
-      {favorites.length === 0 ? (
-        <View style={styles.emptyWrap}>
-          <Image
-            source={require('@/oysloe-assets/Ad details screen/no-favorite.png')}
-            style={styles.emptyImage}
-            contentFit="contain"
-          />
-          <Text style={styles.emptyText}>No data to show</Text>
-        </View>
-      ) : (
-        <FlatList
-          data={favorites}
-          keyExtractor={(it) => it.id}
-          renderItem={({ item }) => (
-            <View style={styles.card}>
-              <Image source={item.image} style={styles.cardImage} contentFit="cover" />
-              <View style={styles.cardInfo}>
-                <Text style={styles.cardTitle} numberOfLines={1}>{item.title}</Text>
-                <Text style={styles.cardPrice}>{item.price}</Text>
-              </View>
-              <TouchableOpacity style={styles.heartButton} onPress={() => handleToggleFavorite(item.id)}>
-                <Image
-                  source={require('@/oysloe-assets/Ad details screen/favorited.png')}
-                  style={styles.heartIcon}
-                />
-              </TouchableOpacity>
-            </View>
-          )}
-          contentContainerStyle={{ padding: 16, gap: 12 }}
-        />
-      )}
-    </View>
-  );
+      favorites.length === 0 ?
+      _jsxs(View, { style: styles.emptyWrap, children: [
+        _jsx(Image, {
+          source: require("@/oysloe-assets/Ad details screen/no.png"),
+          style: styles.emptyImage,
+          contentFit: "contain" }
+        ),
+        _jsx(Text, { style: styles.emptyText, children: "No data to show" })] }
+      ) :
+
+      _jsx(FlatList, {
+        data: favorites,
+        keyExtractor: (it) => it.id,
+        renderItem: ({ item }) =>
+        _jsxs(View, { style: styles.card, children: [
+          _jsx(Image, { source: item.image, style: styles.cardImage, contentFit: "cover" }),
+          _jsxs(View, { style: styles.cardInfo, children: [
+            _jsx(Text, { style: styles.cardTitle, numberOfLines: 1, children: item.title }),
+            _jsx(Text, { style: styles.cardPrice, children: item.price })] }
+          ),
+          _jsx(TouchableOpacity, { style: styles.heartButton, onPress: () => handleToggleFavorite(item.id), children:
+            _jsx(Image, {
+              source: require('@/oysloe-assets/Ad details screen/favorited.png'),
+              style: styles.heartIcon }
+            ) }
+          )] }
+        ),
+
+        contentContainerStyle: { padding: 16, gap: 12 } }
+      )] }
+
+    ));
+
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
+    backgroundColor: '#fff'
   },
   header: {
     height: 56,
@@ -114,74 +114,72 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     paddingHorizontal: 16,
     borderBottomWidth: 1,
-    borderBottomColor: '#eee',
+    borderBottomColor: '#eee'
   },
   safeTop: {
-    backgroundColor: '#fff',
+    backgroundColor: '#fff'
   },
   backBtn: {
     paddingVertical: 8,
-    paddingHorizontal: 8,
+    paddingHorizontal: 8
   },
   backText: {
-    color: '#666',
+    color: '#666'
   },
   headerTitle: {
     fontSize: 16,
     fontWeight: '600',
-    color: '#333',
+    color: '#333'
   },
   emptyWrap: {
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
-    paddingHorizontal: 24,
+    paddingHorizontal: 24
   },
   emptyImage: {
     width: 160,
     height: 160,
-    marginBottom: 12,
+    marginBottom: 12
   },
   emptyText: {
-    color: '#666',
+    color: '#666'
   },
   card: {
     flexDirection: 'row',
     alignItems: 'center',
     backgroundColor: '#f8f8f8',
     borderRadius: 12,
-    padding: 10,
+    padding: 10
   },
   cardImage: {
     width: 56,
     height: 56,
     borderRadius: 8,
-    marginRight: 10,
+    marginRight: 10
   },
   cardInfo: {
-    flex: 1,
+    flex: 1
   },
   cardTitle: {
     fontSize: 14,
     color: '#333',
-    marginBottom: 4,
+    marginBottom: 4
   },
   cardPrice: {
     fontSize: 12,
     color: '#333',
-    fontWeight: '600',
+    fontWeight: '600'
   },
   heartButton: {
     width: 32,
     height: 32,
     alignItems: 'center',
-    justifyContent: 'center',
+    justifyContent: 'center'
   },
   heartIcon: {
     width: 20,
     height: 20,
-    tintColor: '#666',
-  },
+    tintColor: '#666'
+  }
 });
-
-

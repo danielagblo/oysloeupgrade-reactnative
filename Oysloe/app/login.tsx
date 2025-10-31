@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, TextInput, Dimensions } from 'react-native';
 import { Image } from 'expo-image';
 import { router } from 'expo-router';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { SafeAreaView } from 'react-native-safe-area-context';import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 
 const { width } = Dimensions.get('window');
 
@@ -11,13 +11,13 @@ export default function LoginScreen() {
   const [password, setPassword] = useState('');
 
   const handleLogin = () => {
-    
+
     console.log('Login with:', { email, password });
     router.replace('/(tabs)');
   };
 
   const handleGoogleLogin = () => {
-    
+
     console.log('Google login');
     router.replace('/(tabs)');
   };
@@ -35,105 +35,105 @@ export default function LoginScreen() {
   };
 
   return (
-    <SafeAreaView style={styles.container}>
-      <View style={styles.content}>
-        
-        <Text style={styles.title}>Welcome!</Text>
+    _jsx(SafeAreaView, { style: styles.container, children:
+      _jsxs(View, { style: styles.content, children: [
 
-        
-        <View style={styles.inputContainer}>
-          <Image
-            source={require('@/oysloe-assets/Auth/email.png')}
-            style={styles.inputIcon}
-            contentFit="contain"
-          />
-          <TextInput
-            style={styles.input}
-            placeholder="Email Address"
-            placeholderTextColor="#999999"
-            value={email}
-            onChangeText={setEmail}
-            keyboardType="email-address"
-            autoCapitalize="none"
-            autoCorrect={false}
-          />
-        </View>
+        _jsx(Text, { style: styles.title, children: "Welcome!" }),
 
-        
-        <View style={styles.inputContainer}>
-          <Image
-            source={require('@/oysloe-assets/Auth/passwordkey.png')}
-            style={styles.inputIcon}
-            contentFit="contain"
-          />
-          <TextInput
-            style={styles.input}
-            placeholder="Password"
-            placeholderTextColor="#999999"
-            value={password}
-            onChangeText={setPassword}
-            secureTextEntry
-            autoCapitalize="none"
-            autoCorrect={false}
-          />
-        </View>
 
-        
-        <TouchableOpacity style={styles.loginButton} onPress={handleLogin}>
-          <Text style={styles.loginButtonText}>Login</Text>
-        </TouchableOpacity>
+        _jsxs(View, { style: styles.inputContainer, children: [
+          _jsx(Image, {
+            source: require('@/oysloe-assets/Auth/email.png'),
+            style: styles.inputIcon,
+            contentFit: "contain" }
+          ),
+          _jsx(TextInput, {
+            style: styles.input,
+            placeholder: "Email Address",
+            placeholderTextColor: "#999999",
+            value: email,
+            onChangeText: setEmail,
+            keyboardType: "email-address",
+            autoCapitalize: "none",
+            autoCorrect: false }
+          )] }
+        ),
 
-        
-        <TouchableOpacity style={styles.googleButton} onPress={handleGoogleLogin}>
-          <Image
-            source={require('@/oysloe-assets/login/google.png')}
-            style={styles.googleIcon}
-            contentFit="contain"
-          />
-          <Text style={styles.googleButtonText}>login using google</Text>
-        </TouchableOpacity>
 
-        
-        <Text style={styles.cantLoginText}>Cant Login?</Text>
-        
-        <View style={styles.helpButtonsContainer}>
-          <TouchableOpacity style={styles.helpButton} onPress={handlePasswordReset}>
-            <Text style={styles.helpButtonText}>Password Reset</Text>
-          </TouchableOpacity>
-          
-          <TouchableOpacity style={styles.helpButton} onPress={handleOTPLogin}>
-            <Text style={styles.helpButtonText}>OTP Login</Text>
-          </TouchableOpacity>
-        </View>
+        _jsxs(View, { style: styles.inputContainer, children: [
+          _jsx(Image, {
+            source: require('@/oysloe-assets/Auth/passwordkey.png'),
+            style: styles.inputIcon,
+            contentFit: "contain" }
+          ),
+          _jsx(TextInput, {
+            style: styles.input,
+            placeholder: "Password",
+            placeholderTextColor: "#999999",
+            value: password,
+            onChangeText: setPassword,
+            secureTextEntry: true,
+            autoCapitalize: "none",
+            autoCorrect: false }
+          )] }
+        ),
 
-        
-        <View style={styles.signUpContainer}>
-          <Text style={styles.signUpText}>Don't have an account ? </Text>
-          <TouchableOpacity onPress={handleSignUp}>
-            <Text style={styles.signUpLink}>Sign up</Text>
-          </TouchableOpacity>
-        </View>
-      </View>
-    </SafeAreaView>
-  );
+
+        _jsx(TouchableOpacity, { style: styles.loginButton, onPress: handleLogin, children:
+          _jsx(Text, { style: styles.loginButtonText, children: "Login" }) }
+        ),
+
+
+        _jsxs(TouchableOpacity, { style: styles.googleButton, onPress: handleGoogleLogin, children: [
+          _jsx(Image, {
+            source: require('@/oysloe-assets/login/google.png'),
+            style: styles.googleIcon,
+            contentFit: "contain" }
+          ),
+          _jsx(Text, { style: styles.googleButtonText, children: "login using google" })] }
+        ),
+
+
+        _jsx(Text, { style: styles.cantLoginText, children: "Cant Login?" }),
+
+        _jsxs(View, { style: styles.helpButtonsContainer, children: [
+          _jsx(TouchableOpacity, { style: styles.helpButton, onPress: handlePasswordReset, children:
+            _jsx(Text, { style: styles.helpButtonText, children: "Password Reset" }) }
+          ),
+
+          _jsx(TouchableOpacity, { style: styles.helpButton, onPress: handleOTPLogin, children:
+            _jsx(Text, { style: styles.helpButtonText, children: "OTP Login" }) }
+          )] }
+        ),
+
+
+        _jsxs(View, { style: styles.signUpContainer, children: [
+          _jsx(Text, { style: styles.signUpText, children: "Don't have an account ? " }),
+          _jsx(TouchableOpacity, { onPress: handleSignUp, children:
+            _jsx(Text, { style: styles.signUpLink, children: "Sign up" }) }
+          )] }
+        )] }
+      ) }
+    ));
+
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#F8F8F8',
+    backgroundColor: '#F8F8F8'
   },
   content: {
     flex: 1,
     paddingHorizontal: 30,
-    justifyContent: 'center',
+    justifyContent: 'center'
   },
   title: {
     fontSize: 40,
     fontWeight: 500,
     color: '#999999',
     textAlign: 'center',
-    marginBottom: 40,
+    marginBottom: 40
   },
   inputContainer: {
     flexDirection: 'row',
@@ -146,22 +146,22 @@ const styles = StyleSheet.create({
     shadowColor: '#000',
     shadowOffset: {
       width: 0,
-      height: 2,
+      height: 2
     },
     shadowOpacity: 0.1,
     shadowRadius: 4,
-    elevation: 3,
+    elevation: 3
   },
   inputIcon: {
     width: 20,
     height: 20,
     marginRight: 15,
-    tintColor: '#999999',
+    tintColor: '#999999'
   },
   input: {
     flex: 1,
     fontSize: 16,
-    color: '#333333',
+    color: '#333333'
   },
   loginButton: {
     backgroundColor: '#66FF99',
@@ -173,16 +173,16 @@ const styles = StyleSheet.create({
     shadowColor: '#000',
     shadowOffset: {
       width: 0,
-      height: 2,
+      height: 2
     },
     shadowOpacity: 0.1,
     shadowRadius: 4,
-    elevation: 3,
+    elevation: 3
   },
   loginButtonText: {
     color: '#999999',
     fontSize: 18,
-    fontWeight: '400',
+    fontWeight: '400'
   },
   googleButton: {
     flexDirection: 'row',
@@ -198,32 +198,32 @@ const styles = StyleSheet.create({
     shadowColor: '#000',
     shadowOffset: {
       width: 0,
-      height: 2,
+      height: 2
     },
     shadowOpacity: 0.1,
     shadowRadius: 4,
-    elevation: 3,
+    elevation: 3
   },
   googleIcon: {
     width: 24,
     height: 24,
-    marginRight: 12,
+    marginRight: 12
   },
   googleButtonText: {
     color: '#999999',
     fontSize: 16,
-    fontWeight: '400',
+    fontWeight: '400'
   },
   cantLoginText: {
     fontSize: 16,
     color: '#999999',
     textAlign: 'center',
-    marginBottom: 16,
+    marginBottom: 16
   },
   helpButtonsContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginBottom: 40,
+    marginBottom: 40
   },
   helpButton: {
     backgroundColor: '#FFFFFF',
@@ -237,29 +237,29 @@ const styles = StyleSheet.create({
     shadowColor: '#000',
     shadowOffset: {
       width: 0,
-      height: 2,
+      height: 2
     },
     shadowOpacity: 0.1,
     shadowRadius: 4,
-    elevation: 3,
+    elevation: 3
   },
   helpButtonText: {
     color: '#999999',
     fontSize: 14,
-    fontWeight: '400',
+    fontWeight: '400'
   },
   signUpContainer: {
     flexDirection: 'row',
     justifyContent: 'center',
-    alignItems: 'center',
+    alignItems: 'center'
   },
   signUpText: {
     fontSize: 16,
-    color: '#999999',
+    color: '#999999'
   },
   signUpLink: {
     fontSize: 16,
     color: '#333333',
-    fontWeight: '600',
-  },
+    fontWeight: '600'
+  }
 });

@@ -7,95 +7,95 @@ import ParallaxScrollView from '@/components/parallax-scroll-view';
 import { ThemedText } from '@/components/themed-text';
 import { ThemedView } from '@/components/themed-view';
 import { IconSymbol } from '@/components/ui/icon-symbol';
-import { Fonts } from '@/constants/theme';
+import { Fonts } from '@/constants/theme';import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 
 export default function TabTwoScreen() {
   return (
-    <ParallaxScrollView
-      headerBackgroundColor={{ light: '#D0D0D0', dark: '#353636' }}
-      headerImage={
-        <IconSymbol
-          size={310}
-          color="#808080"
-          name="chevron.left.forwardslash.chevron.right"
-          style={styles.headerImage}
-        />
-      }>
-      <ThemedView style={styles.titleContainer}>
-        <ThemedText
-          type="title"
-          style={{
-            fontFamily: Fonts.rounded,
-          }}>
-          Explore
-        </ThemedText>
-      </ThemedView>
-      <ThemedText>This app includes example code to help you get started.</ThemedText>
-      <Collapsible title="File-based routing">
-        <ThemedText>
-          This app has two screens:{' '}
-          <ThemedText type="defaultSemiBold">app/(tabs)/index.tsx</ThemedText> and{' '}
-          <ThemedText type="defaultSemiBold">app/(tabs)/explore.tsx</ThemedText>
-        </ThemedText>
-        <ThemedText>
-          The layout file in <ThemedText type="defaultSemiBold">app/(tabs)/_layout.tsx</ThemedText>{' '}
-          sets up the tab navigator.
-        </ThemedText>
-        <ExternalLink href="https://docs.expo.dev/router/introduction">
-          <ThemedText type="link">Learn more</ThemedText>
-        </ExternalLink>
-      </Collapsible>
-      <Collapsible title="Android, iOS, and web support">
-        <ThemedText>
-          You can open this project on Android, iOS, and the web. To open the web version, press{' '}
-          <ThemedText type="defaultSemiBold">w</ThemedText> in the terminal running this project.
-        </ThemedText>
-      </Collapsible>
-      <Collapsible title="Images">
-        <ThemedText>
-          For static images, you can use the <ThemedText type="defaultSemiBold">@2x</ThemedText> and{' '}
-          <ThemedText type="defaultSemiBold">@3x</ThemedText> suffixes to provide files for
-          different screen densities
-        </ThemedText>
-        <Image
-          source={require('@/assets/images/react-logo.png')}
-          style={{ width: 100, height: 100, alignSelf: 'center' }}
-        />
-        <ExternalLink href="https://reactnative.dev/docs/images">
-          <ThemedText type="link">Learn more</ThemedText>
-        </ExternalLink>
-      </Collapsible>
-      <Collapsible title="Light and dark mode components">
-        <ThemedText>
-          This template has light and dark mode support. The{' '}
-          <ThemedText type="defaultSemiBold">useColorScheme()</ThemedText> hook lets you inspect
-          what the user&apos;s current color scheme is, and so you can adjust UI colors accordingly.
-        </ThemedText>
-        <ExternalLink href="https://docs.expo.dev/develop/user-interface/color-themes/">
-          <ThemedText type="link">Learn more</ThemedText>
-        </ExternalLink>
-      </Collapsible>
-      <Collapsible title="Animations">
-        <ThemedText>
-          This template includes an example of an animated component. The{' '}
-          <ThemedText type="defaultSemiBold">components/HelloWave.tsx</ThemedText> component uses
-          the powerful{' '}
-          <ThemedText type="defaultSemiBold" style={{ fontFamily: Fonts.mono }}>
-            react-native-reanimated
-          </ThemedText>{' '}
-          library to create a waving hand animation.
-        </ThemedText>
-        {Platform.select({
-          ios: (
-            <ThemedText>
-              The <ThemedText type="defaultSemiBold">components/ParallaxScrollView.tsx</ThemedText>{' '}
-              component provides a parallax effect for the header image.
-            </ThemedText>
-          ),
-        })}
-      </Collapsible>
-    </ParallaxScrollView>
-  );
+    _jsxs(ParallaxScrollView, {
+      headerBackgroundColor: { light: '#D0D0D0', dark: '#353636' },
+      headerImage:
+      _jsx(IconSymbol, {
+        size: 310,
+        color: "#808080",
+        name: "chevron.left.forwardslash.chevron.right",
+        style: styles.headerImage }
+      ), children: [
+
+      _jsx(ThemedView, { style: styles.titleContainer, children:
+        _jsx(ThemedText, {
+          type: "title",
+          style: {
+            fontFamily: Fonts.rounded
+          }, children: "Explore" }
+
+        ) }
+      ),
+      _jsx(ThemedText, { children: "This app includes example code to help you get started." }),
+      _jsxs(Collapsible, { title: "File-based routing", children: [
+        _jsxs(ThemedText, { children: ["This app has two screens:",
+          ' ',
+          _jsx(ThemedText, { type: "defaultSemiBold", children: "app/(tabs)/index.tsx" }), " and", ' ',
+          _jsx(ThemedText, { type: "defaultSemiBold", children: "app/(tabs)/explore.tsx" })] }
+        ),
+        _jsxs(ThemedText, { children: ["The layout file in ",
+          _jsx(ThemedText, { type: "defaultSemiBold", children: "app/(tabs)/_layout.tsx" }), ' ', "sets up the tab navigator."] }
+
+        ),
+        _jsx(ExternalLink, { href: "https://docs.expo.dev/router/introduction", children:
+          _jsx(ThemedText, { type: "link", children: "Learn more" }) }
+        )] }
+      ),
+      _jsx(Collapsible, { title: "Android, iOS, and web support", children:
+        _jsxs(ThemedText, { children: ["You can open this project on Android, iOS, and the web. To open the web version, press",
+          ' ',
+          _jsx(ThemedText, { type: "defaultSemiBold", children: "w" }), " in the terminal running this project."] }
+        ) }
+      ),
+      _jsxs(Collapsible, { title: "Images", children: [
+        _jsxs(ThemedText, { children: ["For static images, you can use the ",
+          _jsx(ThemedText, { type: "defaultSemiBold", children: "@2x" }), " and", ' ',
+          _jsx(ThemedText, { type: "defaultSemiBold", children: "@3x" }), " suffixes to provide files for different screen densities"] }
+
+        ),
+        _jsx(Image, {
+          source: require('@/assets/images/react-logo.png'),
+          style: { width: 100, height: 100, alignSelf: 'center' } }
+        ),
+        _jsx(ExternalLink, { href: "https://reactnative.dev/docs/images", children:
+          _jsx(ThemedText, { type: "link", children: "Learn more" }) }
+        )] }
+      ),
+      _jsxs(Collapsible, { title: "Light and dark mode components", children: [
+        _jsxs(ThemedText, { children: ["This template has light and dark mode support. The",
+          ' ',
+          _jsx(ThemedText, { type: "defaultSemiBold", children: "useColorScheme()" }), " hook lets you inspect what the user's current color scheme is, and so you can adjust UI colors accordingly."] }
+
+        ),
+        _jsx(ExternalLink, { href: "https://docs.expo.dev/develop/user-interface/color-themes/", children:
+          _jsx(ThemedText, { type: "link", children: "Learn more" }) }
+        )] }
+      ),
+      _jsxs(Collapsible, { title: "Animations", children: [
+        _jsxs(ThemedText, { children: ["This template includes an example of an animated component. The",
+          ' ',
+          _jsx(ThemedText, { type: "defaultSemiBold", children: "components/HelloWave.tsx" }), " component uses the powerful",
+          ' ',
+          _jsx(ThemedText, { type: "defaultSemiBold", style: { fontFamily: Fonts.mono }, children: "react-native-reanimated" }
+
+          ), ' ', "library to create a waving hand animation."] }
+
+        ),
+        Platform.select({
+          ios:
+          _jsxs(ThemedText, { children: ["The ",
+            _jsx(ThemedText, { type: "defaultSemiBold", children: "components/ParallaxScrollView.tsx" }), ' ', "component provides a parallax effect for the header image."] }
+
+          )
+
+        })] }
+      )] }
+    ));
+
 }
 
 const styles = StyleSheet.create({
@@ -103,10 +103,10 @@ const styles = StyleSheet.create({
     color: '#808080',
     bottom: -90,
     left: -35,
-    position: 'absolute',
+    position: 'absolute'
   },
   titleContainer: {
     flexDirection: 'row',
-    gap: 8,
-  },
+    gap: 8
+  }
 });

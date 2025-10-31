@@ -1,5 +1,5 @@
-import { Redirect } from 'expo-router';
+import { Redirect } from 'expo-router';import { jsx as _jsx } from "react/jsx-runtime";
 
 export default function Index() {
-  return <Redirect href="/onboarding" />;
+  return _jsx(Redirect, { href: "/onboarding" });
 }

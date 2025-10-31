@@ -8,11 +8,11 @@ import {
   Dimensions,
   ScrollView,
   Modal,
-  Pressable,
-} from 'react-native';
+  Pressable } from
+'react-native';
 import { Image } from 'expo-image';
 import { router } from 'expo-router';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { SafeAreaView } from 'react-native-safe-area-context';import { jsx as _jsx, jsxs as _jsxs, Fragment as _Fragment } from "react/jsx-runtime";
 
 const { width, height } = Dimensions.get('window');
 const DRAWER_WIDTH = width * 0.75;
@@ -22,11 +22,11 @@ export default function ProfileScreen() {
   const slideAnim = React.useRef(new Animated.Value(DRAWER_WIDTH)).current;
 
   React.useEffect(() => {
-   
+
     Animated.timing(slideAnim, {
       toValue: 0,
       duration: 300,
-      useNativeDriver: true,
+      useNativeDriver: true
     }).start();
   }, []);
 
@@ -34,7 +34,7 @@ export default function ProfileScreen() {
     Animated.timing(slideAnim, {
       toValue: DRAWER_WIDTH,
       duration: 300,
-      useNativeDriver: true,
+      useNativeDriver: true
     }).start(() => {
       router.back();
     });
@@ -46,181 +46,203 @@ export default function ProfileScreen() {
   };
 
   return (
-    <>
-      {}
-      <Modal
-        visible={showLogoutModal}
-        transparent={true}
-        animationType="fade"
-        onRequestClose={() => setShowLogoutModal(false)}
-      >
-        <Pressable 
-          style={styles.modalOverlay} 
-          onPress={() => setShowLogoutModal(false)}
-        >
-          <View style={styles.modalContent}>
-            <Image 
-              source={require('@/oysloe-assets/Ad details screen/sure.png')} 
-              style={styles.modalIcon} 
-            />
-            <Text style={styles.modalText}>Are you sure?</Text>
-            <View style={styles.modalButtons}>
-              <TouchableOpacity 
-                style={[styles.modalButton, styles.modalButtonYes]}
-                onPress={handleLogout}
-              >
-                <Text style={styles.modalButtonYesText}>Yes logout</Text>
-              </TouchableOpacity>
-              <TouchableOpacity 
-                style={[styles.modalButton, styles.modalButtonClose]}
-                onPress={() => setShowLogoutModal(false)}
-              >
-                <Text style={styles.modalButtonCloseText}>Close</Text>
-              </TouchableOpacity>
-            </View>
-          </View>
-        </Pressable>
-      </Modal>
+    _jsxs(_Fragment, { children: [
 
-      {}
-      <TouchableOpacity style={styles.backdrop} activeOpacity={1} onPress={closeDrawer} />
-      
-      {}
-      <Animated.View
-        style={[
-          styles.drawer,
-          {
-            transform: [{ translateX: slideAnim }],
-          },
-        ]}
-      >
-        <SafeAreaView style={styles.drawerContent}>
-          {}
-          <TouchableOpacity style={styles.logoutButton} onPress={() => setShowLogoutModal(true)}>
-            <Image
-              source={require('@/oysloe-assets/side menu/logout.png')}
-              style={styles.logoutIcon}
-            />
-            <Text style={styles.logoutText}>Logout</Text>
-          </TouchableOpacity>
+      _jsx(Modal, {
+        visible: showLogoutModal,
+        transparent: true,
+        animationType: "fade",
+        onRequestClose: () => setShowLogoutModal(false), children:
 
-          <ScrollView showsVerticalScrollIndicator={false}>
-            {}
-            <View style={styles.profileCard}>
-              <View style={styles.avatarContainer}>
-                <Image
-                  source={require('@/oysloe-assets/side menu/profile.png')}
-                  style={styles.avatar}
-                />
-              </View>
-              <Text style={styles.userName}>Jeffery Andoff</Text>
-              <View style={styles.coverStatusContainer}>
-                <View style={styles.greenDot} />
-                <Text style={styles.coverStatus}>High cover</Text>
-              </View>
-              <View style={styles.progressBarContainer}>
-                <View style={[styles.progressBar, { width: '80%' }]} />
-              </View>
-            </View>
+        _jsx(Pressable, {
+          style: styles.modalOverlay,
+          onPress: () => setShowLogoutModal(false), children:
 
-            {}
-            <View style={styles.statsContainer}>
-              <TouchableOpacity style={styles.statCard} onPress={() => router.push('/ads?initialTab=active')}>
-                <Text style={styles.statNumber}>900k</Text>
-                <Text style={styles.statLabel}>Active Ads</Text>
-              </TouchableOpacity>
-              <View style={styles.statCard}>
-                <Text style={styles.statNumber}>900k</Text>
-                <Text style={styles.statLabel}>Taken Ads</Text>
-              </View>
-            </View>
+          _jsxs(View, { style: styles.modalContent, children: [
+            _jsx(Image, {
+              source: require('@/oysloe-assets/Ad details screen/sure.png'),
+              style: styles.modalIcon }
+            ),
+            _jsx(Text, { style: styles.modalText, children: "Are you sure?" }),
+            _jsxs(View, { style: styles.modalButtons, children: [
+              _jsx(TouchableOpacity, {
+                style: [styles.modalButton, styles.modalButtonYes],
+                onPress: handleLogout, children:
 
-            {}
-            <View style={styles.section}>
-              <Text style={styles.sectionTitle}>Account</Text>
-              <TouchableOpacity 
-                style={styles.menuItem}
-                onPress={() => {
+                _jsx(Text, { style: styles.modalButtonYesText, children: "Yes logout" }) }
+              ),
+              _jsx(TouchableOpacity, {
+                style: [styles.modalButton, styles.modalButtonClose],
+                onPress: () => setShowLogoutModal(false), children:
+
+                _jsx(Text, { style: styles.modalButtonCloseText, children: "Close" }) }
+              )] }
+            )] }
+          ) }
+        ) }
+      ),
+
+
+      _jsx(TouchableOpacity, { style: styles.backdrop, activeOpacity: 1, onPress: closeDrawer }),
+
+
+      _jsx(Animated.View, {
+        style: [
+        styles.drawer,
+        {
+          transform: [{ translateX: slideAnim }]
+        }], children:
+
+
+        _jsxs(SafeAreaView, { style: styles.drawerContent, children: [
+
+          _jsxs(TouchableOpacity, { style: styles.logoutButton, onPress: () => setShowLogoutModal(true), children: [
+            _jsx(Image, {
+              source: require('@/oysloe-assets/side menu/logout.png'),
+              style: styles.logoutIcon }
+            ),
+            _jsx(Text, { style: styles.logoutText, children: "Logout" })] }
+          ),
+
+          _jsxs(ScrollView, { showsVerticalScrollIndicator: false, children: [
+
+            _jsxs(View, { style: styles.profileCard, children: [
+              _jsx(View, { style: styles.avatarContainer, children:
+                _jsx(Image, {
+                  source: require('@/oysloe-assets/side menu/profile.png'),
+                  style: styles.avatar }
+                ) }
+              ),
+              _jsx(Text, { style: styles.userName, children: "Jeffery Andoff" }),
+              _jsxs(View, { style: styles.coverStatusContainer, children: [
+                _jsx(View, { style: styles.greenDot }),
+                _jsx(Text, { style: styles.coverStatus, children: "High cover" })] }
+              ),
+              _jsx(View, { style: styles.progressBarContainer, children:
+                _jsx(View, { style: [styles.progressBar, { width: '80%' }] }) }
+              )] }
+            ),
+
+
+            _jsxs(View, { style: styles.statsContainer, children: [
+              _jsxs(TouchableOpacity, { style: styles.statCard, onPress: () => router.push('/ads?initialTab=active'), children: [
+                _jsx(Text, { style: styles.statNumber, children: "900k" }),
+                _jsx(Text, { style: styles.statLabel, children: "Active Ads" })] }
+              ),
+              _jsxs(View, { style: styles.statCard, children: [
+                _jsx(Text, { style: styles.statNumber, children: "900k" }),
+                _jsx(Text, { style: styles.statLabel, children: "Taken Ads" })] }
+              )] }
+            ),
+
+
+            _jsxs(View, { style: styles.section, children: [
+              _jsx(Text, { style: styles.sectionTitle, children: "Account" }),
+              _jsxs(TouchableOpacity, {
+                style: styles.menuItem,
+                onPress: () => {
                   router.push('/setup');
-                }}
-              >
-                <Image
-                  source={require('@/oysloe-assets/side menu/profile.png')}
-                  style={styles.menuIcon}
-                />
-                <Text style={styles.menuText}>Edit profile</Text>
-              </TouchableOpacity>
-            </View>
+                }, children: [
 
-            {}
-            <View style={styles.section}>
-              <Text style={styles.sectionTitle}>Business</Text>
-              
-              <TouchableOpacity style={styles.menuItem} onPress={() => router.push('/ads')}>
-                <Image
-                  source={require('@/oysloe-assets/side menu/ads.png')}
-                  style={styles.menuIcon}
-                />
-                <Text style={styles.menuText}>Ads</Text>
-              </TouchableOpacity>
+                _jsx(Image, {
+                  source: require('@/oysloe-assets/side menu/profile.png'),
+                  style: styles.menuIcon }
+                ),
+                _jsx(Text, { style: styles.menuText, children: "Edit profile" })] }
+              )] }
+            ),
 
-              <TouchableOpacity style={styles.menuItem} onPress={() => router.push('/(tabs)/favorites')}>
-                <Image
-                  source={require('@/oysloe-assets/side menu/favorite.png')}
-                  style={styles.menuIcon}
-                />
-                <Text style={styles.menuText}>Favorite</Text>
-              </TouchableOpacity>
 
-              <TouchableOpacity style={styles.menuItem}>
-                <Image
-                  source={require('@/oysloe-assets/side menu/subscribe.png')}
-                  style={styles.menuIcon}
-                />
-                <Text style={styles.menuText}>Subscription</Text>
-              </TouchableOpacity>
+            _jsxs(View, { style: styles.section, children: [
+              _jsx(Text, { style: styles.sectionTitle, children: "Business" }),
 
-              <TouchableOpacity style={styles.menuItem}>
-                <Image
-                  source={require('@/oysloe-assets/side menu/refer and earn.png')}
-                  style={styles.menuIcon}
-                />
-                <Text style={styles.menuText}>Refer & Earn</Text>
-              </TouchableOpacity>
-            </View>
+              _jsxs(TouchableOpacity, { style: styles.menuItem, onPress: () => router.push('/ads'), children: [
+                _jsx(Image, {
+                  source: require('@/oysloe-assets/side menu/ads.png'),
+                  style: styles.menuIcon }
+                ),
+                _jsx(Text, { style: styles.menuText, children: "Ads" })] }
+              ),
 
-            {}
-            <View style={styles.section}>
-              <Text style={styles.sectionTitle}>Settings</Text>
-              <TouchableOpacity style={styles.menuItem}>
-                <Image
-                  source={require('@/oysloe-assets/side menu/feedback.png')}
-                  style={styles.menuIcon}
-                />
-                <Text style={styles.menuText}>Feedback</Text>
-              </TouchableOpacity>
+              _jsxs(TouchableOpacity, { style: styles.menuItem, onPress: () => router.push('/(tabs)/favorites'), children: [
+                _jsx(Image, {
+                  source: require('@/oysloe-assets/side menu/favorite.png'),
+                  style: styles.menuIcon }
+                ),
+                _jsx(Text, { style: styles.menuText, children: "Favorite" })] }
+              ),
 
-              <TouchableOpacity style={styles.menuItem}>
-                <Image
-                  source={require('@/oysloe-assets/side menu/privacypolicy.png')}
-                  style={styles.menuIcon}
-                />
-                <Text style={styles.menuText}>Privacy Policy</Text>
-              </TouchableOpacity>
+              _jsxs(TouchableOpacity, { style: styles.menuItem, onPress: () => router.push('/(tabs)/subscription'), children: [
+                _jsx(Image, {
+                  source: require('@/oysloe-assets/side menu/subscribe.png'),
+                  style: styles.menuIcon }
+                ),
+                _jsx(Text, { style: styles.menuText, children: "Subscription" })] }
+              ),
 
-              <TouchableOpacity style={styles.menuItem}>
-                <Image
-                  source={require('@/oysloe-assets/side menu/terms and conditions.png')}
-                  style={styles.menuIcon}
-                />
-                <Text style={styles.menuText}>Terms & Conditions</Text>
-              </TouchableOpacity>
-            </View>
-          </ScrollView>
-        </SafeAreaView>
-      </Animated.View>
-    </>
-  );
+              _jsxs(TouchableOpacity, {
+                style: styles.menuItem,
+                onPress: () => router.push('/(tabs)/refer-earn'), children: [
+
+                _jsx(Image, {
+                  source: require('@/oysloe-assets/side menu/refer and earn.png'),
+                  style: styles.menuIcon }
+                ),
+                _jsx(Text, { style: styles.menuText, children: "Refer & Earn" })] }
+              )] }
+            ),
+
+
+            _jsxs(View, { style: styles.section, children: [
+              _jsx(Text, { style: styles.sectionTitle, children: "Settings" }),
+
+              _jsxs(TouchableOpacity, {
+                style: styles.menuItem,
+                onPress: () => router.push('/(tabs)/feedback'), children: [
+
+                _jsx(Image, {
+                  source: require('@/oysloe-assets/side menu/feedback.png'),
+                  style: styles.menuIcon }
+                ),
+                _jsx(Text, { style: styles.menuText, children: "Feedback" })] }
+              ),
+
+
+              _jsxs(TouchableOpacity, {
+                style: styles.menuItem,
+                onPress: () => router.push('/edit-profile'), children: [
+
+                _jsx(Image, {
+                  source: require('@/oysloe-assets/side menu/account.png'),
+                  style: styles.menuIcon }
+                ),
+                _jsx(Text, { style: styles.menuText, children: "Account" })] }
+              ),
+
+
+              _jsxs(TouchableOpacity, { style: styles.menuItem, onPress: () => router.push('/(tabs)/terms-and-conditions'), children: [
+                _jsx(Image, {
+                  source: require('@/oysloe-assets/side menu/privacypolicy.png'),
+                  style: styles.menuIcon }
+                ),
+                _jsx(Text, { style: styles.menuText, children: "T&C" })] }
+              ),
+
+
+              _jsxs(TouchableOpacity, { style: styles.menuItem, onPress: () => router.push('/(tabs)/privacy-policy'), children: [
+                _jsx(Image, {
+                  source: require('@/oysloe-assets/side menu/terms and conditions.png'),
+                  style: styles.menuIcon }
+                ),
+                _jsx(Text, { style: styles.menuText, children: "Privacy Policy" })] }
+              )] }
+            )] }
+          )] }
+
+        ) }
+      )] }
+    ));
+
 }
 
 const styles = StyleSheet.create({
@@ -230,7 +252,7 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     bottom: 0,
-    backgroundColor: 'rgba(0, 0, 0, 0)', // Fully transparent
+    backgroundColor: 'rgba(0, 0, 0, 0)'
   },
   drawer: {
     position: 'absolute',
@@ -244,18 +266,18 @@ const styles = StyleSheet.create({
     shadowColor: '#000',
     shadowOffset: {
       width: -2,
-      height: 0,
+      height: 0
     },
     shadowOpacity: 0.3,
     shadowRadius: 4,
-    elevation: 10,
+    elevation: 10
   },
   drawerContent: {
     flex: 1,
     paddingHorizontal: 20,
     paddingTop: 20,
     borderTopLeftRadius: 50,
-    overflow: 'hidden',
+    overflow: 'hidden'
   },
   logoutButton: {
     flexDirection: 'row',
@@ -265,21 +287,21 @@ const styles = StyleSheet.create({
     paddingVertical: 12,
     paddingHorizontal: 20,
     borderRadius: 12,
-    marginBottom: 30,
+    marginBottom: 30
   },
   logoutIcon: {
     width: 20,
     height: 20,
-    marginRight: 8,
+    marginRight: 8
   },
   logoutText: {
     fontSize: 16,
     color: '#333',
-    fontWeight: '500',
+    fontWeight: '500'
   },
   profileCard: {
     alignItems: 'center',
-    marginBottom: 30,
+    marginBottom: 30
   },
   avatarContainer: {
     width: 80,
@@ -290,98 +312,98 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     marginBottom: 12,
-    backgroundColor: '#f0f0f0',
+    backgroundColor: '#f0f0f0'
   },
   avatar: {
     width: 60,
-    height: 60,
+    height: 60
   },
   userName: {
     fontSize: 20,
     fontWeight: 'bold',
     color: '#333',
-    marginBottom: 8,
+    marginBottom: 8
   },
   coverStatusContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: 8,
+    marginBottom: 8
   },
   greenDot: {
     width: 8,
     height: 8,
     borderRadius: 4,
     backgroundColor: '#4ECDC4',
-    marginRight: 6,
+    marginRight: 6
   },
   coverStatus: {
     fontSize: 14,
-    color: '#666',
+    color: '#666'
   },
   progressBarContainer: {
     width: '100%',
     height: 6,
     backgroundColor: '#e0e0e0',
     borderRadius: 3,
-    marginTop: 8,
+    marginTop: 8
   },
   progressBar: {
     height: '100%',
     backgroundColor: '#4ECDC4',
-    borderRadius: 3,
+    borderRadius: 3
   },
   statsContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginBottom: 30,
+    marginBottom: 30
   },
   statCard: {
     width: '48%',
     backgroundColor: '#f8f8f8',
     padding: 16,
     borderRadius: 12,
-    alignItems: 'center',
+    alignItems: 'center'
   },
   statNumber: {
     fontSize: 24,
     fontWeight: 'bold',
     color: '#333',
-    marginBottom: 4,
+    marginBottom: 4
   },
   statLabel: {
     fontSize: 12,
-    color: '#666',
+    color: '#666'
   },
   section: {
-    marginBottom: 24,
+    marginBottom: 24
   },
   sectionTitle: {
     fontSize: 16,
     fontWeight: 'bold',
     color: '#666',
-    marginBottom: 12,
+    marginBottom: 12
   },
   menuItem: {
     flexDirection: 'row',
     alignItems: 'center',
     paddingVertical: 12,
-    paddingHorizontal: 8,
+    paddingHorizontal: 8
   },
   menuIcon: {
     width: 24,
     height: 24,
     marginRight: 12,
-    tintColor: '#333',
+    tintColor: '#333'
   },
   menuText: {
     fontSize: 16,
-    color: '#333',
+    color: '#333'
   },
   modalOverlay: {
     flex: 1,
     backgroundColor: 'rgba(0, 0, 0, 0.5)',
     justifyContent: 'center',
-    alignItems: 'center',
+    alignItems: 'center'
   },
   modalContent: {
     backgroundColor: '#fff',
@@ -389,46 +411,46 @@ const styles = StyleSheet.create({
     padding: 30,
     alignItems: 'center',
     width: '80%',
-    maxWidth: 400,
+    maxWidth: 400
   },
   modalIcon: {
     width: 60,
     height: 60,
-    marginBottom: 20,
+    marginBottom: 20
   },
   modalText: {
     fontSize: 18,
     fontWeight: '600',
     color: '#333',
-    marginBottom: 30,
+    marginBottom: 30
   },
   modalButtons: {
     flexDirection: 'row',
     gap: 10,
-    width: '100%',
+    width: '100%'
   },
   modalButton: {
     flex: 1,
     paddingVertical: 12,
     borderRadius: 25,
-    alignItems: 'center',
+    alignItems: 'center'
   },
   modalButtonYes: {
-    backgroundColor: '#f0f0f0',
+    backgroundColor: '#f0f0f0'
   },
   modalButtonYesText: {
     fontSize: 14,
     color: '#333',
-    fontWeight: '600',
+    fontWeight: '600'
   },
   modalButtonClose: {
     backgroundColor: '#fff',
     borderWidth: 1,
-    borderColor: '#e0e0e0',
+    borderColor: '#e0e0e0'
   },
   modalButtonCloseText: {
     fontSize: 14,
     color: '#333',
-    fontWeight: '600',
-  },
+    fontWeight: '600'
+  }
 });

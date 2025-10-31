@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, TextInput, Dimensions, Modal } from 'react-native';
 import { Image } from 'expo-image';
 import { router } from 'expo-router';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { SafeAreaView } from 'react-native-safe-area-context';import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 
 const { width } = Dimensions.get('window');
 
@@ -33,108 +33,108 @@ export default function ResetPasswordScreen() {
   };
 
   return (
-    <SafeAreaView style={styles.container}>
-      <View style={styles.content}>
-        
-        <Text style={styles.title}>Reset password</Text>
+    _jsxs(SafeAreaView, { style: styles.container, children: [
+      _jsxs(View, { style: styles.content, children: [
 
-        
-        <View style={styles.inputContainer}>
-          <Image
-            source={require('@/oysloe-assets/Auth/email.png')}
-            style={styles.inputIcon}
-            contentFit="contain"
-          />
-          <TextInput
-            style={styles.input}
-            placeholder="Email Address"
-            placeholderTextColor="#999999"
-            value={email}
-            onChangeText={setEmail}
-            keyboardType="email-address"
-            autoCapitalize="none"
-            autoCorrect={false}
-          />
-        </View>
+        _jsx(Text, { style: styles.title, children: "Reset password" }),
 
-        
-        <Text style={styles.instructionText}>
-          We'll send you a link to the email provided to reset your password.
-        </Text>
 
-        
-        <TouchableOpacity style={styles.submitButton} onPress={handleSubmit}>
-          <Text style={styles.submitButtonText}>Submit</Text>
-        </TouchableOpacity>
+        _jsxs(View, { style: styles.inputContainer, children: [
+          _jsx(Image, {
+            source: require('@/oysloe-assets/Auth/email.png'),
+            style: styles.inputIcon,
+            contentFit: "contain" }
+          ),
+          _jsx(TextInput, {
+            style: styles.input,
+            placeholder: "Email Address",
+            placeholderTextColor: "#999999",
+            value: email,
+            onChangeText: setEmail,
+            keyboardType: "email-address",
+            autoCapitalize: "none",
+            autoCorrect: false }
+          )] }
+        ),
 
-        
-        <Text style={styles.cantLoginText}>Cant Login?</Text>
-        
-        <View style={styles.helpButtonsContainer}>
-          <TouchableOpacity style={styles.helpButton} onPress={handleLogin}>
-            <Text style={styles.helpButtonText}>Login</Text>
-          </TouchableOpacity>
-          
-          <TouchableOpacity style={styles.helpButton} onPress={handleOTPLogin}>
-            <Text style={styles.helpButtonText}>OTP Login</Text>
-          </TouchableOpacity>
-        </View>
 
-        
-        <View style={styles.signUpContainer}>
-          <Text style={styles.signUpText}>Don't have an account ? </Text>
-          <TouchableOpacity onPress={handleSignUp}>
-            <Text style={styles.signUpLink}>Sign up</Text>
-          </TouchableOpacity>
-        </View>
-      </View>
+        _jsx(Text, { style: styles.instructionText, children: "We'll send you a link to the email provided to reset your password." }
 
-      
-      <Modal
-        visible={showPopup}
-        transparent={true}
-        animationType="fade"
-        onRequestClose={handleClosePopup}
-      >
-        <View style={styles.modalOverlay}>
-          <View style={styles.popupContainer}>
-            
-            <Image
-              source={require('@/gifs/mail.gif')}
-              style={styles.popupIcon}
-              contentFit="contain"
-            />
-            
-            
-            <Text style={styles.popupMessage}>Reset link sent to your email</Text>
-            
-            
-            <TouchableOpacity style={styles.closeButton} onPress={handleClosePopup}>
-              <Text style={styles.closeButtonText}>Close</Text>
-            </TouchableOpacity>
-          </View>
-        </View>
-      </Modal>
-    </SafeAreaView>
-  );
+        ),
+
+
+        _jsx(TouchableOpacity, { style: styles.submitButton, onPress: handleSubmit, children:
+          _jsx(Text, { style: styles.submitButtonText, children: "Submit" }) }
+        ),
+
+
+        _jsx(Text, { style: styles.cantLoginText, children: "Cant Login?" }),
+
+        _jsxs(View, { style: styles.helpButtonsContainer, children: [
+          _jsx(TouchableOpacity, { style: styles.helpButton, onPress: handleLogin, children:
+            _jsx(Text, { style: styles.helpButtonText, children: "Login" }) }
+          ),
+
+          _jsx(TouchableOpacity, { style: styles.helpButton, onPress: handleOTPLogin, children:
+            _jsx(Text, { style: styles.helpButtonText, children: "OTP Login" }) }
+          )] }
+        ),
+
+
+        _jsxs(View, { style: styles.signUpContainer, children: [
+          _jsx(Text, { style: styles.signUpText, children: "Don't have an account ? " }),
+          _jsx(TouchableOpacity, { onPress: handleSignUp, children:
+            _jsx(Text, { style: styles.signUpLink, children: "Sign up" }) }
+          )] }
+        )] }
+      ),
+
+
+      _jsx(Modal, {
+        visible: showPopup,
+        transparent: true,
+        animationType: "fade",
+        onRequestClose: handleClosePopup, children:
+
+        _jsx(View, { style: styles.modalOverlay, children:
+          _jsxs(View, { style: styles.popupContainer, children: [
+
+            _jsx(Image, {
+              source: require('@/gifs/mail.gif'),
+              style: styles.popupIcon,
+              contentFit: "contain" }
+            ),
+
+
+            _jsx(Text, { style: styles.popupMessage, children: "Reset link sent to your email" }),
+
+
+            _jsx(TouchableOpacity, { style: styles.closeButton, onPress: handleClosePopup, children:
+              _jsx(Text, { style: styles.closeButtonText, children: "Close" }) }
+            )] }
+          ) }
+        ) }
+      )] }
+    ));
+
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#F8F8F8',
+    backgroundColor: '#F8F8F8'
   },
   content: {
     flex: 1,
     paddingHorizontal: 30,
-    justifyContent: 'center',
+    justifyContent: 'center'
   },
   title: {
     fontSize: 32,
     fontWeight: '500',
     color: '#333333',
     textAlign: 'center',
-    marginBottom: 40,
+    marginBottom: 40
   },
   inputContainer: {
     flexDirection: 'row',
@@ -147,22 +147,22 @@ const styles = StyleSheet.create({
     shadowColor: '#000',
     shadowOffset: {
       width: 0,
-      height: 2,
+      height: 2
     },
     shadowOpacity: 0.1,
     shadowRadius: 4,
-    elevation: 3,
+    elevation: 3
   },
   inputIcon: {
     width: 20,
     height: 20,
     marginRight: 12,
-    tintColor: '#999999',
+    tintColor: '#999999'
   },
   input: {
     flex: 1,
     fontSize: 16,
-    color: '#333333',
+    color: '#333333'
   },
   instructionText: {
     fontSize: 16,
@@ -170,7 +170,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     marginBottom: 30,
     lineHeight: 24,
-    paddingHorizontal: 20,
+    paddingHorizontal: 20
   },
   submitButton: {
     backgroundColor: '#66FF99',
@@ -181,27 +181,27 @@ const styles = StyleSheet.create({
     shadowColor: '#000',
     shadowOffset: {
       width: 0,
-      height: 2,
+      height: 2
     },
     shadowOpacity: 0.1,
     shadowRadius: 4,
-    elevation: 3,
+    elevation: 3
   },
   submitButtonText: {
     color: 'grey',
     fontSize: 18,
-    fontWeight: '600',
+    fontWeight: '600'
   },
   cantLoginText: {
     fontSize: 16,
     color: '#333333',
     textAlign: 'center',
-    marginBottom: 16,
+    marginBottom: 16
   },
   helpButtonsContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginBottom: 40,
+    marginBottom: 40
   },
   helpButton: {
     backgroundColor: '#FFFFFF',
@@ -215,30 +215,30 @@ const styles = StyleSheet.create({
     shadowColor: '#000',
     shadowOffset: {
       width: 0,
-      height: 2,
+      height: 2
     },
     shadowOpacity: 0.1,
     shadowRadius: 4,
-    elevation: 3,
+    elevation: 3
   },
   helpButtonText: {
     color: '#333333',
     fontSize: 14,
-    fontWeight: '500',
+    fontWeight: '500'
   },
   signUpContainer: {
     flexDirection: 'row',
     justifyContent: 'center',
-    alignItems: 'center',
+    alignItems: 'center'
   },
   signUpText: {
     fontSize: 16,
-    color: '#333333',
+    color: '#333333'
   },
   signUpLink: {
     fontSize: 16,
     color: '#333333',
-    fontWeight: '600',
+    fontWeight: '600'
   },
 
   modalOverlay: {
@@ -246,7 +246,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(0, 0, 0, 0.5)',
     justifyContent: 'center',
     alignItems: 'center',
-    paddingHorizontal: 20,
+    paddingHorizontal: 20
   },
   popupContainer: {
     backgroundColor: '#FFFFFF',
@@ -259,16 +259,16 @@ const styles = StyleSheet.create({
     shadowColor: '#000',
     shadowOffset: {
       width: 0,
-      height: 4,
+      height: 4
     },
     shadowOpacity: 0.25,
     shadowRadius: 8,
-    elevation: 8,
+    elevation: 8
   },
   popupIcon: {
     width: 80,
     height: 80,
-    marginBottom: 24,
+    marginBottom: 24
   },
   popupMessage: {
     fontSize: 16,
@@ -276,7 +276,7 @@ const styles = StyleSheet.create({
     color: '#333333',
     textAlign: 'center',
     marginBottom: 24,
-    lineHeight: 22,
+    lineHeight: 22
   },
   closeButton: {
     backgroundColor: '#FFFFFF',
@@ -286,11 +286,11 @@ const styles = StyleSheet.create({
     paddingVertical: 12,
     paddingHorizontal: 24,
     minWidth: 80,
-    alignItems: 'center',
+    alignItems: 'center'
   },
   closeButtonText: {
     fontSize: 16,
     fontWeight: '500',
-    color: '#333333',
-  },
+    color: '#333333'
+  }
 });

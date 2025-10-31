@@ -1,98 +1,98 @@
 import React, { useEffect, useRef } from 'react';
-import { 
-  StyleSheet, 
-  ScrollView, 
-  View, 
-  Text, 
-  TextInput, 
-  TouchableOpacity, 
+import {
+  StyleSheet,
+  ScrollView,
+  View,
+  Text,
+  TextInput,
+  TouchableOpacity,
   FlatList,
   Dimensions,
-  Animated
-} from 'react-native';
+  Animated } from
+'react-native';
 import { Image } from 'expo-image';
 import { router } from 'expo-router';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import { LinearGradient } from 'expo-linear-gradient';
+
+import { LinearGradient } from 'expo-linear-gradient';import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 
 const { width } = Dimensions.get('window');
 
 const categories = [
-  { id: 1, name: 'Electronics', icon: require('@/oysloe-assets/Category icons/electronics.png') },
-  { id: 2, name: 'Furniture', icon: require('@/oysloe-assets/Category icons/furniture.png') },
-  { id: 3, name: 'Vehicles', icon: require('@/oysloe-assets/Category icons/vehicle.png') },
-  { id: 4, name: 'Industry', icon: require('@/oysloe-assets/Category icons/industrial.png') },
-  { id: 5, name: 'Fashion', icon: require('@/oysloe-assets/Category icons/fashion.png') },
-  { id: 6, name: 'Grocery', icon: require('@/oysloe-assets/Category icons/grocery.png') },
-  { id: 7, name: 'Sporting', icon: require('@/oysloe-assets/Category icons/games.png') },
-  { id: 8, name: 'Property', icon: require('@/oysloe-assets/Category icons/property.png') },
-  { id: 9, name: 'Cosmetics', icon: require('@/oysloe-assets/Category icons/cosmetics.png') },
-  { id: 10, name: 'Services', icon: require('@/oysloe-assets/Category icons/services.png') },
-];
+{ id: 1, name: 'Electronics', icon: require('@/oysloe-assets/Category icons/electronics.png') },
+{ id: 2, name: 'Furniture', icon: require('@/oysloe-assets/Category icons/furniture.png') },
+{ id: 3, name: 'Vehicles', icon: require('@/oysloe-assets/Category icons/vehicle.png') },
+{ id: 4, name: 'Industry', icon: require('@/oysloe-assets/Category icons/industrial.png') },
+{ id: 5, name: 'Fashion', icon: require('@/oysloe-assets/Category icons/fashion.png') },
+{ id: 6, name: 'Grocery', icon: require('@/oysloe-assets/Category icons/grocery.png') },
+{ id: 7, name: 'Sporting', icon: require('@/oysloe-assets/Category icons/games.png') },
+{ id: 8, name: 'Property', icon: require('@/oysloe-assets/Category icons/property.png') },
+{ id: 9, name: 'Cosmetics', icon: require('@/oysloe-assets/Category icons/cosmetics.png') },
+{ id: 10, name: 'Services', icon: require('@/oysloe-assets/Category icons/services.png') }];
+
 
 const filters = [
-  { name: 'Electronics', count: '45k+', progress: 0.85 },
-  { name: 'Vehicle', count: '200+', progress: 0.75 },
-  { name: 'Furniture', count: '158+', progress: 0.65 },
-  { name: 'Sporting', count: '100+', progress: 0.55 },
-  { name: 'Fashion', count: '35+', progress: 0.15 },
-];
+{ name: 'Electronics', count: '45k+', progress: 0.85 },
+{ name: 'Vehicle', count: '200+', progress: 0.75 },
+{ name: 'Furniture', count: '158+', progress: 0.65 },
+{ name: 'Sporting', count: '100+', progress: 0.55 },
+{ name: 'Fashion', count: '35+', progress: 0.15 }];
+
 
 const ads = [
-  {
-    id: 1,
-    title: 'Samsung AQ ultra smart...',
-    price: '120 for 6 days',
-    image: require('@/oysloe-assets/Ad images/storey.png'),
-    location: 'Santamaria-kotobabi',
-  },
-  {
-    id: 2,
-    title: 'Samsung AQ ultra smart...',
-    price: '1,670,000',
-    image: require('@/oysloe-assets/Ad images/nice-inside.png'),
-    location: 'Santamaria-kotobabi',
-  },
-  {
-    id: 3,
-    title: 'Samsung galaxy ultra 24...',
-    price: '12 720 65,00',
-    image: require('@/oysloe-assets/Ad images/nice-inside.png'),
-    location: 'Santamaria-kotobabi',
-  },
-  {
-    id: 4,
-    title: 'Samsung AQ ultra smart...',
-    price: '1,670,000',
-    image: require('@/oysloe-assets/Ad images/grey-ocar.png'),
-    location: 'Santamaria-kotobabi',
-  },
-  {
-    id: 5,
-    title: 'Samsung galaxy ultra 24...',
-    price: '12 720 65,00',
-    image: require('@/oysloe-assets/Ad images/3d-car-city-street.jpg'),
-    location: 'Santamaria-kotobabi',
-  },
-  {
-    id: 6,
-    title: 'Samsung AQ ultra smart...',
-    price: '1,670,000',
-    image: require('@/oysloe-assets/Ad images/landscape-nature-scene-tv-appliance-generative-ai.jpg'),
-    location: 'Santamaria-kotobabi',
-  },
-];
+{
+  id: 1,
+  title: 'Samsung AQ ultra smart...',
+  price: '120 for 6 days',
+  image: require('@/oysloe-assets/Ad images/storey.png'),
+  location: 'Santamaria-kotobabi'
+},
+{
+  id: 2,
+  title: 'Samsung AQ ultra smart...',
+  price: '1,670,000',
+  image: require('@/oysloe-assets/Ad images/nice-inside.png'),
+  location: 'Santamaria-kotobabi'
+},
+{
+  id: 3,
+  title: 'Samsung galaxy ultra 24...',
+  price: '12 720 65,00',
+  image: require('@/oysloe-assets/Ad images/nice-inside.png'),
+  location: 'Santamaria-kotobabi'
+},
+{
+  id: 4,
+  title: 'Samsung AQ ultra smart...',
+  price: '1,670,000',
+  image: require('@/oysloe-assets/Ad images/grey-ocar.png'),
+  location: 'Santamaria-kotobabi'
+},
+{
+  id: 5,
+  title: 'Samsung galaxy ultra 24...',
+  price: '12 720 65,00',
+  image: require('@/oysloe-assets/Ad images/3d-car-city-street.jpg'),
+  location: 'Santamaria-kotobabi'
+},
+{
+  id: 6,
+  title: 'Samsung AQ ultra smart...',
+  price: '1,670,000',
+  image: require('@/oysloe-assets/Ad images/landscape-nature-scene-tv-appliance-generative-ai.jpg'),
+  location: 'Santamaria-kotobabi'
+}];
 
-const CircularProgress = ({ progress, size = 50, item }: { progress: number; size?: number; item: any }) => {
+
+const CircularProgress = ({ progress, size = 50, item }) => {
   const animatedValue = useRef(new Animated.Value(0)).current;
   const [isVisible, setIsVisible] = React.useState(false);
 
   const animateProgress = () => {
-    animatedValue.setValue(-90); // Start all arcs from the top of the circle
+    animatedValue.setValue(-90);
     Animated.timing(animatedValue, {
       toValue: progress * 360 - 90,
       duration: 1500,
-      useNativeDriver: true,
+      useNativeDriver: true
     }).start();
   };
 
@@ -108,184 +108,184 @@ const CircularProgress = ({ progress, size = 50, item }: { progress: number; siz
 
   const rotateInterpolate = animatedValue.interpolate({
     inputRange: [0, 360],
-    outputRange: ['0deg', '360deg'],
+    outputRange: ['0deg', '360deg']
   });
 
   return (
-    <View style={[styles.progressContainer, { width: size, height: size }]}>
-      <View style={[styles.progressBackground, { width: size, height: size, borderRadius: size / 2 }]}>
-        {}
-        <View style={styles.progressArcContainer}>
-          <Animated.View 
-            style={[
-              styles.progressArc, 
-              { 
-                width: size, 
-                height: size,
-                borderRadius: size / 2,
-                transform: [{ rotate: rotateInterpolate }]
-              }
-            ]} 
-          />
-        </View>
-        {}
-        <View style={styles.progressContent}>
-          <Text style={styles.progressText}>{item.name}</Text>
-          <Text style={styles.progressCount}>{item.count}</Text>
-        </View>
-      </View>
-    </View>
-  );
+    _jsx(View, { style: [styles.progressContainer, { width: size, height: size }], children:
+      _jsxs(View, { style: [styles.progressBackground, { width: size, height: size, borderRadius: size / 2 }], children: [
+
+        _jsx(View, { style: styles.progressArcContainer, children:
+          _jsx(Animated.View, {
+            style: [
+            styles.progressArc,
+            {
+              width: size,
+              height: size,
+              borderRadius: size / 2,
+              transform: [{ rotate: rotateInterpolate }]
+            }] }
+
+          ) }
+        ),
+
+        _jsxs(View, { style: styles.progressContent, children: [
+          _jsx(Text, { style: styles.progressText, children: item.name }),
+          _jsx(Text, { style: styles.progressCount, children: item.count })] }
+        )] }
+      ) }
+    ));
+
 };
 
 export default function HomeScreen() {
   const [animationKey, setAnimationKey] = React.useState(0);
 
   const resetAnimation = () => {
-    setAnimationKey(prev => prev + 1);
+    setAnimationKey((prev) => prev + 1);
   };
-  const renderCategory = ({ item }: { item: typeof categories[0] }) => (
-    <TouchableOpacity style={styles.categoryItem}>
-      <View style={styles.categoryIconContainer}>
-        <Image source={item.icon} style={styles.categoryIcon} />
-      </View>
-      <Text style={styles.categoryText}>{item.name}</Text>
-    </TouchableOpacity>
+  const renderCategory = ({ item }) =>
+  _jsxs(TouchableOpacity, { style: styles.categoryItem, children: [
+    _jsx(View, { style: styles.categoryIconContainer, children:
+      _jsx(Image, { source: item.icon, style: styles.categoryIcon }) }
+    ),
+    _jsx(Text, { style: styles.categoryText, children: item.name })] }
   );
 
-  const renderFilter = ({ item }: { item: typeof filters[0] }) => (
-    <TouchableOpacity style={styles.filterButton} key={`${item.name}-${animationKey}`}>
-      <CircularProgress progress={item.progress} size={65} item={item} />
-    </TouchableOpacity>
+
+  const renderFilter = ({ item }) =>
+  _jsx(TouchableOpacity, { style: styles.filterButton, children:
+    _jsx(CircularProgress, { progress: item.progress, size: 65, item: item }) }, `${item.name}-${animationKey}`
   );
 
-  const renderAd = ({ item }: { item: typeof ads[0] }) => (
-    <TouchableOpacity 
-      style={styles.adCard}
-      onPress={() => {
-        if (item.id === 5) {
-          router.push('/ad-details');
-        }
-      }}
-    >
-      <Image source={item.image} style={styles.adImage} />
-      <TouchableOpacity style={styles.locationButton}>
-        <Image 
-          source={require('@/oysloe-assets/Ad details screen/map.png')} 
-          style={styles.locationIcon} 
-        />
-        <Text style={styles.locationText}>{item.location}</Text>
-      </TouchableOpacity>
-      <Text style={styles.adTitle} numberOfLines={2}>{item.title}</Text>
-      <Text style={styles.adPrice}>¢ {item.price}</Text>
-    </TouchableOpacity>
+
+  const renderAd = ({ item }) =>
+  _jsxs(TouchableOpacity, {
+    style: styles.adCard,
+    onPress: () => {
+      if (item.id === 5) {
+        router.push('/ad-details');
+      }
+    }, children: [
+
+    _jsx(Image, { source: item.image, style: styles.adImage }),
+    _jsxs(TouchableOpacity, { style: styles.locationButton, children: [
+      _jsx(Image, {
+        source: require('@/oysloe-assets/Ad details screen/map.png'),
+        style: styles.locationIcon }
+      ),
+      _jsx(Text, { style: styles.locationText, children: item.location })] }
+    ),
+    _jsx(Text, { style: styles.adTitle, numberOfLines: 2, children: item.title }),
+    _jsxs(Text, { style: styles.adPrice, children: ["\xA2 ", item.price] })] }
   );
+
 
   React.useEffect(() => {
     const interval = setInterval(() => {
-      setAnimationKey(prev => prev + 1);
-    }, 8000); // Re-animate every 8 seconds
-    
+      setAnimationKey((prev) => prev + 1);
+    }, 8000);
+
     return () => clearInterval(interval);
   }, []);
 
   return (
-    <View style={styles.container}>
-      <ScrollView style={styles.scrollView} showsVerticalScrollIndicator={false}>
-        {}
-        <View style={styles.header}>
-          <Text style={styles.appTitle}>Oysloe</Text>
-          <LinearGradient
-            colors={['#FF6B6B', '#4ECDC4', '#45B7D1', '#96CEB4', '#FFEAA7', '#DDA0DD']}
-            start={{ x: 0, y: 0 }}
-            end={{ x: 1, y: 0 }}
-            style={styles.searchGradientBorder}
-          >
-            <View style={styles.searchContainer}>
-        <Image
-                source={require('@/oysloe-assets/Ad details screen/search.png')} 
-                style={styles.searchIcon} 
-              />
-              <TextInput
-                style={styles.searchInput}
-                placeholder="Search anything up for good"
-                placeholderTextColor="#999"
-              />
-            </View>
-          </LinearGradient>
-        </View>
+    _jsx(View, { style: styles.container, children:
+      _jsxs(ScrollView, { style: styles.scrollView, showsVerticalScrollIndicator: false, children: [
 
-        {}
-        <View style={styles.categoriesContainer}>
-          <FlatList
-            data={categories}
-            renderItem={renderCategory}
-            keyExtractor={(item) => item.id.toString()}
-            numColumns={4}
-            scrollEnabled={false}
-            contentContainerStyle={styles.categoriesGrid}
-          />
-        </View>
+        _jsxs(View, { style: styles.header, children: [
+          _jsx(Text, { style: styles.appTitle, children: "Oysloe" }),
+          _jsx(LinearGradient, {
+            colors: ['#FF6B6B', '#4ECDC4', '#45B7D1', '#96CEB4', '#FFEAA7', '#DDA0DD'],
+            start: { x: 0, y: 0 },
+            end: { x: 1, y: 0 },
+            style: styles.searchGradientBorder, children:
 
-        {}
-        <View style={styles.exploreSection}>
-          <View style={styles.exploreHeader}>
-            <Text style={styles.exploreTitle}>Explore Ads</Text>
-            <TouchableOpacity style={styles.showAllButton}>
-              <Text style={styles.showAllText}>Show All</Text>
-            </TouchableOpacity>
-          </View>
+            _jsxs(View, { style: styles.searchContainer, children: [
+              _jsx(Image, {
+                source: require('@/oysloe-assets/Ad details screen/search.png'),
+                style: styles.searchIcon }
+              ),
+              _jsx(TextInput, {
+                style: styles.searchInput,
+                placeholder: "Search anything up for good",
+                placeholderTextColor: "#999" }
+              )] }
+            ) }
+          )] }
+        ),
 
-          {}
-          <FlatList
-            data={filters}
-            renderItem={renderFilter}
-            keyExtractor={(item, index) => index.toString()}
-            horizontal
-            showsHorizontalScrollIndicator={false}
-            style={styles.filtersContainer}
-            contentContainerStyle={styles.filtersContent}
-          />
 
-          {}
-          <FlatList
-            data={ads}
-            renderItem={renderAd}
-            keyExtractor={(item) => item.id.toString()}
-            numColumns={2}
-            scrollEnabled={false}
-            contentContainerStyle={styles.adsGrid}
-            columnWrapperStyle={styles.adRow}
-          />
-        </View>
-      </ScrollView>
-    </View>
-  );
+        _jsx(View, { style: styles.categoriesContainer, children:
+          _jsx(FlatList, {
+            data: categories,
+            renderItem: renderCategory,
+            keyExtractor: (item) => item.id.toString(),
+            numColumns: 4,
+            scrollEnabled: false,
+            contentContainerStyle: styles.categoriesGrid }
+          ) }
+        ),
+
+
+        _jsxs(View, { style: styles.exploreSection, children: [
+          _jsxs(View, { style: styles.exploreHeader, children: [
+            _jsx(Text, { style: styles.exploreTitle, children: "Explore Ads" }),
+            _jsx(TouchableOpacity, { style: styles.showAllButton, children:
+              _jsx(Text, { style: styles.showAllText, children: "Show All" }) }
+            )] }
+          ),
+
+
+          _jsx(FlatList, {
+            data: filters,
+            renderItem: renderFilter,
+            keyExtractor: (item, index) => index.toString(),
+            horizontal: true,
+            showsHorizontalScrollIndicator: false,
+            style: styles.filtersContainer,
+            contentContainerStyle: styles.filtersContent }
+          ),
+
+
+          _jsx(FlatList, {
+            data: ads,
+            renderItem: renderAd,
+            keyExtractor: (item) => item.id.toString(),
+            numColumns: 2,
+            scrollEnabled: false,
+            contentContainerStyle: styles.adsGrid,
+            columnWrapperStyle: styles.adRow }
+          )] }
+        )] }
+      ) }
+    ));
+
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
+    backgroundColor: '#fff'
   },
   scrollView: {
-    flex: 1,
+    flex: 1
   },
   header: {
     paddingHorizontal: 20,
     paddingTop: 100,
-    paddingBottom: 30,
+    paddingBottom: 30
   },
   appTitle: {
     fontSize: 46,
     fontWeight: 'medium',
     color: '#595757ff',
     textAlign: 'center',
-    marginBottom: 20,
+    marginBottom: 20
   },
   searchGradientBorder: {
     borderRadius: 25,
-    padding: 2,
+    padding: 2
   },
   searchContainer: {
     flexDirection: 'row',
@@ -293,30 +293,30 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     borderRadius: 23,
     paddingHorizontal: 15,
-    paddingVertical: 12,
+    paddingVertical: 12
   },
   searchIcon: {
     width: 20,
     height: 20,
     marginRight: 10,
-    tintColor: '#666',
+    tintColor: '#666'
   },
   searchInput: {
     flex: 1,
     fontSize: 16,
-    color: '#333',
+    color: '#333'
   },
   categoriesContainer: {
     paddingHorizontal: 20,
-    marginBottom: 30,
+    marginBottom: 30
   },
   categoriesGrid: {
-    justifyContent: 'space-between',
+    justifyContent: 'space-between'
   },
   categoryItem: {
     width: (width - 60) / 4,
     alignItems: 'center',
-    marginBottom: 20,
+    marginBottom: 20
   },
   categoryIconContainer: {
     width: 60,
@@ -329,60 +329,60 @@ const styles = StyleSheet.create({
     shadowColor: '#000',
     shadowOffset: {
       width: 0,
-      height: 2,
+      height: 2
     },
     shadowOpacity: 0.1,
     shadowRadius: 4,
-    elevation: 3,
+    elevation: 3
   },
   categoryIcon: {
     width: 30,
-    height: 30,
+    height: 30
   },
   categoryText: {
     fontSize: 12,
     color: '#666',
-    textAlign: 'center',
+    textAlign: 'center'
   },
   exploreSection: {
     paddingHorizontal: 20,
-    paddingBottom: 100,
+    paddingBottom: 100
   },
   exploreHeader: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginBottom: 15,
+    marginBottom: 15
   },
   exploreTitle: {
     fontSize: 18,
     fontWeight: 'bold',
-    color: '#333',
+    color: '#333'
   },
   showAllButton: {
     backgroundColor: '#f0f0f0',
     paddingHorizontal: 12,
     paddingVertical: 6,
-    borderRadius: 15,
+    borderRadius: 15
   },
   showAllText: {
     fontSize: 12,
-    color: '#666',
+    color: '#666'
   },
   filtersContainer: {
-    marginBottom: 20,
+    marginBottom: 20
   },
   filtersContent: {
-    paddingRight: 20,
+    paddingRight: 20
   },
   filterButton: {
     alignItems: 'center',
     marginRight: 8,
-    width: 65,
+    width: 65
   },
   progressContainer: {
     justifyContent: 'center',
-    alignItems: 'center',
+    alignItems: 'center'
   },
   progressBackground: {
     backgroundColor: '#fff',
@@ -390,14 +390,14 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     position: 'relative',
     borderWidth: 3,
-    borderColor: '#e0e0e0',
+    borderColor: '#e0e0e0'
   },
   progressArcContainer: {
     position: 'absolute',
     width: '100%',
     height: '100%',
     justifyContent: 'center',
-    alignItems: 'center',
+    alignItems: 'center'
   },
   progressArc: {
     position: 'absolute',
@@ -406,34 +406,34 @@ const styles = StyleSheet.create({
     borderTopColor: '#333',
     borderRightColor: 'transparent',
     borderBottomColor: 'transparent',
-    borderLeftColor: 'transparent',
+    borderLeftColor: 'transparent'
   },
   progressContent: {
     position: 'absolute',
     justifyContent: 'center',
     alignItems: 'center',
-    zIndex: 1,
+    zIndex: 1
   },
   progressText: {
     fontSize: 9,
     color: '#333',
     fontWeight: 'bold',
     textAlign: 'center',
-    lineHeight: 10,
+    lineHeight: 10
   },
   progressCount: {
     fontSize: 8,
     color: '#666',
     fontWeight: '500',
     textAlign: 'center',
-    lineHeight: 9,
+    lineHeight: 9
   },
   adsGrid: {
-    paddingBottom: 20,
+    paddingBottom: 20
   },
   adRow: {
     justifyContent: 'space-between',
-    marginBottom: 15,
+    marginBottom: 15
   },
   adCard: {
     width: (width - 50) / 2,
@@ -442,34 +442,34 @@ const styles = StyleSheet.create({
     shadowColor: '#000',
     shadowOffset: {
       width: 0,
-      height: 2,
+      height: 2
     },
     shadowOpacity: 0.1,
     shadowRadius: 3,
-    elevation: 3,
+    elevation: 3
   },
   adImage: {
     width: '100%',
     height: 120,
     borderTopLeftRadius: 10,
-    borderTopRightRadius: 10,
+    borderTopRightRadius: 10
   },
   locationButton: {
     flexDirection: 'row',
     alignItems: 'center',
     paddingHorizontal: 10,
-    paddingVertical: 6,
+    paddingVertical: 6
   },
   locationIcon: {
     width: 12,
     height: 12,
     marginRight: 4,
-    tintColor: '#666',
+    tintColor: '#666'
   },
   locationText: {
     fontSize: 10,
     color: '#666',
-    fontWeight: '400',
+    fontWeight: '400'
   },
   adTitle: {
     fontSize: 14,
@@ -477,13 +477,13 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     paddingTop: 4,
     paddingBottom: 4,
-    fontWeight: '500',
+    fontWeight: '500'
   },
   adPrice: {
     fontSize: 12,
     color: '#666',
     paddingHorizontal: 10,
     paddingBottom: 10,
-    fontWeight: '600',
-  },
+    fontWeight: '600'
+  }
 });

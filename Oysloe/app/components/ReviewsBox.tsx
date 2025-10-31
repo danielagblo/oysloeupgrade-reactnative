@@ -1,44 +1,44 @@
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { ReviewStars } from './ReviewStars';
-import { StarIcon } from './StarIcon';
+import { StarIcon } from './StarIcon';import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 
-const ReviewsBox = ({ aggregatedReviews }) => {
-  const ratingBreakdown = aggregatedReviews?.ratingBreakdown || {};
-  const total = Object.values(ratingBreakdown).reduce((a, b) => a + b, 0);
+const ReviewsBox = ({ aggregatedReviews }: any) => {
+  const ratingBreakdown = (aggregatedReviews?.ratingBreakdown || {}) as Record<string, number>;
+  const total = Object.values(ratingBreakdown).reduce((a, b) => a + (Number(b) || 0), 0);
 
   return (
-    <View style={styles.reviewsCard}>
-      {/* Average rating, stars, and review count centered */}
-      <Text style={styles.avgNumber}>{aggregatedReviews?.averageRating?.toFixed(1) || '0.0'}</Text>
-      <View style={{ marginVertical: 6 }}>
-        <ReviewStars
-          count={Math.round(aggregatedReviews?.averageRating || 0)}
-          bgColor="transparent"
-          offColor="#d9d9d9"
-        />
-      </View>
-      <Text style={styles.revCount}>{aggregatedReviews?.totalReviews || 0} Reviews</Text>
-      {/* Ratings breakdown bars */}
-      <View style={styles.breakdownCol}>
-        {[5, 4, 3, 2, 1].map((star) => {
-          const count = ratingBreakdown[star] || 0;
+    _jsxs(View, { style: styles.reviewsCard, children: [
+
+      _jsx(Text, { style: styles.avgNumber, children: aggregatedReviews?.averageRating?.toFixed(1) || '0.0' }),
+      _jsx(View, { style: { marginVertical: 6 }, children:
+        _jsx(ReviewStars, {
+          count: Math.round(aggregatedReviews?.averageRating || 0),
+          bgColor: "transparent",
+          offColor: "#d9d9d9" }
+        ) }
+      ),
+      _jsxs(Text, { style: styles.revCount, children: [aggregatedReviews?.totalReviews || 0, " Reviews"] }),
+
+      _jsx(View, { style: styles.breakdownCol, children:
+          [5, 4, 3, 2, 1].map((star) => {
+          const count = Number(ratingBreakdown[String(star)] || 0);
           const percent = total ? (count / total) * 100 : 0;
           return (
-            <View key={star} style={styles.barRow}>
-              <StarIcon color="#1a2235" size={18} />
-              <Text style={styles.starLabel}>{star}</Text>
-              <View style={styles.barBg}>
-                <View style={[styles.barFill, { width: `${percent}%` }]} />
-              </View>
-              {/* Omit percent text for extra clean look, or uncomment to show percentage */}
-              {/* <Text style={styles.percentText}>{percent.toFixed(0)}%</Text> */}
-            </View>
-          );
-        })}
-      </View>
-    </View>
-  );
+            _jsxs(View, { style: styles.barRow, children: [
+              _jsx(StarIcon, { color: "#1a2235", size: 18 }),
+              _jsx(Text, { style: styles.starLabel, children: star }),
+              _jsx(View, { style: styles.barBg, children:
+                _jsx(View, { style: [styles.barFill, { width: `${percent}%` }] }) }
+              )] }, star
+
+
+            ));
+
+        }) }
+      )] }
+    ));
+
 };
 
 const styles = StyleSheet.create({
@@ -53,7 +53,7 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.07,
     shadowRadius: 6,
     elevation: 1,
-    width: '100%',
+    width: '100%'
   },
   avgNumber: {
     fontSize: 40,
@@ -61,7 +61,7 @@ const styles = StyleSheet.create({
     color: '#222b37',
     textAlign: 'center',
     marginBottom: 1,
-    letterSpacing: -0.5,
+    letterSpacing: -0.5
   },
   revCount: {
     fontSize: 17,
@@ -69,20 +69,20 @@ const styles = StyleSheet.create({
     marginTop: 7,
     marginBottom: 16,
     textAlign: 'center',
-    fontWeight: '500',
+    fontWeight: '500'
   },
   breakdownCol: {
     width: '100%',
     flexDirection: 'column',
     justifyContent: 'center',
     marginTop: 2,
-    gap: 8,
+    gap: 8
   },
   barRow: {
     flexDirection: 'row',
     alignItems: 'center',
     marginBottom: 10,
-    minHeight: 23,
+    minHeight: 23
   },
   starLabel: {
     fontSize: 17,
@@ -91,7 +91,7 @@ const styles = StyleSheet.create({
     width: 22,
     textAlign: 'left',
     marginLeft: 2,
-    marginRight: 2,
+    marginRight: 2
   },
   barBg: {
     flex: 1,
@@ -100,7 +100,7 @@ const styles = StyleSheet.create({
     borderRadius: 30,
     marginHorizontal: 13,
     overflow: 'hidden',
-    position: 'relative',
+    position: 'relative'
   },
   barFill: {
     backgroundColor: '#233E83',
@@ -108,7 +108,7 @@ const styles = StyleSheet.create({
     top: 0,
     height: '100%',
     borderRadius: 30,
-    position: 'absolute',
+    position: 'absolute'
   },
   percentText: {
     fontSize: 13,
@@ -116,8 +116,8 @@ const styles = StyleSheet.create({
     fontWeight: '700',
     color: '#234',
     marginLeft: 3,
-    textAlign: 'right',
-  },
+    textAlign: 'right'
+  }
 });
 
 export default ReviewsBox;

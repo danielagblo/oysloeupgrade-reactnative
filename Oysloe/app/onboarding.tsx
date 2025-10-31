@@ -4,27 +4,27 @@ import { Image } from 'expo-image';
 import { router } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Animated, { useSharedValue, useAnimatedStyle, withTiming, runOnJS } from 'react-native-reanimated';
-import { GestureDetector, Gesture } from 'react-native-gesture-handler';
+import { GestureDetector, Gesture } from 'react-native-gesture-handler';import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 
 const { width, height } = Dimensions.get('window');
 
 const onboardingData = [
-  {
-    gif: require('@/gifs/onboarding1.gif'),
-    title: 'User Safety\nGuarantee',
-    description: 'Buyers and sellers undergo strict checks and verification to ensure authenticity and reliability'
-  },
-  {
-    gif: require('@/gifs/onboarding2.gif'),
-    title: 'Scale you\nto Success',
-    description: 'Watch your business grow with our designed marketing tools, and automated processes.'
-  },
-  {
-    gif: require('@/gifs/onboarding3.gif'),
-    title: 'Your journey\nbegins now',
-    description: 'Optimized for all business owners with seamless experience for everyone'
-  }
-];
+{
+  gif: require('@/gifs/onboarding1.gif'),
+  title: 'User Safety\nGuarantee',
+  description: 'Buyers and sellers undergo strict checks and verification to ensure authenticity and reliability'
+},
+{
+  gif: require('@/gifs/onboarding2.gif'),
+  title: 'Scale you\nto Success',
+  description: 'Watch your business grow with our designed marketing tools, and automated processes.'
+},
+{
+  gif: require('@/gifs/onboarding3.gif'),
+  title: 'Your journey\nbegins now',
+  description: 'Optimized for all business owners with seamless experience for everyone'
+}];
+
 
 export default function OnboardingScreen() {
   const [currentStep, setCurrentStep] = useState(0);
@@ -61,57 +61,57 @@ export default function OnboardingScreen() {
 
   const animatedStyle = useAnimatedStyle(() => {
     return {
-      opacity: opacity.value,
+      opacity: opacity.value
     };
   });
 
   const currentData = onboardingData[currentStep];
 
   return (
-    <SafeAreaView style={styles.container}>
-      <GestureDetector gesture={panGesture}>
-        <View style={styles.content}>
-          <Animated.View style={[styles.screenContainer, animatedStyle]}>
-            <View style={styles.animationContainer}>
-              <Image source={currentData.gif} style={styles.animation} contentFit="contain" />
-            </View>
+    _jsx(SafeAreaView, { style: styles.container, children:
+      _jsx(GestureDetector, { gesture: panGesture, children:
+        _jsx(View, { style: styles.content, children:
+          _jsxs(Animated.View, { style: [styles.screenContainer, animatedStyle], children: [
+            _jsx(View, { style: styles.animationContainer, children:
+              _jsx(Image, { source: currentData.gif, style: styles.animation, contentFit: "contain" }) }
+            ),
 
-            <View style={styles.textContainer}>
-              <Text style={styles.title}>{currentData.title}</Text>
-              <Text style={styles.description}>{currentData.description}</Text>
+            _jsxs(View, { style: styles.textContainer, children: [
+              _jsx(Text, { style: styles.title, children: currentData.title }),
+              _jsx(Text, { style: styles.description, children: currentData.description }),
 
-              <View style={styles.paginationContainer}>
-                {onboardingData.map((_, dotIndex) => (
-                  <View key={dotIndex} style={[styles.dot, dotIndex === currentStep && styles.activeDot]} />
-                ))}
-              </View>
+              _jsx(View, { style: styles.paginationContainer, children:
+                onboardingData.map((_, dotIndex) =>
+                _jsx(View, { style: [styles.dot, dotIndex === currentStep && styles.activeDot] }, dotIndex)
+                ) }
+              ),
 
-              <TouchableOpacity style={styles.button} onPress={handleNext}>
-                <Text style={styles.buttonText}>{currentStep === onboardingData.length - 1 ? 'Get started' : 'Next'}</Text>
-              </TouchableOpacity>
-            </View>
-          </Animated.View>
-        </View>
-      </GestureDetector>
-    </SafeAreaView>
-  );
+              _jsx(TouchableOpacity, { style: styles.button, onPress: handleNext, children:
+                _jsx(Text, { style: styles.buttonText, children: currentStep === onboardingData.length - 1 ? 'Get started' : 'Next' }) }
+              )] }
+            )] }
+          ) }
+        ) }
+      ) }
+    ));
+
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: '#FFFFFF'
   },
   content: {
     flex: 1,
     justifyContent: 'center',
-    alignItems: 'center',
+    alignItems: 'center'
   },
   screenContainer: {
     width: '100%',
     height: '100%',
     justifyContent: 'center',
-    alignItems: 'center',
+    alignItems: 'center'
   },
   animationContainer: {
     flex: 0.5,
@@ -119,11 +119,11 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     paddingHorizontal: 20,
-    paddingBottom: 20,
+    paddingBottom: 20
   },
   animation: {
     width: width,
-    height: height * 0.45,
+    height: height * 0.45
   },
   textContainer: {
     flex: 0.5,
@@ -131,7 +131,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 40,
     alignItems: 'center',
     justifyContent: 'space-between',
-    paddingBottom: 40,
+    paddingBottom: 40
   },
   title: {
     fontSize: 32,
@@ -139,7 +139,7 @@ const styles = StyleSheet.create({
     color: '#333333',
     textAlign: 'center',
     lineHeight: 38,
-    marginBottom: 20,
+    marginBottom: 20
   },
   description: {
     fontSize: 16,
@@ -147,23 +147,23 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     lineHeight: 24,
     marginBottom: 30,
-    paddingHorizontal: 20,
+    paddingHorizontal: 20
   },
   paginationContainer: {
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
-    marginBottom: 30,
+    marginBottom: 30
   },
   dot: {
     width: 8,
     height: 8,
     borderRadius: 4,
     backgroundColor: '#E0E0E0',
-    marginHorizontal: 4,
+    marginHorizontal: 4
   },
   activeDot: {
-    backgroundColor: '#333333',
+    backgroundColor: '#333333'
   },
   button: {
     backgroundColor: '#F5F5F5',
@@ -171,11 +171,11 @@ const styles = StyleSheet.create({
     paddingHorizontal: 40,
     borderRadius: 8,
     minWidth: 200,
-    alignItems: 'center',
+    alignItems: 'center'
   },
   buttonText: {
     fontSize: 16,
     fontWeight: '600',
-    color: '#333333',
-  },
+    color: '#333333'
+  }
 });
