@@ -1,16 +1,16 @@
 import React, { useState, useRef } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, TextInput, Dimensions, StatusBar, ScrollView, KeyboardAvoidingView, Platform, Modal } from 'react-native';
 
-import { router } from 'expo-router';
+import { useRouter, Stack } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { Stack } from 'expo-router';import { jsx as _jsx, jsxs as _jsxs, Fragment as _Fragment } from "react/jsx-runtime";
 
 const { width } = Dimensions.get('window');
 
 export default function OTPLoginScreen() {
   const [otp, setOtp] = useState(['', '', '', '', '', '']);
   const [showResendPopup, setShowResendPopup] = useState(false);
-  const inputRefs = useRef([]);
+  const router = useRouter();
+  const inputRefs = useRef<any[]>([]);
 
   const handleResend = () => {
     console.log('Resend OTP');
@@ -22,7 +22,7 @@ export default function OTPLoginScreen() {
     setShowResendPopup(false);
   };
 
-  const handleOtpChange = (value, index) => {
+  const handleOtpChange = (value: string, index: number) => {
     const newOtp = [...otp];
     newOtp[index] = value;
     setOtp(newOtp);
@@ -33,10 +33,9 @@ export default function OTPLoginScreen() {
     }
   };
 
-  const handleKeyPress = (key, index) => {
-
+  const handleKeyPress = (key: string, index: number) => {
     if (key === 'Backspace' && !otp[index] && index > 0) {
-      inputRefs.current[index - 1]?.focus();
+      inputRefs.current[index - 1]?.focus?.();
     }
   };
 
@@ -57,119 +56,99 @@ export default function OTPLoginScreen() {
   };
 
   return (
-    _jsxs(_Fragment, { children: [
-      _jsx(Stack.Screen, { options: { headerShown: false } }),
-      _jsx(StatusBar, { hidden: true }),
-      _jsx(SafeAreaView, { style: styles.container, children:
-        _jsx(KeyboardAvoidingView, {
-          style: styles.keyboardAvoidingView,
-          behavior: Platform.OS === 'ios' ? 'padding' : 'height',
-          keyboardVerticalOffset: Platform.OS === 'ios' ? 0 : 20, children:
+    <>
+      <Stack.Screen options={{ headerShown: false }} />
+      <StatusBar hidden />
+      <SafeAreaView style={styles.container}>
+        <KeyboardAvoidingView
+          style={styles.keyboardAvoidingView}
+          behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+          keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : 20}
+        >
+          <ScrollView
+            style={styles.scrollView}
+            contentContainerStyle={styles.scrollContent}
+            keyboardShouldPersistTaps="handled"
+            showsVerticalScrollIndicator={false}
+          >
+            <Text style={styles.title}>OTP Login</Text>
 
-          _jsxs(ScrollView, {
-            style: styles.scrollView,
-            contentContainerStyle: styles.scrollContent,
-            keyboardShouldPersistTaps: "handled",
-            showsVerticalScrollIndicator: false, children: [
+            <View style={styles.otpContainer}>
+              {otp.map((digit, index) => (
+                <TextInput
+                  key={index}
+                  ref={(ref) => {
+                    if (ref) inputRefs.current[index] = ref;
+                  }}
+                  style={styles.otpBox}
+                  value={digit}
+                  onChangeText={(value) => handleOtpChange(value, index)}
+                  onKeyPress={(e) => handleKeyPress(e.nativeEvent.key, index)}
+                  keyboardType="numeric"
+                  maxLength={1}
+                  textAlign="center"
+                  autoCapitalize="none"
+                  autoCorrect={false}
+                />
+              ))}
+            </View>
 
+            <Text style={styles.instructionText}>
+              We'll send a verification code to the number if it's being in our system
+            </Text>
 
-            _jsx(Text, { style: styles.title, children: "OTP Login" }),
+            <TouchableOpacity
+              style={[styles.resendButton, !isOtpComplete() && styles.resendButtonDisabled]}
+              onPress={handleResend}
+              disabled={!isOtpComplete()}
+            >
+              <Text style={[styles.resendButtonText, !isOtpComplete() && styles.resendButtonTextDisabled]}>
+                Resend
+              </Text>
+            </TouchableOpacity>
 
+            <Text style={styles.cantLoginText}>Cant Login?</Text>
 
-            _jsx(View, { style: styles.otpContainer, children:
-              otp.map((digit, index) =>
-              _jsx(TextInput, {
+            <View style={styles.helpButtonsContainer}>
+              <TouchableOpacity style={styles.helpButton} onPress={handlePasswordReset}>
+                <Text style={styles.helpButtonText}>Password Reset</Text>
+              </TouchableOpacity>
 
-                ref: (ref) => {
-                  if (ref) {
-                    inputRefs.current[index] = ref;
-                  }
-                },
-                style: styles.otpBox,
-                value: digit,
-                onChangeText: (value) => handleOtpChange(value, index),
-                onKeyPress: ({ nativeEvent }) => handleKeyPress(nativeEvent.key, index),
-                keyboardType: "numeric",
-                maxLength: 1,
-                textAlign: "center",
-                autoCapitalize: "none",
-                autoCorrect: false }, index
-              )
-              ) }
-            ),
+              <TouchableOpacity style={styles.helpButton} onPress={handleLogin}>
+                <Text style={styles.helpButtonText}>Login</Text>
+              </TouchableOpacity>
+            </View>
 
+            <View style={styles.signUpContainer}>
+              <Text style={styles.signUpText}>Don't have an account ? </Text>
+              <TouchableOpacity onPress={handleSignUp}>
+                <Text style={styles.signUpLink}>Sign up</Text>
+              </TouchableOpacity>
+            </View>
+          </ScrollView>
+        </KeyboardAvoidingView>
+      </SafeAreaView>
 
-            _jsx(Text, { style: styles.instructionText, children: "We'll send a verification code to the number if it's being in our system" }
+      <Modal visible={showResendPopup} transparent animationType="fade" onRequestClose={handleCloseResendPopup}>
+        <View style={styles.modalOverlay}>
+          <View style={styles.popupContainer}>
+            <View style={styles.successIconContainer}>
+              <Text style={styles.successIcon}>✓</Text>
+            </View>
 
-            ),
+            <Text style={styles.popupTitle}>OTP Resent Successfully!</Text>
+            <Text style={styles.popupMessage}>
+              A new verification code has been sent to your registered phone number.
+            </Text>
 
-
-            _jsx(TouchableOpacity, {
-              style: [
-              styles.resendButton,
-              !isOtpComplete() && styles.resendButtonDisabled],
-
-              onPress: handleResend,
-              disabled: !isOtpComplete(), children:
-
-              _jsx(Text, { style: [
-                styles.resendButtonText,
-                !isOtpComplete() && styles.resendButtonTextDisabled], children:
-                "Resend" }) }
-            ),
-
-
-            _jsx(Text, { style: styles.cantLoginText, children: "Cant Login?" }),
-
-            _jsxs(View, { style: styles.helpButtonsContainer, children: [
-              _jsx(TouchableOpacity, { style: styles.helpButton, onPress: handlePasswordReset, children:
-                _jsx(Text, { style: styles.helpButtonText, children: "Password Reset" }) }
-              ),
-
-              _jsx(TouchableOpacity, { style: styles.helpButton, onPress: handleLogin, children:
-                _jsx(Text, { style: styles.helpButtonText, children: "Login" }) }
-              )] }
-            ),
-
-
-            _jsxs(View, { style: styles.signUpContainer, children: [
-              _jsx(Text, { style: styles.signUpText, children: "Don't have an account ? " }),
-              _jsx(TouchableOpacity, { onPress: handleSignUp, children:
-                _jsx(Text, { style: styles.signUpLink, children: "Sign up" }) }
-              )] }
-            )] }
-          ) }
-        ) }
-      ),
-
-
-      _jsx(Modal, {
-        visible: showResendPopup,
-        transparent: true,
-        animationType: "fade",
-        onRequestClose: handleCloseResendPopup, children:
-
-        _jsx(View, { style: styles.modalOverlay, children:
-          _jsxs(View, { style: styles.popupContainer, children: [
-
-            _jsx(View, { style: styles.successIconContainer, children:
-              _jsx(Text, { style: styles.successIcon, children: "\u2713" }) }
-            ),
-
-
-            _jsx(Text, { style: styles.popupTitle, children: "OTP Resent Successfully!" }),
-            _jsx(Text, { style: styles.popupMessage, children: "A new verification code has been sent to your registered phone number." }
-
-            ),
-
-
-            _jsx(TouchableOpacity, { style: styles.closeButton, onPress: handleCloseResendPopup, children:
-              _jsx(Text, { style: styles.closeButtonText, children: "Close" }) }
-            )] }
-          ) }
-        ) }
-      )] }
-    ));
+            <TouchableOpacity style={styles.closeButton} onPress={handleCloseResendPopup}>
+              <Text style={styles.closeButtonText}>Close</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
+    </>
+  );
 
 }
 

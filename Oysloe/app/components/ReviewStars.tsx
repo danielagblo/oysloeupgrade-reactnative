@@ -23,6 +23,8 @@ export const ReviewStars = ({
 
 };
 
+export default ReviewStars;
+
 const styles = StyleSheet.create({
   reviewContainer: {
     backgroundColor: '#d9d9d9',

@@ -40,8 +40,10 @@ export default function AdDetailsScreen() {
   }
 
   function onQuickQuestion(q: string) {
-    setChatMessages([...chatMessages, { author: 'me', text: q }]);
+    setChatInput(q);
   }
+
+  // Voice input disabled for Expo Go; keeping mic button visual-only
 
   const handleBack = () => {
     router.back();
@@ -292,7 +294,10 @@ export default function AdDetailsScreen() {
 
 
         _jsxs(View, { style: styles.sectionCard, children: [
-          _jsx(Text, { style: styles.sectionTitle, children: "Quick Chat" }),
+          _jsxs(View, { style: { flexDirection: 'row', alignItems: 'center', marginBottom: 12 }, children: [
+            _jsx(Image, { source: require('@/oysloe-assets/Ad details screen/quick chat.png'), style: { width: 18, height: 18, marginRight: 8 } }),
+            _jsx(Text, { style: styles.sectionTitle, children: "Quick Chat" })] }
+          ),
 
 
           _jsx(View, { style: { maxHeight: 150, minHeight: 40, marginBottom: 7 }, children:
@@ -305,7 +310,12 @@ export default function AdDetailsScreen() {
 
 
           _jsx(View, { style: styles.quickChatQuestions, children:
-            ["Is this original?", "Do you have delivery?", "Can you confirm the condition?"].map((q, index) =>
+            [
+              "Is this original?",
+              "Do you have delivery?",
+              "Can you confirm the condition?",
+              "Do you have delivery?"
+            ].map((q, index) =>
             _jsx(TouchableOpacity, { style: styles.quickChatQuestionBtn, onPress: () => onQuickQuestion(q), children:
               _jsx(Text, { style: styles.quickChatQuestionText, children: q }) }, q + index
             )
@@ -330,18 +340,19 @@ export default function AdDetailsScreen() {
             _jsx(View, { style: { width: 52, alignItems: 'center', marginLeft: 10 }, children:
               _jsx(TouchableOpacity, { style: { width: 48, height: 48, backgroundColor: '#fff', borderRadius: 16, justifyContent: 'center', alignItems: 'center', borderWidth: 1, borderColor: '#dbe3ea' }, children:
 
-                _jsx(RNImage, { source: require('@/oysloe-assets/Ad details screen/quick chat.png'), style: { width: 23, height: 23 } }) }
+                _jsx(RNImage, { source: require('@/oysloe-assets/Ad details screen/Microphone.png'), style: { width: 20, height: 20 } }) }
               ) }
             )] }
           ),
 
 
           _jsxs(View, { style: styles.securityMessageRow, children: [
-            _jsx(RNImage, { source: require('@/oysloe-assets/Ad details screen/shield.png'), style: styles.securityIcon }),
-            _jsx(Text, { style: styles.securityText, children: "Chat is secured" }),
-            _jsx(View, { style: styles.safetyReminderBox, children:
-              _jsx(Text, { style: styles.safetyReminderText, children: "Always chat here for safety reasons!" }) }
-            )] }
+            _jsxs(View, { style: { flexDirection: 'row', alignItems: 'center', backgroundColor: '#74ffa7', borderRadius: 10, paddingVertical: 5, paddingHorizontal: 10, marginRight: 10 }, children: [
+              _jsx(RNImage, { source: require('@/oysloe-assets/Ad details screen/lock.png'), style: { width: 9, height: 9, marginRight: 6 } }),
+              _jsx(Text, { style: { fontSize: 9, color: '#374957' }, children: "Chat is secured" })] }
+            ),
+            _jsx(RNImage, { source: require('@/oysloe-assets/Ad details screen/Shield2.png'), style: styles.securityIcon }),
+            _jsx(Text, { style: styles.safetyReminderText, children: "Always chat here for safety reasons!" })] }
           )] }
         ),
 
