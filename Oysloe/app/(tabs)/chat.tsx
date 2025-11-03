@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { StyleSheet, View, Text, TouchableOpacity, Dimensions, Platform, ScrollView, Alert } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Image } from 'expo-image';
-import { router } from 'expo-router';import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
+import { router } from 'expo-router';
 
 const { width } = Dimensions.get('window');
 const MINT = '#74FFA7';
@@ -14,11 +14,11 @@ export default function ChatScreen() {
 
   // Mock chat data - in real app this would come from API/state
   const chatData = [
-    { id: 1, title: 'iphone 14 pro max', status: 'Closed', message: null },
-    { id: 2, title: 'iphone 14 pro max', message: 'is the iphone 15 pro max today...', status: null },
-    { id: 3, title: 'iphone 14 pro max', message: 'is the iphone 15 pro max today...', status: null },
-    { id: 4, title: 'iphone 14 pro max', message: 'is the iphone 15 pro max today...', status: null },
-    { id: 5, title: 'iphone 14 pro max', message: 'is the iphone 15 pro max today...', status: null }
+    { id: 1, title: 'iphone 14 pro max', status: 'Closed', message: null, from: 'support' as const },
+    { id: 2, title: 'iphone 14 pro max', message: 'is the iphone 15 pro max today...', status: null, from: 'you' as const },
+    { id: 3, title: 'iphone 14 pro max', message: 'is the iphone 15 pro max today...', status: null, from: 'you' as const },
+    { id: 4, title: 'iphone 14 pro max', message: 'is the iphone 15 pro max today...', status: null, from: 'you' as const },
+    { id: 5, title: 'iphone 14 pro max', message: 'is the iphone 15 pro max today...', status: null, from: 'support' as const }
   ];
 
   // Mock support cases data
@@ -44,82 +44,106 @@ export default function ChatScreen() {
   };
 
   return (
-    _jsx(SafeAreaView, { style: styles.container, children:
-      _jsxs(View, { style: styles.content, children: [
-        _jsxs(View, { style: styles.header, children: [
-          _jsx(TouchableOpacity, { onPress: () => router.back(), style: styles.backBtn, children:
-            _jsx(Text, { style: styles.backText, children: "\u2190 Back" })
-          }),
-          _jsx(Text, { style: styles.headerTitle, children: "Inbox" })] }
-        ),
-        _jsxs(View, { style: styles.toggleRow, children: [
-          _jsxs(TouchableOpacity, { style: [styles.toggleBtn, isChat && styles.toggleBtnActive], onPress: () => setActiveTab('chat'), children: [
-            _jsx(Image, { source: require('@/oysloe-assets/inbox/quick chat.png'), style: styles.toggleIcon }),
-            _jsxs(View, { children: [
-              _jsx(Text, { style: [styles.toggleLabel, isChat && styles.toggleLabelActive], children: "Chat" }),
-              _jsx(Text, { style: [styles.toggleSub, isChat && styles.toggleSubActive], children: "9 unread" })] }
-            )] }
-          ),
-          _jsxs(TouchableOpacity, { style: [styles.toggleBtn, isSupport && styles.toggleBtnActive], onPress: () => setActiveTab('support'), children: [
-            _jsx(Image, { source: require('@/oysloe-assets/inbox/support.png'), style: styles.toggleIcon }),
-            _jsxs(View, { children: [
-              _jsx(Text, { style: [styles.toggleLabel, isSupport && styles.toggleLabelActive], children: "Support" }),
-              _jsx(Text, { style: [styles.toggleSub, isSupport && styles.toggleSubActive], children: "14 active" })] }
-            )] }
-          )] }
-        ),
+    <SafeAreaView style={styles.container}>
+      <View style={styles.content}>
+        <View style={styles.header}>
+          <TouchableOpacity onPress={() => router.back()} style={styles.backBtn}>
+            <Text style={styles.backText}>← Back</Text>
+          </TouchableOpacity>
+          <Text style={styles.headerTitle}>Inbox</Text>
+        </View>
 
-        isSupport && _jsx(Text, { style: styles.heading, children: "Get Help Anytime" }),
-        isSupport && _jsx(Text, { style: styles.description, children: "If you are facing an issue,send us a report,we will respond to you immediately.Our support is active 24/7." }),
+        <View style={styles.toggleRow}>
+          <TouchableOpacity style={[styles.toggleBtn, isChat && styles.toggleBtnActive]} onPress={() => setActiveTab('chat')}>
+            <Image source={require('@/oysloe-assets/inbox/quick chat.png')} style={styles.toggleIcon} />
+            <View>
+              <Text style={[styles.toggleLabel, isChat && styles.toggleLabelActive]}>Chat</Text>
+              <Text style={[styles.toggleSub, isChat && styles.toggleSubActive]}>9 unread</Text>
+            </View>
+          </TouchableOpacity>
 
-        isSupport && _jsxs(View, { style: styles.addCaseWrapper, children: [
-          _jsx(Text, { style: styles.addCaseText, children: "Add case" }),
-          _jsx(View, { style: styles.addCasePlus, children:
-            _jsx(Text, { style: styles.plusSymbol, children: "+" })
-          })] }
-        ),
+          <TouchableOpacity style={[styles.toggleBtn, isSupport && styles.toggleBtnActive]} onPress={() => setActiveTab('support')}>
+            <Image source={require('@/oysloe-assets/inbox/support.png')} style={styles.toggleIcon} />
+            <View>
+              <Text style={[styles.toggleLabel, isSupport && styles.toggleLabelActive]}>Support</Text>
+              <Text style={[styles.toggleSub, isSupport && styles.toggleSubActive]}>14 active</Text>
+            </View>
+          </TouchableOpacity>
+        </View>
 
-        isSupport && _jsx(Text, { style: styles.sectionLabel, children: "Open Case" }),
+        {isSupport && <Text style={styles.heading}>Get Help Anytime</Text>}
+        {isSupport && <Text style={styles.description}>If you are facing an issue,send us a report,we will respond to you immediately.Our support is active 24/7.</Text>}
 
-        isChat && chatData.length > 0 ? _jsx(ScrollView, { style: styles.chatList, showsVerticalScrollIndicator: false, children:
-          chatData.map((chat) =>
-          _jsxs(TouchableOpacity, { style: [styles.chatItem, selectedChatId === chat.id && styles.chatItemSelected], onPress: () => setSelectedChatId(chat.id), children: [
-            _jsx(Image, { source: require('@/oysloe-assets/Ad images/iphone14.png'), style: styles.chatImage }),
-            _jsxs(View, { style: styles.chatContent, children: [
-              _jsx(Text, { style: styles.chatTitle, children: chat.title }),
-              chat.status ? _jsxs(View, { style: styles.statusBadge, children: [
-                _jsx(Text, { style: styles.statusBadgeText, children: chat.status })] }
-              ) : chat.message ? _jsx(Text, { style: styles.chatMessage, children: chat.message }) : null] }
-            )] }
-          )
-          ) }
-        ) : null,
+        {isSupport && (
+          <TouchableOpacity style={styles.addCaseWrapper} onPress={() => router.push('/(tabs)/chat-conversation')}>
+            <Text style={styles.addCaseText}>Add case</Text>
+            <View style={styles.addCasePlus}>
+              <Text style={styles.plusSymbol}>+</Text>
+            </View>
+          </TouchableOpacity>
+        )}
 
-        isSupport && supportCases.length > 0 ? _jsx(ScrollView, { style: styles.supportList, showsVerticalScrollIndicator: false, children:
-          supportCases.map((c) =>
-          _jsx(TouchableOpacity, { onPress: () => onPressCase(c.id), children:
-            _jsxs(View, { style: styles.supportItem, children: [
-              _jsx(Text, { style: styles.supportDate, children: c.date }),
-              _jsxs(View, { style: styles.supportRow, children: [
-                _jsxs(View, { style: { flex: 1 }, children: [
-                  _jsx(Text, { style: styles.supportTitle, children: c.title }),
-                  _jsx(View, { style: [styles.caseBadge, c.status === 'Active' ? styles.caseBadgeActive : styles.caseBadgeClosed], children:
-                    _jsx(Text, { style: styles.caseBadgeText, children: c.status })
-                  })] }
-                ),
-                selectedCaseId === c.id && _jsx(View, { style: styles.redDot })] }
-              )] }
-            ) }
-          )
-          ) }
-        ) : null,
+        {isSupport && <Text style={styles.sectionLabel}>Open Case</Text>}
 
-        (isChat && chatData.length === 0) || (isSupport && supportCases.length === 0) ? _jsxs(View, { style: styles.emptyState, children: [
-          _jsx(Image, { source: require('@/oysloe-assets/Ad details screen/no.png'), style: styles.emptyImage }),
-          _jsx(Text, { style: styles.emptyText, children: "No data to show" })] }
-        ) : null] }
-      ) }
-    ));
+        {isChat && chatData.length > 0 ? (
+          <ScrollView style={styles.chatList} showsVerticalScrollIndicator={false}>
+            {chatData.map((chat) => (
+              <TouchableOpacity
+                key={chat.id}
+                style={[styles.chatItem, selectedChatId === chat.id && styles.chatItemSelected]}
+                onPress={() => setSelectedChatId(chat.id)}
+              >
+                <Image source={require('@/oysloe-assets/Ad images/iphone14.png')} style={styles.chatImage} />
+                <View style={styles.chatContent}>
+                  <View>
+                    <Text style={chat.from === 'support' ? styles.fromLabelSupport : styles.fromLabelYou}>{chat.from === 'support' ? 'Support' : 'You'}</Text>
+                  </View>
+                  <Text style={styles.chatTitle}>{chat.title}</Text>
+                  {chat.status ? (
+                    <View style={styles.statusBadge}>
+                      <Text style={styles.statusBadgeText}>{chat.status}</Text>
+                    </View>
+                  ) : chat.message ? (
+                    <Text style={styles.chatMessage}>{chat.message}</Text>
+                  ) : null}
+                </View>
+              </TouchableOpacity>
+            ))}
+          </ScrollView>
+        ) : (
+          <View />
+        )}
+
+        {isSupport && supportCases.length > 0 ? (
+          <ScrollView style={styles.supportList} showsVerticalScrollIndicator={false}>
+            {supportCases.map((c) => (
+              <TouchableOpacity key={c.id} onPress={() => onPressCase(c.id)}>
+                <View style={styles.supportItem}>
+                  <Text style={styles.supportDate}>{c.date}</Text>
+                  <View style={styles.supportRow}>
+                    <View style={{ flex: 1 }}>
+                      <Text style={styles.supportTitle}>{c.title}</Text>
+                      <View style={[styles.caseBadge, c.status === 'Active' ? styles.caseBadgeActive : styles.caseBadgeClosed]}>
+                        <Text style={styles.caseBadgeText}>{c.status}</Text>
+                      </View>
+                    </View>
+                    {selectedCaseId === c.id && <View style={styles.redDot} />}
+                  </View>
+                </View>
+              </TouchableOpacity>
+            ))}
+          </ScrollView>
+        ) : null}
+
+        {(isChat && chatData.length === 0) || (isSupport && supportCases.length === 0) ? (
+          <View style={styles.emptyState}>
+            <Image source={require('@/oysloe-assets/Ad details screen/no.png')} style={styles.emptyImage} />
+            <Text style={styles.emptyText}>No data to show</Text>
+          </View>
+        ) : null}
+      </View>
+    </SafeAreaView>
+  );
 }
 
 const styles = StyleSheet.create({
@@ -267,6 +291,7 @@ const styles = StyleSheet.create({
   },
   chatItem: {
     flexDirection: 'row',
+    alignItems: 'flex-start',
     paddingVertical: 12,
     paddingHorizontal: 0,
     borderBottomWidth: 1,
@@ -279,7 +304,8 @@ const styles = StyleSheet.create({
     width: 50,
     height: 50,
     borderRadius: 6,
-    marginRight: 12
+    marginRight: 12,
+    marginTop: -2
   },
   chatContent: {
     flex: 1,
@@ -291,6 +317,8 @@ const styles = StyleSheet.create({
     color: '#374957',
     marginBottom: 4
   },
+  fromLabelSupport: { fontSize: 10, color: '#75828d', marginBottom: 2 },
+  fromLabelYou: { fontSize: 10, color: '#75828d', alignSelf: 'flex-end', marginBottom: 2 },
   chatMessage: {
     fontSize: 13,
     color: '#7d8b96',

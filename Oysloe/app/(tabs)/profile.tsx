@@ -210,7 +210,7 @@ export default function ProfileScreen() {
 
               _jsxs(TouchableOpacity, {
                 style: styles.menuItem,
-                onPress: () => router.push('/edit-profile'), children: [
+                onPress: () => router.push('/account'), children: [
 
                 _jsx(Image, {
                   source: require('@/oysloe-assets/side menu/account.png'),
@@ -308,7 +308,7 @@ const styles = StyleSheet.create({
     height: 80,
     borderRadius: 40,
     borderWidth: 3,
-    borderColor: '#4ECDC4',
+    borderColor: '#66FF99',
     justifyContent: 'center',
     alignItems: 'center',
     marginBottom: 12,
@@ -333,7 +333,7 @@ const styles = StyleSheet.create({
     width: 8,
     height: 8,
     borderRadius: 4,
-    backgroundColor: '#4ECDC4',
+    backgroundColor: '#66FF99',
     marginRight: 6
   },
   coverStatus: {
@@ -349,7 +349,7 @@ const styles = StyleSheet.create({
   },
   progressBar: {
     height: '100%',
-    backgroundColor: '#4ECDC4',
+    backgroundColor: '#66FF99',
     borderRadius: 3
   },
   statsContainer: {

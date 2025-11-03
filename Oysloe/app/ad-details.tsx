@@ -489,7 +489,7 @@ export default function AdDetailsScreen() {
             _jsx(Image, { source: require('@/oysloe-assets/bottom menu/home.png'), style: styles.navIcon }),
             _jsx(Text, { style: styles.navText, children: "Home" })] }
           ),
-          _jsxs(TouchableOpacity, { style: styles.navItem, children: [
+          _jsxs(TouchableOpacity, { style: styles.navItem, onPress: () => router.push('/alerts'), children: [
             _jsx(Image, { source: require('@/oysloe-assets/bottom menu/alert.png'), style: styles.navIcon }),
             _jsx(Text, { style: styles.navText, children: "Alerts" })] }
           ),

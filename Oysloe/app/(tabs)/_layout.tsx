@@ -37,7 +37,7 @@ export default function TabLayout() {
         } }
       ),
       _jsx(Tabs.Screen, {
-        name: "explore",
+        name: "alerts",
         options: {
           title: 'Alerts',
           tabBarIcon: ({ color, focused }: { color: string; focused: boolean }) =>
@@ -95,6 +95,18 @@ export default function TabLayout() {
         } }
       ),
       _jsx(Tabs.Screen, {
+        name: "explore",
+        options: {
+          href: null
+        } }
+      ),
+      _jsx(Tabs.Screen, {
+        name: "selections",
+        options: {
+          href: null
+        } }
+      ),
+      _jsx(Tabs.Screen, {
         name: "ads",
         options: {
 
@@ -125,6 +137,13 @@ export default function TabLayout() {
       ),
       _jsx(Tabs.Screen, {
         name: "privacy-policy",
+        options: {
+          href: null,
+          headerShown: false
+        } }
+      ),
+      _jsx(Tabs.Screen, {
+        name: "chat-conversation",
         options: {
           href: null,
           headerShown: false

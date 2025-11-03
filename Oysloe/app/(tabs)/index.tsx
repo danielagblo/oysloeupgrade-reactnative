@@ -17,6 +17,11 @@ import { LinearGradient } from 'expo-linear-gradient';import { jsx as _jsx, jsxs
 
 const { width } = Dimensions.get('window');
 
+// Types
+type Category = { id: number; name: string; icon: any };
+type Filter = { name: string; count: string; progress: number };
+type AdItem = { id: number; title: string; price: string; image: any; location: string };
+
 const categories = [
 { id: 1, name: 'Electronics', icon: require('@/oysloe-assets/Category icons/electronics.png') },
 { id: 2, name: 'Furniture', icon: require('@/oysloe-assets/Category icons/furniture.png') },
@@ -83,7 +88,8 @@ const ads = [
 }];
 
 
-const CircularProgress = ({ progress, size = 50, item }) => {
+type CircularProgressProps = { progress: number; size?: number; item: Filter };
+const CircularProgress = ({ progress, size = 50, item }: CircularProgressProps) => {
   const animatedValue = useRef(new Animated.Value(0)).current;
   const [isVisible, setIsVisible] = React.useState(false);
 
@@ -144,7 +150,7 @@ export default function HomeScreen() {
   const resetAnimation = () => {
     setAnimationKey((prev) => prev + 1);
   };
-  const renderCategory = ({ item }) =>
+  const renderCategory = ({ item }: { item: Category }) =>
   _jsxs(TouchableOpacity, { style: styles.categoryItem, children: [
     _jsx(View, { style: styles.categoryIconContainer, children:
       _jsx(Image, { source: item.icon, style: styles.categoryIcon }) }
@@ -153,13 +159,13 @@ export default function HomeScreen() {
   );
 
 
-  const renderFilter = ({ item }) =>
+  const renderFilter = ({ item }: { item: Filter }) =>
   _jsx(TouchableOpacity, { style: styles.filterButton, children:
     _jsx(CircularProgress, { progress: item.progress, size: 65, item: item }) }, `${item.name}-${animationKey}`
   );
 
 
-  const renderAd = ({ item }) =>
+  const renderAd = ({ item }: { item: AdItem }) =>
   _jsxs(TouchableOpacity, {
     style: styles.adCard,
     onPress: () => {
@@ -220,7 +226,7 @@ export default function HomeScreen() {
           _jsx(FlatList, {
             data: categories,
             renderItem: renderCategory,
-            keyExtractor: (item) => item.id.toString(),
+            keyExtractor: (item: Category) => item.id.toString(),
             numColumns: 4,
             scrollEnabled: false,
             contentContainerStyle: styles.categoriesGrid }
@@ -240,7 +246,7 @@ export default function HomeScreen() {
           _jsx(FlatList, {
             data: filters,
             renderItem: renderFilter,
-            keyExtractor: (item, index) => index.toString(),
+            keyExtractor: (_item: Filter, index: number) => index.toString(),
             horizontal: true,
             showsHorizontalScrollIndicator: false,
             style: styles.filtersContainer,
@@ -251,7 +257,7 @@ export default function HomeScreen() {
           _jsx(FlatList, {
             data: ads,
             renderItem: renderAd,
-            keyExtractor: (item) => item.id.toString(),
+            keyExtractor: (item: AdItem) => item.id.toString(),
             numColumns: 2,
             scrollEnabled: false,
             contentContainerStyle: styles.adsGrid,

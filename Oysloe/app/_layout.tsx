@@ -47,6 +47,7 @@ export default function RootLayout() {
           _jsx(Stack.Screen, { name: "setup", options: { headerShown: false } }),
           _jsx(Stack.Screen, { name: "setup-payment", options: { headerShown: false } }),
           _jsx(Stack.Screen, { name: "edit-profile", options: { headerShown: false } }),
+          _jsx(Stack.Screen, { name: "account", options: { headerShown: false } }),
           _jsx(Stack.Screen, { name: "post-ad-form", options: { headerShown: false } }),
           _jsx(Stack.Screen, { name: "(tabs)", options: { headerShown: false } }),
           _jsx(Stack.Screen, { name: "modal", options: { presentation: 'modal', title: 'Modal' } })] }
