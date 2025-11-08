@@ -33,13 +33,13 @@ const MOCK_FAVORITES = [
 
 
 export default function FavoritesScreen() {
-  const [favorites, setFavorites] = React.useState(MOCK_FAVORITES);
+  const [favorites, setFavorites] = React.useState<Array<any>>(MOCK_FAVORITES);
 
-  const handleToggleFavorite = (id) => {
+  const handleToggleFavorite = (id: string) => {
     setFavorites((prev) => prev.filter((f) => f.id !== id));
   };
 
-  const renderItem = ({ item }) =>
+  const renderItem = ({ item }: { item: any }) =>
   _jsxs(View, { style: styles.card, children: [
     _jsx(Image, { source: item.image, style: styles.cardImage, contentFit: "cover" }),
     _jsxs(View, { style: styles.cardInfo, children: [
@@ -79,8 +79,8 @@ export default function FavoritesScreen() {
 
       _jsx(FlatList, {
         data: favorites,
-        keyExtractor: (it) => it.id,
-        renderItem: ({ item }) =>
+  keyExtractor: (it: any) => it.id,
+  renderItem: ({ item }: { item: any }) =>
         _jsxs(View, { style: styles.card, children: [
           _jsx(Image, { source: item.image, style: styles.cardImage, contentFit: "cover" }),
           _jsxs(View, { style: styles.cardInfo, children: [

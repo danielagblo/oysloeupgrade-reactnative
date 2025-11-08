@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, TextInput, Dimensions } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, TextInput, Dimensions, Modal } from 'react-native';
 import { Image } from 'expo-image';
 import { router } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
@@ -9,6 +9,7 @@ const { width } = Dimensions.get('window');
 export default function LoginScreen() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [showResetPopup, setShowResetPopup] = useState(false);
 
   const handleLogin = () => {
 
@@ -23,6 +24,11 @@ export default function LoginScreen() {
   };
 
   const handlePasswordReset = () => {
+    setShowResetPopup(true);
+  };
+
+  const closeResetPopup = () => {
+    setShowResetPopup(false);
     router.push('/reset-password');
   };
 
@@ -35,7 +41,7 @@ export default function LoginScreen() {
   };
 
   return (
-    _jsx(SafeAreaView, { style: styles.container, children:
+    _jsxs(SafeAreaView, { style: styles.container, children: [
       _jsxs(View, { style: styles.content, children: [
 
         _jsx(Text, { style: styles.title, children: "Welcome!" }),
@@ -113,7 +119,22 @@ export default function LoginScreen() {
             _jsx(Text, { style: styles.signUpLink, children: "Sign up" }) }
           )] }
         )] }
-      ) }
+      ),
+
+      _jsx(Modal, { transparent: true, visible: showResetPopup, animationType: "fade", onRequestClose: closeResetPopup, children:
+        _jsx(View, { style: styles.modalOverlay, children:
+          _jsxs(View, { style: styles.popupContainer, children: [
+            _jsx(View, { style: styles.successIconContainer, children:
+              _jsx(Image, { source: require('@/oysloe-assets/bottom menu/alert.png'), style: styles.promptIcon, contentFit: 'contain' })
+            }),
+            _jsx(Text, { style: styles.popupTitle, children: "Check your messages" }),
+            _jsx(Text, { style: styles.popupMessage, children: "We\u2019ve sent a reset code via SMS. Open your Messages app to continue." }),
+            _jsx(TouchableOpacity, { style: styles.closeButton, onPress: closeResetPopup, children:
+              _jsx(Text, { style: styles.closeButtonText, children: "Close" })
+            })] }
+          ) }
+        ) }
+      )] }
     ));
 
 }
@@ -261,5 +282,15 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: '#333333',
     fontWeight: '600'
-  }
+  },
+  // Modal styles (matching OTP modal aesthetics)
+  modalOverlay: { flex: 1, backgroundColor: 'rgba(0, 0, 0, 0.5)', justifyContent: 'center', alignItems: 'center', paddingHorizontal: 20 },
+  popupContainer: { backgroundColor: '#FFFFFF', borderRadius: 20, paddingVertical: 40, paddingHorizontal: 32, alignItems: 'center', minWidth: 320, maxWidth: 380, shadowColor: '#000', shadowOffset: { width: 0, height: 8 }, shadowOpacity: 0.3, shadowRadius: 12, elevation: 12 },
+  successIconContainer: { width: 80, height: 80, borderRadius: 40, backgroundColor: '#66FF99', justifyContent: 'center', alignItems: 'center', marginBottom: 24 },
+  successIcon: { fontSize: 40, color: '#FFFFFF', fontWeight: 'bold' },
+  popupTitle: { fontSize: 22, fontWeight: '700', color: '#333333', textAlign: 'center', marginBottom: 12 },
+  popupMessage: { fontSize: 16, color: '#666666', textAlign: 'center', marginBottom: 24, lineHeight: 22, paddingHorizontal: 10 },
+  closeButton: { backgroundColor: '#66FF99', borderRadius: 12, paddingVertical: 14, paddingHorizontal: 32, minWidth: 120, alignItems: 'center' },
+  closeButtonText: { fontSize: 16, fontWeight: '600', color: '#FFFFFF' },
+  promptIcon: { width: 28, height: 28, tintColor: '#FFFFFF' }
 });

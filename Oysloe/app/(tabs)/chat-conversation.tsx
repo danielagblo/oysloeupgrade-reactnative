@@ -2,7 +2,7 @@ import React, { useMemo } from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { View, Text, StyleSheet, ScrollView, Dimensions, TouchableOpacity } from 'react-native';
 import { Image } from 'expo-image';
-import { router } from 'expo-router';
+import { router, useLocalSearchParams } from 'expo-router';
 
 const { width } = Dimensions.get('window');
 
@@ -15,6 +15,8 @@ type Message = {
 };
 
 export default function ChatConversationScreen() {
+  const params = useLocalSearchParams();
+  const chatId = params?.chatId ?? 'unknown';
   const messagesYesterday: Message[] = useMemo(() => [
     {
       id: 'm1',
@@ -48,7 +50,10 @@ export default function ChatConversationScreen() {
         <TouchableOpacity onPress={() => router.back()} style={styles.backBtn}>
           <Text style={styles.backText}>{'\u2039'}</Text>
         </TouchableOpacity>
-        <Text style={styles.headerTitle}>No 45678904</Text>
+        <View style={{ alignItems: 'center' }}>
+          <Text style={styles.headerTitle}>iphone 14 pro max</Text>
+          <Text style={styles.headerSub}>Chat • #{chatId}</Text>
+        </View>
         <View style={{ width: 30 }} />
       </View>
 
@@ -93,16 +98,23 @@ function MessageBubble({ message }: { message: Message }) {
   return (
     <View style={rowStyle}>
       {!isYou && message.showAvatar && (
-        <Image source={avatarSource} style={[styles.avatar, styles.avatarLeft]} />
+        <View>
+          <Text style={{ marginLeft: '8%' }}>Adam</Text>
+          <Image source={avatarSource} style={[styles.avatar, styles.avatarLeft]} />
+        </View>
       )}
 
-      <View style={bubbleStyle}>
+         {isYou && message.showAvatar && (
+        <View>
+          <Text style={{ marginRight: '8%' }}>You</Text>
+          <Image source={avatarSource} style={[styles.avatar, styles.avatarRight]} />
+        </View>
+      )}
+         <View style={bubbleStyle}>
         <Text style={[styles.messageText, isYou && styles.messageTextYou]}>{message.text}</Text>
       </View>
 
-      {isYou && message.showAvatar && (
-        <Image source={avatarSource} style={[styles.avatar, styles.avatarRight]} />
-      )}
+
 
       <Text style={[styles.timeText, isYou ? styles.timeRight : styles.timeLeft]}>{message.time}</Text>
     </View>
@@ -111,7 +123,7 @@ function MessageBubble({ message }: { message: Message }) {
 
 function InputBar() {
   return (
-    <View style={styles.inputWrap}>
+    <View style={[styles.inputWrap]}>
       <View style={styles.inputBox}>
         <TouchableOpacity style={styles.iconBtn}>
           <Image source={require('@/oysloe-assets/Ad details screen/imageupload.png')} style={styles.icon} />
@@ -164,6 +176,10 @@ const styles = StyleSheet.create({
   headerTitle: {
     fontSize: 14,
     color: '#51565C'
+  },
+  headerSub: {
+    fontSize: 12,
+    color: '#98A1AA'
   },
   scroll: {
     flex: 1
@@ -259,7 +275,8 @@ const styles = StyleSheet.create({
     paddingHorizontal: 12,
     paddingVertical: 10,
     gap: 10,
-    backgroundColor: '#F6F7F8'
+    backgroundColor: '#F6F7F8',
+    position:'absolute',bottom:0, width:'100%',
   },
   inputBox: {
     flex: 1,
@@ -313,9 +330,12 @@ const styles = StyleSheet.create({
     borderColor: '#E8EDF2'
   },
   micIcon: {
-    width: 18,
-    height: 18
+    width: 25,
+    height: 25,
+    objectFit: 'contain'
   }
 });
+
+
 
 

@@ -91,7 +91,7 @@ export default function ChatScreen() {
               <TouchableOpacity
                 key={chat.id}
                 style={[styles.chatItem, selectedChatId === chat.id && styles.chatItemSelected]}
-                onPress={() => setSelectedChatId(chat.id)}
+                onPress={() => router.push({ pathname: '/(tabs)/chat-conversation', params: { chatId: String(chat.id) } })}
               >
                 <Image source={require('@/oysloe-assets/Ad images/iphone14.png')} style={styles.chatImage} />
                 <View style={styles.chatContent}>

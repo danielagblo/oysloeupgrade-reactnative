@@ -225,14 +225,14 @@ export default function PostAdFormScreen() {
     }
   };
 
-  const toggleLocationTag = (tag, type) => {
+  const toggleLocationTag = (tag: string, type: string) => {
     setLocationTags({
       ...locationTags,
-      [type]: locationTags[type] === tag ? '' : tag
+      [type]: (locationTags as any)[type] === tag ? '' : tag
     });
   };
 
-  const handleDurationSelect = (duration) => {
+  const handleDurationSelect = (duration: string) => {
     setSelectedDurations({
       ...selectedDurations,
       [durationType]: duration
@@ -240,7 +240,7 @@ export default function PostAdFormScreen() {
     setShowDurationModal(false);
   };
 
-  const openDurationModal = (type) => {
+  const openDurationModal = (type: string) => {
     setDurationType(type);
     setShowDurationModal(true);
   };
@@ -321,7 +321,7 @@ export default function PostAdFormScreen() {
             _jsx(TextInput, {
               placeholder: "0",
               value: pricing.daily,
-              onChangeText: (text) => setPricing({ ...pricing, daily: text }),
+              onChangeText: (text: string) => setPricing({ ...pricing, daily: text }),
               keyboardType: "numeric",
               style: styles.salePriceInput }
             )] }
@@ -336,7 +336,7 @@ export default function PostAdFormScreen() {
               _jsx(TextInput, {
                 placeholder: "0",
                 value: pricing.daily,
-                onChangeText: (text) => setPricing({ ...pricing, daily: text }),
+                onChangeText: (text: string) => setPricing({ ...pricing, daily: text }),
                 keyboardType: "numeric",
                 style: styles.salePriceInput }
               )] }
@@ -360,7 +360,7 @@ export default function PostAdFormScreen() {
                 _jsx(TextInput, {
                   placeholder: "0",
                   value: pricing.daily,
-                  onChangeText: (text) => setPricing({ ...pricing, daily: text }),
+                  onChangeText: (text: string) => setPricing({ ...pricing, daily: text }),
                   keyboardType: "numeric",
                   style: styles.priceInput }
                 )] }
@@ -383,7 +383,7 @@ export default function PostAdFormScreen() {
                 _jsx(TextInput, {
                   placeholder: "0",
                   value: pricing.weekly,
-                  onChangeText: (text) => setPricing({ ...pricing, weekly: text }),
+                  onChangeText: (text: string) => setPricing({ ...pricing, weekly: text }),
                   keyboardType: "numeric",
                   style: styles.priceInput }
                 )] }
@@ -406,7 +406,7 @@ export default function PostAdFormScreen() {
                 _jsx(TextInput, {
                   placeholder: "0",
                   value: pricing.monthly,
-                  onChangeText: (text) => setPricing({ ...pricing, monthly: text }),
+                  onChangeText: (text: string) => setPricing({ ...pricing, monthly: text }),
                   keyboardType: "numeric",
                   style: styles.priceInput }
                 )] }
@@ -499,7 +499,7 @@ export default function PostAdFormScreen() {
         onRequestClose: () => setShowDurationModal(false), children:
 
         _jsx(Pressable, { style: styles.modalOverlay, onPress: () => setShowDurationModal(false), children:
-          _jsxs(Pressable, { style: styles.bottomSheet, onPress: (e) => e.stopPropagation(), children: [
+          _jsxs(Pressable, { style: styles.bottomSheet, onPress: (e: any) => e.stopPropagation(), children: [
             _jsx(View, { style: styles.grabHandle }),
 
             _jsxs(View, { style: styles.bottomSheetHeader, children: [
@@ -617,7 +617,7 @@ export default function PostAdFormScreen() {
         onRequestClose: () => setShowCategoryModal(false), children:
 
         _jsx(Pressable, { style: styles.modalOverlay, onPress: () => setShowCategoryModal(false), children:
-          _jsxs(Pressable, { style: styles.bottomSheet, onPress: (e) => e.stopPropagation(), children: [
+          _jsxs(Pressable, { style: styles.bottomSheet, onPress: (e: any) => e.stopPropagation(), children: [
             _jsx(View, { style: styles.grabHandle }),
 
             _jsx(View, { style: styles.bottomSheetHeader, children:
@@ -653,7 +653,7 @@ export default function PostAdFormScreen() {
         onRequestClose: () => setShowSubCategoryModal(false), children:
 
         _jsx(Pressable, { style: styles.modalOverlay, onPress: () => setShowSubCategoryModal(false), children:
-          _jsxs(Pressable, { style: styles.bottomSheet, onPress: (e) => e.stopPropagation(), children: [
+          _jsxs(Pressable, { style: styles.bottomSheet, onPress: (e: any) => e.stopPropagation(), children: [
             _jsx(View, { style: styles.grabHandle }),
 
             _jsxs(View, { style: styles.bottomSheetHeader, children: [
@@ -668,7 +668,7 @@ export default function PostAdFormScreen() {
             ),
 
             _jsx(ScrollView, { style: styles.durationList, children:
-              subCategories[selectedMainCategory]?.map((subCategory, index) =>
+              (subCategories as any)[selectedMainCategory]?.map((subCategory: any, index: number) =>
               _jsxs(TouchableOpacity, {
 
                 style: [
@@ -706,7 +706,7 @@ export default function PostAdFormScreen() {
         onRequestClose: () => setShowMapLocationModal(false), children:
 
         _jsx(Pressable, { style: styles.modalOverlayCenter, onPress: () => setShowMapLocationModal(false), children:
-          _jsxs(Pressable, { style: styles.mapLocationModal, onPress: (e) => e.stopPropagation(), children: [
+          _jsxs(Pressable, { style: styles.mapLocationModal, onPress: (e: any) => e.stopPropagation(), children: [
             _jsx(Text, { style: styles.mapModalTitle, children: "Would you want to save this location for future use?" }),
 
             _jsxs(View, { style: styles.mapModalLocation, children: [
@@ -757,7 +757,7 @@ export default function PostAdFormScreen() {
         onRequestClose: () => setShowLocationRegionModal(false), children:
 
         _jsx(Pressable, { style: styles.modalOverlay, onPress: () => setShowLocationRegionModal(false), children:
-          _jsxs(Pressable, { style: styles.bottomSheet, onPress: (e) => e.stopPropagation(), children: [
+          _jsxs(Pressable, { style: styles.bottomSheet, onPress: (e: any) => e.stopPropagation(), children: [
             _jsx(View, { style: styles.grabHandle }),
 
             _jsxs(View, { style: styles.bottomSheetHeader, children: [
@@ -819,7 +819,7 @@ export default function PostAdFormScreen() {
         onRequestClose: () => setShowLocationAreaModal(false), children:
 
         _jsx(Pressable, { style: styles.modalOverlay, onPress: () => setShowLocationAreaModal(false), children:
-          _jsxs(Pressable, { style: styles.bottomSheet, onPress: (e) => e.stopPropagation(), children: [
+          _jsxs(Pressable, { style: styles.bottomSheet, onPress: (e: any) => e.stopPropagation(), children: [
             _jsx(View, { style: styles.grabHandle }),
 
             _jsxs(View, { style: styles.bottomSheetHeader, children: [
@@ -837,7 +837,7 @@ export default function PostAdFormScreen() {
               _jsx(View, { style: styles.locationSectionHeader, children:
                 _jsx(Text, { style: styles.locationSectionTitle, children: "Popular areas" }) }
               ),
-              regionAreas[selectedRegion]?.popular.map((area, index) =>
+              (regionAreas as any)[selectedRegion]?.popular.map((area: any, index: number) =>
               _jsxs(TouchableOpacity, {
 
                 style: [styles.durationOption, selectedArea === area && styles.durationOptionSelected],
@@ -860,7 +860,7 @@ export default function PostAdFormScreen() {
               _jsx(View, { style: styles.locationSectionHeader, children:
                 _jsx(Text, { style: styles.locationSectionTitle, children: "Other areas" }) }
               ),
-              regionAreas[selectedRegion]?.other.map((area, index) =>
+              (regionAreas as any)[selectedRegion]?.other.map((area: any, index: number) =>
               _jsxs(TouchableOpacity, {
 
                 style: [styles.durationOption, selectedArea === area && styles.durationOptionSelected],
@@ -891,7 +891,7 @@ export default function PostAdFormScreen() {
         onRequestClose: () => setShowSuccessModal(false), children:
 
         _jsx(Pressable, { style: styles.successModalOverlay, onPress: () => setShowSuccessModal(false), children:
-          _jsxs(Pressable, { style: styles.successModal, onPress: (e) => e.stopPropagation(), children: [
+          _jsxs(Pressable, { style: styles.successModal, onPress: (e: any) => e.stopPropagation(), children: [
             _jsx(View, { style: styles.successIconContainer, children:
               _jsx(Image, { source: successImage, style: styles.successIconImage, resizeMode: "contain" }) }
             ),

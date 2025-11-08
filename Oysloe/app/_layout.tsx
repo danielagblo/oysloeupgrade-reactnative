@@ -7,6 +7,7 @@ import * as Network from 'expo-network';
 import React from 'react';
 
 import { useColorScheme } from '@/hooks/use-color-scheme';import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
+import SlidingPanelProvider from '@/components/SlidingPanelProvider';
 
 export default function RootLayout() {
   const colorScheme = useColorScheme();
@@ -37,7 +38,8 @@ export default function RootLayout() {
   return (
     _jsx(GestureHandlerRootView, { style: { flex: 1 }, children:
       _jsxs(ThemeProvider, { value: colorScheme === 'dark' ? DarkTheme : DefaultTheme, children: [
-        _jsxs(Stack, { children: [
+        _jsx(SlidingPanelProvider, { children:
+          _jsxs(Stack, { children: [
           _jsx(Stack.Screen, { name: "index", options: { headerShown: false } }),
           _jsx(Stack.Screen, { name: "onboarding", options: { headerShown: false } }),
           _jsx(Stack.Screen, { name: "login", options: { headerShown: false } }),
@@ -50,8 +52,7 @@ export default function RootLayout() {
           _jsx(Stack.Screen, { name: "account", options: { headerShown: false } }),
           _jsx(Stack.Screen, { name: "post-ad-form", options: { headerShown: false } }),
           _jsx(Stack.Screen, { name: "(tabs)", options: { headerShown: false } }),
-          _jsx(Stack.Screen, { name: "modal", options: { presentation: 'modal', title: 'Modal' } })] }
-        ),
+          _jsx(Stack.Screen, { name: "modal", options: { presentation: 'modal', title: 'Modal' } })] }) }),
         _jsx(StatusBar, { style: "auto" })] }
       ) }
     ));

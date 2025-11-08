@@ -27,9 +27,9 @@ export default function AdsScreen() {
   const [selectedTab, setSelectedTab] = useState(
     initialTab || 'active'
   );
-  const [selectedAdId, setSelectedAdId] = useState(null);
+  const [selectedAdId, setSelectedAdId] = useState<string | null>(null);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
-  const [pendingDeleteId, setPendingDeleteId] = useState(null);
+  const [pendingDeleteId, setPendingDeleteId] = useState<string | null>(null);
 
   const [ads, setAds] = useState([
   {
@@ -57,32 +57,31 @@ export default function AdsScreen() {
     [ads, selectedTab]
   );
 
-  function markAsTaken(adId) {
+  function markAsTaken(adId: string) {
     if (!adId) return;
     setAds((prev) => prev.map((a) => a.id === adId ? { ...a, status: 'taken' } : a));
     setSelectedTab('taken');
     setSelectedAdId(adId);
   }
-  function doDeleteAd(adId) {
+  function doDeleteAd(adId: string) {
     if (!adId) return;
     setAds((prev) => prev.filter((a) => a.id !== adId));
     setSelectedAdId(null);
     setShowDeleteModal(false);
     setPendingDeleteId(null);
   }
-  function deleteAd(adId) {
+  function deleteAd(adId: string) {
     if (!adId) return;
     setPendingDeleteId(adId);
     setShowDeleteModal(true);
   }
-  function suspendAd(adId) {
+  function suspendAd(adId: string) {
     if (!adId) return;
     setAds((prev) => prev.map((a) => a.id === adId ? { ...a, status: 'suspended' } : a));
     setSelectedTab('suspended');
     setSelectedAdId(adId);
   }
-
-  function moveTo(adId, status) {
+  function moveTo(adId: string, status: string) {
     setAds((prev) => prev.map((a) => a.id === adId ? { ...a, status } : a));
     setSelectedTab(status);
     setSelectedAdId(adId);
@@ -132,8 +131,8 @@ export default function AdsScreen() {
 
         _jsx(FlatList, {
           data: filteredAds,
-          keyExtractor: (item) => item.id,
-          renderItem: ({ item, index }) =>
+          keyExtractor: (item: any) => item.id,
+          renderItem: ({ item, index }: { item: any; index: number }) =>
           _jsxs(View, { children: [
             _jsxs(TouchableOpacity, { activeOpacity: 0.9, onPress: () => setSelectedAdId(item.id), style: styles.card, children: [
               _jsx(Image, { source: item.image, style: styles.cardImage, contentFit: "cover" }),
@@ -188,7 +187,7 @@ export default function AdsScreen() {
               _jsx(TouchableOpacity, { style: styles.modalCancelBtn, onPress: () => setShowDeleteModal(false), children:
                 _jsx(Text, { style: styles.modalCancelText, children: "Cancel" }) }
               ),
-              _jsx(TouchableOpacity, { style: styles.modalDeleteBtn, onPress: () => doDeleteAd(pendingDeleteId), children:
+              _jsx(TouchableOpacity, { style: styles.modalDeleteBtn, onPress: () => pendingDeleteId && doDeleteAd(pendingDeleteId), children:
                 _jsx(Text, { style: styles.modalDeleteText, children: "Delete" }) }
               )] }
             )] }

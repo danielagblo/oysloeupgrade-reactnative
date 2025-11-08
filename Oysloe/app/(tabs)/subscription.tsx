@@ -1,11 +1,12 @@
 import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, ScrollView, SafeAreaView } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, ScrollView, SafeAreaView, Modal } from 'react-native';
 import { router } from 'expo-router';import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 
 
 
 export default function SubscriptionScreen() {
   const [selected, setSelected] = React.useState('basic');
+  const [showPaid, setShowPaid] = React.useState(false);
 
   const PlanCard = ({
     title,
@@ -99,13 +100,37 @@ export default function SubscriptionScreen() {
         ),
 
         _jsx(View, { style: { height: 16 } }),
-        _jsx(TouchableOpacity, { style: styles.payBtn, activeOpacity: 0.9, children:
+        _jsx(TouchableOpacity, { style: styles.payBtn, activeOpacity: 0.9, onPress: () => setShowPaid(true), children:
           _jsx(Text, { style: styles.payText, children: "Pay Now" }) }
         ),
         _jsx(View, { style: { height: 24 } })] }
-      )] }
+      ),
+      _jsx(SuccessPopup, { visible: showPaid, onClose: () => setShowPaid(false) })] }
     ));
 
+}
+
+import { Image } from 'expo-image';
+
+function SuccessPopup({ visible, onClose }: { visible: boolean; onClose: () => void }) {
+  return (
+    _jsx(Modal, { transparent: true, visible: visible, animationType: "fade", onRequestClose: onClose, children:
+      _jsx(View, { style: styles.modalOverlay, children:
+        _jsxs(View, { style: styles.modalCard, children: [
+          _jsx(Image, { source: require('@/oysloe-assets/Ads/success.png'), style: { width: 70, height: 70, marginBottom: 10 } }),
+          _jsx(Text, { style: styles.modalTitle, children: "Payment sent" }),
+          _jsxs(View, { style: styles.modalBtnRow, children: [
+            _jsx(TouchableOpacity, { style: [styles.modalBtn, styles.modalBtnGhost], onPress: () => router.replace('/(tabs)'), children:
+              _jsx(Text, { style: styles.modalBtnGhostText, children: "Home" }) }
+            ),
+            _jsx(TouchableOpacity, { style: [styles.modalBtn, styles.modalBtnGhost], onPress: onClose, children:
+              _jsx(Text, { style: styles.modalBtnGhostText, children: "Close" }) }
+            )] }
+          )] }
+        ) }
+      ) }
+    )
+  );
 }
 
 const styles = StyleSheet.create({
@@ -132,5 +157,15 @@ const styles = StyleSheet.create({
   priceText: { color: '#111827', fontWeight: '700' },
   strikeText: { color: '#9aa3af', textDecorationLine: 'line-through', marginLeft: 10 },
   payBtn: { backgroundColor: '#fff', borderRadius: 16, paddingVertical: 16, alignItems: 'center', justifyContent: 'center', borderWidth: 1, borderColor: '#eceff3', marginHorizontal: 4 },
-  payText: { color: '#111827', fontWeight: '600' }
+  payText: { color: '#111827', fontWeight: '600' },
+
+  modalOverlay: { flex: 1, backgroundColor: 'rgba(0,0,0,0.6)', alignItems: 'center', justifyContent: 'center', padding: 16 },
+  modalCard: { width: '86%', maxWidth: 380, backgroundColor: '#fff', borderRadius: 18, paddingVertical: 26, paddingHorizontal: 20, alignItems: 'center' },
+  modalIconWrap: { width: 76, height: 76, borderRadius: 38, backgroundColor: '#66FF99', alignItems: 'center', justifyContent: 'center', marginBottom: 12 },
+  modalTick: { fontSize: 0 },
+  modalTitle: { fontSize: 18, color: '#111827', fontWeight: '600', marginBottom: 14 },
+  modalBtnRow: { flexDirection: 'row', gap: 12 },
+  modalBtn: { paddingVertical: 10, paddingHorizontal: 22, borderRadius: 18, backgroundColor: '#fff', borderWidth: 1, borderColor: '#eceff3' },
+  modalBtnGhost: { backgroundColor: '#fff' },
+  modalBtnGhostText: { color: '#111827', fontWeight: '600' }
 });

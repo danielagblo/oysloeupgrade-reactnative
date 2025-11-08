@@ -34,7 +34,6 @@ export default function AccountDeleteScreen() {
 
   const onReactivate = () => {
     setShowScheduled(false);
-    // Simple inline feedback for now
     alert('Account successfully reactivated');
   };
 
@@ -58,7 +57,7 @@ export default function AccountDeleteScreen() {
 
         <ScrollView contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
           <Text style={styles.title}>Delete Account</Text>
-          <Text style={styles.subtitle}>If you want to delete your account and you\'re prompted to provide a reason for deleting.</Text>
+          <Text style={styles.subtitle}>If you want to delete your account and you're prompted to provide a reason for deleting.</Text>
 
           <View style={styles.card}>
             {reasons.map((label, index) => (
@@ -94,7 +93,6 @@ export default function AccountDeleteScreen() {
         </ScrollView>
       </KeyboardAvoidingView>
 
-      {/* First confirm modal */}
       <Modal visible={showConfirm} transparent animationType="fade" onRequestClose={onConfirmClose}>
         <View style={styles.modalOverlay}>
           <View style={styles.modalCard}>
@@ -112,7 +110,6 @@ export default function AccountDeleteScreen() {
         </View>
       </Modal>
 
-      {/* Scheduled for removal modal */}
       <Modal visible={showScheduled} transparent animationType="fade" onRequestClose={() => setShowScheduled(false)}>
         <View style={styles.modalOverlay}>
           <View style={styles.modalCard}>

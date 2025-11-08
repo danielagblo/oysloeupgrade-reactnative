@@ -1,8 +1,10 @@
-import { StyleSheet, TouchableOpacity, Image, ScrollView, FlatList, View, Text, ImageSourcePropType } from 'react-native';
+import { StyleSheet, TouchableOpacity, Image, ScrollView, View, Text, ImageSourcePropType, Dimensions } from 'react-native';
 import { router } from 'expo-router';
-import { useState } from 'react';
+import { useCallback, useState } from 'react';
 import { Ionicons } from '@expo/vector-icons';import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import * as ImagePicker from 'expo-image-picker';
+import { DraxProvider, DraxList } from 'react-native-drax';
 
 const sampleImage = require('../../oysloe-assets/Ad images/iphone.png');
 
@@ -11,13 +13,43 @@ type ImageItem = { id: string; uri: ImageSourcePropType };
 export default function PostAdScreen() {
   const insets = useSafeAreaInsets();
   const [images, setImages] = useState<ImageItem[]>([
-    { id: '1', uri: sampleImage },
-    { id: '2', uri: sampleImage },
-    { id: '3', uri: sampleImage },
-    { id: '4', uri: sampleImage },
-    { id: '5', uri: sampleImage },
-    { id: '6', uri: sampleImage }
+    { id: '1', uri: sampleImage }
   ]);
+
+  const screenWidth = Dimensions.get('window').width;
+  const horizontalPadding = 16;
+  const cellMargin = 4;
+  const numCols = 3;
+  const CELL = Math.floor((screenWidth - horizontalPadding * 2 - cellMargin * 2 * numCols) / numCols);
+
+  const requestPermissionAndPick = useCallback(async () => {
+    const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+    if (status !== 'granted') {
+      alert('Permission to access media library is required.');
+      return;
+    }
+
+    const result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      quality: 1,
+      allowsMultipleSelection: true,
+      selectionLimit: 10
+    });
+
+    if (!result.canceled) {
+      const newItems: ImageItem[] = result.assets.map((a, idx) => ({ id: `${Date.now()}-${idx}`, uri: { uri: a.uri } }));
+      setImages((prev) => [...prev, ...newItems]);
+    }
+  }, []);
+
+  const onItemReorder = useCallback(({ fromIndex, toIndex }: { fromIndex: number; toIndex: number }) => {
+    setImages((prev) => {
+      const data = [...prev];
+      const moved = data.splice(fromIndex, 1)[0];
+      data.splice(toIndex, 0, moved);
+      return data;
+    });
+  }, []);
 
   return (
     _jsxs(View, { style: styles.container, children: [
@@ -31,7 +63,7 @@ export default function PostAdScreen() {
 
       _jsxs(ScrollView, { style: styles.content, showsVerticalScrollIndicator: false, children: [
         _jsx(View, { style: styles.uploadContainer, children:
-          _jsxs(TouchableOpacity, { style: styles.uploadBox, children: [
+          _jsxs(TouchableOpacity, { style: styles.uploadBox, onPress: requestPermissionAndPick, children: [
             _jsx(Ionicons, { name: "cloud-upload-outline", size: 32, color: "#000" }),
             _jsx(Text, { style: styles.uploadButtonText, children: "Upload Images" })] }
           ) }
@@ -55,17 +87,20 @@ export default function PostAdScreen() {
         ),
 
 
-        _jsx(View, { style: styles.imageGrid, children:
-          _jsx(FlatList, {
-            data: images,
-            numColumns: 3,
-            scrollEnabled: false,
-            keyExtractor: (item: ImageItem) => item.id,
-            renderItem: ({ item }: { item: ImageItem }) =>
-            _jsx(View, { style: styles.imageContainer, children:
-              _jsx(Image, { source: item.uri, style: styles.image }) }
+        _jsx(DraxProvider, { children:
+          _jsx(View, { style: styles.imageGrid, children:
+            _jsx(DraxList, {
+              data: images,
+              keyExtractor: (item: ImageItem) => item.id,
+              numColumns: 3,
+              onItemReorder: onItemReorder,
+              scrollEnabled: false,
+              renderItemContent: ({ item }: { item: ImageItem }) => (
+                _jsx(View, { style: [styles.imageContainer, { width: CELL, height: CELL }], children:
+                  _jsx(Image, { source: item.uri, style: styles.image }) }
+                )
+              ) }
             ) }
-
           ) }
         )] }
       ),
@@ -163,11 +198,14 @@ const styles = StyleSheet.create({
     marginBottom: 100
   },
   imageContainer: {
-    flex: 1 / 3,
-    aspectRatio: 1,
     margin: 4,
     borderRadius: 8,
     overflow: 'hidden'
+  },
+  activeItem: {
+    opacity: 0.8,
+    borderWidth: 1,
+    borderColor: '#66FF99'
   },
   image: {
     width: '100%',

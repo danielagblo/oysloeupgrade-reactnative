@@ -3,12 +3,14 @@ import React from 'react';
 import { Image } from 'expo-image';
 
 import { HapticTab } from '@/components/haptic-tab';
+import { useSlidingPanel } from '@/components/SlidingPanelProvider';
 
 
 import { useColorScheme } from '@/hooks/use-color-scheme';import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 
 export default function TabLayout() {
   const colorScheme = useColorScheme();
+  const { toggleProfile } = useSlidingPanel();
 
   return (
     _jsxs(Tabs, {
@@ -79,6 +81,9 @@ export default function TabLayout() {
           presentation: 'modal',
           animationEnabled: false,
           detachPreviousScreen: false,
+          // Override the tab button so pressing Profile opens our global panel
+          // and does NOT navigate to the profile route (prevents duplicate background).
+          tabBarButton: (props: any) => _jsx(HapticTab, { ...props, onPress: () => { toggleProfile(); } }),
           tabBarIcon: ({ color, focused }: { color: string; focused: boolean }) =>
           _jsx(Image, {
             source: require('@/oysloe-assets/bottom menu/profile.png'),

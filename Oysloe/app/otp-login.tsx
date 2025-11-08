@@ -1,5 +1,6 @@
 import React, { useState, useRef } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, TextInput, Dimensions, StatusBar, ScrollView, KeyboardAvoidingView, Platform, Modal } from 'react-native';
+import { Image } from 'expo-image';
 
 import { useRouter, Stack } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -9,6 +10,7 @@ const { width } = Dimensions.get('window');
 export default function OTPLoginScreen() {
   const [otp, setOtp] = useState(['', '', '', '', '', '']);
   const [showResendPopup, setShowResendPopup] = useState(false);
+  const [showResetPopup, setShowResetPopup] = useState(false);
   const router = useRouter();
   const inputRefs = useRef<any[]>([]);
 
@@ -44,6 +46,11 @@ export default function OTPLoginScreen() {
   };
 
   const handlePasswordReset = () => {
+    setShowResetPopup(true);
+  };
+
+  const closeResetPopup = () => {
+    setShowResetPopup(false);
     router.push('/reset-password');
   };
 
@@ -142,6 +149,21 @@ export default function OTPLoginScreen() {
             </Text>
 
             <TouchableOpacity style={styles.closeButton} onPress={handleCloseResendPopup}>
+              <Text style={styles.closeButtonText}>Close</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
+
+      <Modal visible={showResetPopup} transparent animationType="fade" onRequestClose={closeResetPopup}>
+        <View style={styles.modalOverlay}>
+          <View style={styles.popupContainer}>
+            <View style={styles.successIconContainer}>
+              <Image source={require('@/oysloe-assets/bottom menu/alert.png')} style={styles.promptIcon} contentFit="contain" />
+            </View>
+            <Text style={styles.popupTitle}>Check your messages</Text>
+            <Text style={styles.popupMessage}>We\u2019ve sent a reset code via SMS. Open your Messages app to continue.</Text>
+            <TouchableOpacity style={styles.closeButton} onPress={closeResetPopup}>
               <Text style={styles.closeButtonText}>Close</Text>
             </TouchableOpacity>
           </View>
@@ -358,5 +380,6 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: '600',
     color: '#FFFFFF'
-  }
+  },
+  promptIcon: { width: 28, height: 28, tintColor: '#FFFFFF' }
 });
