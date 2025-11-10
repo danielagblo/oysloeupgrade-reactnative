@@ -5,7 +5,11 @@ import { useRouter } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import ReviewsBox from './components/ReviewsBox';
 
-const { width } = Dimensions.get('window');
+const { width, height } = Dimensions.get('window');
+
+
+const vw = (percent: number) => (width * percent) / 100;
+const vh = (percent: number) => (height * percent) / 100;
 
 type Message = { author: string; text: string };
 
@@ -39,7 +43,7 @@ export default function AdDetailsScreen() {
         </View>
 
         <View style={styles.mainImageContainer}>
-          <Image source={require('@/oysloe-assets/Ad images/3d-car-city-street.jpg')} style={styles.mainImage} contentFit="cover" />
+          <Image source={require('@/oysloe-assets/Ad images/storey.png')} style={styles.mainImage} contentFit="cover" />
           <View style={styles.imageOverlayBadge}>
             <Text style={styles.overlayText}>1.5x</Text>
           </View>
@@ -50,37 +54,62 @@ export default function AdDetailsScreen() {
 
         <View style={styles.sectionCard}>
           <View style={styles.locationRow}>
-            <Image source={require('@/oysloe-assets/Ad details screen/map.png')} style={styles.locationIcon} />
+          < Image source={require( '@/oysloe-assets/Ad details screen/map.png' ) }
+style={styles.locationIcon} />
             <Text style={styles.locationText}>Lashibi, Accra</Text>
           </View>
           <Text style={styles.productTitle}>Six bedroom apartment boys quarters self compound</Text>
 
           <View style={styles.pricingRow}>
             <View style={styles.pricingOption}>
-              <RNImage source={require('@/oysloe-assets/Ad details screen/Pricing filter.png')} style={styles.cediIcon} />
-              <Text style={styles.pricingAmount}>120</Text>
-              <Text style={styles.pricingPeriod}>Daily</Text>
+              <Text style={styles.pricingAmount}>₵ 120</Text>
+              <Text style={styles.pricingPeriod}>Daily 3xmns</Text>
             </View>
             <View style={styles.pricingOption}>
-              <RNImage source={require('@/oysloe-assets/Ad details screen/Pricing filter.png')} style={styles.cediIcon} />
-              <Text style={styles.pricingAmount}>720</Text>
-              <Text style={styles.pricingPeriod}>Weekly</Text>
+              <Text style={styles.pricingAmount}>₵ 720</Text>
+              <Text style={styles.pricingPeriod}>Weekly 4xmns</Text>
             </View>
             <View style={styles.pricingOption}>
-              <RNImage source={require('@/oysloe-assets/Ad details screen/Pricing filter.png')} style={styles.cediIcon} />
-              <Text style={styles.pricingAmount}>65,000</Text>
-              <Text style={styles.pricingPeriod}>Monthly</Text>
+              <Text style={styles.pricingAmount}>₵ 65,000</Text>
+              <Text style={styles.pricingPeriod}>Monthly 6x mns</Text>
             </View>
           </View>
 
           <View style={styles.specificationsSection}>
             <View style={styles.specRow}>
-              <View style={styles.specBullet} />
-              <Text style={styles.specText}><Text style={styles.specLabel}>State </Text><Text style={styles.specValue}>Brand new</Text></Text>
+              <Text style={styles.specBullet}>•</Text>
+              <View style={styles.specContent}>
+                <Text style={styles.specLabel}>State </Text>
+                <Text style={styles.specValue}>Brand new</Text>
+              </View>
             </View>
             <View style={styles.specRow}>
-              <View style={styles.specBullet} />
-              <Text style={styles.specText}><Text style={styles.specLabel}>Manufacturer </Text><Text style={styles.specValue}>Volkswagen</Text></Text>
+              <Text style={styles.specBullet}>•</Text>
+              <View style={styles.specContent}>
+                <Text style={styles.specLabel}>Manufacturer </Text>
+                <Text style={styles.specValue}>Volkswagen</Text>
+              </View>
+            </View>
+            <View style={styles.specRow}>
+              <Text style={styles.specBullet}>•</Text>
+              <View style={styles.specContent}>
+                <Text style={styles.specLabel}>Year make </Text>
+                <Text style={styles.specValue}>2021</Text>
+              </View>
+            </View>
+            <View style={styles.specRow}>
+              <Text style={styles.specBullet}>•</Text>
+              <View style={styles.specContent}>
+                <Text style={styles.specLabel}>Model </Text>
+                <Text style={styles.specValue}>Aud</Text>
+              </View>
+            </View>
+            <View style={styles.specRow}>
+              <Text style={styles.specBullet}>•</Text>
+              <View style={styles.specContent}>
+                <Text style={styles.specLabel}>Body color </Text>
+                <Text style={styles.specValue}>Black</Text>
+              </View>
             </View>
           </View>
         </View>
@@ -155,30 +184,47 @@ const styles = StyleSheet.create({
 
   mainImageContainer: { width: '100%', height: width * 0.6, backgroundColor: '#fff', justifyContent: 'center' },
   mainImage: { width: '100%', height: '100%' },
-  imageOverlayBadge: { position: 'absolute', top: 18, right: 18, backgroundColor: '#f4f4f4aa', borderRadius: 16, paddingHorizontal: 8, paddingVertical: 4 },
-  overlayText: { fontSize: 12, color: '#374957', fontWeight: '500' },
+  imageOverlayBadge: { 
+    position: 'absolute', 
+    top: vh(2.5), 
+    left: vw(4), 
+    backgroundColor: '#74ffa7', // Mint green
+    borderRadius: vw(4), 
+    paddingHorizontal: vw(2.5), 
+    paddingVertical: vh(0.6),
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 3,
+  },
+  overlayText: { 
+    fontSize: vw(3.2), 
+    color: '#333333', // Grey text
+    fontWeight: '700' 
+  },
   paginationContainer: { position: 'absolute', bottom: 12, right: 12, backgroundColor: '#ffffffcc', paddingHorizontal: 8, paddingVertical: 4, borderRadius: 10 },
   paginationText: { fontSize: 12, color: '#374957' },
 
-  sectionCard: { backgroundColor: '#fff', margin: 10, borderRadius: 12, padding: 12 },
-  locationRow: { flexDirection: 'row', alignItems: 'center', marginBottom: 8 },
-  locationIcon: { width: 12, height: 12, marginRight: 8 },
-  locationText: { fontSize: 13, color: '#504e4e', fontWeight: '500' },
-  productTitle: { fontSize: 18, fontWeight: '500', color: '#374957', marginBottom: 12 },
-  sectionTitle: { fontSize: 16, fontWeight: '500', color: '#374957', marginBottom: 12 },
+  sectionCard: { backgroundColor: '#fff', margin: vh(1.2), borderRadius: vw(3), padding: vw(3) },
+  locationRow: { flexDirection: 'row', alignItems: 'center', marginBottom: vh(1) },
+  locationIcon: { width: vw(4.5), height: vw(4.5), marginRight: vw(2) },
+  locationBullet: { fontSize: vw(3.5), color: '#9ca3af', marginRight: vw(1.5) },
+  locationText: { fontSize: vw(3.2), color: '#9ca3af', fontWeight: '400' }, // Faint gray
+  productTitle: { fontSize: vw(4.5), fontWeight: '600', color: '#1F2933', marginBottom: vh(1.5) },
+  sectionTitle: { fontSize: vw(4), fontWeight: '600', color: '#374957', marginBottom: vh(1.5) },
 
-  pricingRow: { flexDirection: 'row', justifyContent: 'space-between', marginTop: 8, marginBottom: 12 },
+  pricingRow: { flexDirection: 'row', justifyContent: 'space-between', marginTop: vh(1), marginBottom: vh(1.5) },
   pricingOption: { flex: 1, alignItems: 'center' },
-  cediIcon: { width: 12, height: 12, marginBottom: 4 },
-  pricingAmount: { fontSize: 20, fontWeight: '600', color: '#374957' },
-  pricingPeriod: { fontSize: 12, color: '#374957', marginTop: 2 },
+  pricingAmount: { fontSize: vw(5.5), fontWeight: '700', color: '#1F2933' }, // Dark, bold
+  pricingPeriod: { fontSize: vw(3), color: '#9ca3af', marginTop: vh(0.3), fontWeight: '400' }, // Faint gray
 
-  specificationsSection: { marginTop: 6, marginBottom: 6 },
-  specRow: { flexDirection: 'row', alignItems: 'center', marginBottom: 8 },
-  specBullet: { width: 6, height: 6, borderRadius: 3, backgroundColor: '#374957', marginRight: 8 },
-  specText: { fontSize: 13, color: '#374957' },
-  specLabel: { fontWeight: '600' },
-  specValue: { fontWeight: '400' },
+  specificationsSection: { marginTop: vh(0.8), marginBottom: vh(0.8) },
+  specRow: { flexDirection: 'row', alignItems: 'flex-start', marginBottom: vh(0.8) },
+  specBullet: { fontSize: vw(3.5), color: '#1F2933', marginRight: vw(2), marginTop: vh(0.1) },
+  specContent: { flex: 1, flexDirection: 'row', flexWrap: 'wrap' },
+  specLabel: { fontSize: vw(3.2), fontWeight: '600', color: '#1F2933' },
+  specValue: { fontSize: vw(3.2), fontWeight: '400', color: '#9ca3af' }, // Faint gray
 
   chatList: { maxHeight: 150, marginBottom: 8 },
   chatBubble: { borderRadius: 16, padding: 10, marginVertical: 4, maxWidth: '80%' },

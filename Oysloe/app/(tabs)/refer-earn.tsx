@@ -34,7 +34,7 @@ export default function ReferEarnScreen() {
           <Text style={styles.backIcon}>←</Text>
           <Text style={styles.backText}>Back</Text>
         </TouchableOpacity>
-        <Text style={styles.headerTitle}>Earn</Text>
+        <Text style={styles.headerTitle}>Refer and Earn</Text>
         <View style={{ width: 60 }} />
       </View>
 
@@ -46,13 +46,13 @@ export default function ReferEarnScreen() {
           </View>
           <View style={styles.pointsCardRight}>
             <Text style={styles.pointsValue}>10,000</Text>
-            <Text style={styles.pointsEquivalent}>equals ₵10</Text>
+            <Text style={styles.pointsEquivalent}>equals $10</Text>
           </View>
           <Text style={styles.cardArrow}>→</Text>
         </TouchableOpacity>
 
         <View style={styles.actionsRow}>
-          <TouchableOpacity style={styles.actionCard} activeOpacity={0.85}>
+          <TouchableOpacity style={styles.actionCard} activeOpacity={0.85} onPress={onPressEarn}>
             <Image source={require('../../oysloe-assets/refer and earn/Earn.png')} style={styles.actionIcon} />
             <Text style={styles.actionText}>Earn</Text>
             <Text style={styles.cardArrow}>→</Text>
@@ -96,28 +96,78 @@ Boost your business</Text>
 
       <PointsSheet visible={showPoints} onClose={() => setShowPoints(false)} />
 
-      {/* Level selection bottom sheet */}
+      {/* Earn bottom sheet */}
       <View style={[StyleSheet.absoluteFill, { display: showLevelSheet ? 'flex' : 'none' }]} pointerEvents={showLevelSheet ? 'auto' : 'none'}>
         <View style={styles.sheetOverlay}>
-          <TouchableOpacity style={StyleSheet.absoluteFill} onPress={() => setShowLevelSheet(false)} />
-          <View style={styles.sheetCard}>
+          <TouchableOpacity style={StyleSheet.absoluteFill} activeOpacity={1} onPress={() => setShowLevelSheet(false)} />
+          <View style={styles.earnSheetCard}>
             <View style={styles.sheetHandle} />
-            <TouchableOpacity style={styles.sheetRow} activeOpacity={0.9} onPress={() => setShowLevelSheet(false)}>
-              <Text style={styles.sheetTitle}>Silver</Text>
-              <Text style={styles.sheetSub}>10,000 points to silver</Text>
-              <View style={styles.sheetBar}><View style={[styles.sheetFill, { width: '12%' }]} /></View>
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.sheetRow} activeOpacity={0.9} onPress={() => setShowLevelSheet(false)}>
-              <Text style={styles.sheetTitle}>Gold</Text>
-              <Text style={styles.sheetSub}>100,000 points to gold</Text>
-              <View style={styles.sheetBar}><View style={[styles.sheetFill, { width: '55%' }]} /></View>
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.sheetRow} activeOpacity={0.9} onPress={() => setShowLevelSheet(false)}>
-              <Text style={styles.sheetTitle}>Diamond</Text>
-              <Text style={styles.sheetSub}>1,000,000 points to diamond</Text>
-              <View style={styles.sheetBar}><View style={[styles.sheetFill, { width: '100%' }]} /></View>
-            </TouchableOpacity>
-            <Text style={styles.sheetHint}>Your earning levels also helps us to rank you.</Text>
+            <Text style={styles.earnSheetTitle}>We value friendship</Text>
+            <Text style={styles.earnSheetSubtitle}>Follow the steps below and get rewarded</Text>
+            
+            {/* Steps */}
+            <View style={styles.stepsContainer}>
+              <View style={styles.stepItem}>
+                <View style={styles.stepNumberCircle}>
+                  <Text style={styles.stepNumber}>1</Text>
+                </View>
+                <View style={styles.stepContent}>
+                  <Text style={styles.stepText}>Share your code</Text>
+                  <Image source={require('../../oysloe-assets/refer and earn/copy.png')} style={styles.stepIcon} />
+                </View>
+              </View>
+              
+              <View style={styles.stepConnector} />
+              
+              <View style={styles.stepItem}>
+                <View style={styles.stepNumberCircle}>
+                  <Text style={styles.stepNumber}>2</Text>
+                </View>
+                <View style={styles.stepContent}>
+                  <Text style={styles.stepText}>Your friend adds the code</Text>
+                </View>
+              </View>
+              
+              <View style={styles.stepConnector} />
+              
+              <View style={styles.stepItem}>
+                <View style={styles.stepNumberCircle}>
+                  <Text style={styles.stepNumber}>3</Text>
+                </View>
+                <View style={styles.stepContent}>
+                  <Text style={styles.stepText}>Your friend places an order</Text>
+                </View>
+              </View>
+            </View>
+
+            {/* Rewards Section */}
+            <View style={styles.rewardsContainer}>
+              <View style={styles.rewardItem}>
+                <Image source={require('../../oysloe-assets/refer and earn/Earn.png')} style={styles.rewardIcon} />
+                <View style={styles.rewardTextContainer}>
+                  <Text style={styles.rewardLabel}>You get</Text>
+                  <Text style={styles.rewardValue}>50 Points</Text>
+                </View>
+              </View>
+              
+              <View style={styles.rewardItem}>
+                <Image source={require('../../oysloe-assets/refer and earn/Redeem.png')} style={styles.rewardIcon} />
+                <View style={styles.rewardTextContainer}>
+                  <Text style={styles.rewardLabel}>They get</Text>
+                  <Text style={styles.rewardValue}>Discount coupon 10% or 10 points</Text>
+                </View>
+              </View>
+            </View>
+
+            {/* Referral Code Input */}
+            <View style={styles.referralCodeContainer}>
+              <View style={styles.referralCodeBox}>
+                <Text style={styles.referralCodeText}>{referralCode}</Text>
+              </View>
+              <TouchableOpacity style={styles.referralCopyButton} onPress={copyToClipboard}>
+                <Text style={styles.referralCopyButtonText}>Copy</Text>
+              </TouchableOpacity>
+            </View>
           </View>
         </View>
       </View>
@@ -210,5 +260,31 @@ const styles = StyleSheet.create({
   couponInput: { flex: 1, backgroundColor: '#fff', borderRadius: 8, paddingHorizontal: 12, paddingVertical: 10, marginRight: 8, borderWidth: 1, borderColor: '#e6e6e6' },
   couponApplyBtn: { backgroundColor: '#34d399', paddingHorizontal: 16, paddingVertical: 10, borderRadius: 8 },
   couponApplyText: { color: '#fff', fontWeight: '600' },
+
+  earnSheetCard: { backgroundColor: '#fff', borderTopLeftRadius: 16, borderTopRightRadius: 16, paddingHorizontal: 16, paddingTop: 10, paddingBottom: 32, maxHeight: '80%', marginTop: 'auto', shadowColor: '#000', shadowOffset: { width: 0, height: -2 }, shadowOpacity: 0.1, shadowRadius: 8, elevation: 10 },
+  earnSheetTitle: { fontSize: 18, fontWeight: '700', color: '#374957', marginBottom: 8, textAlign: 'center' },
+  earnSheetSubtitle: { fontSize: 14, color: '#9aa3ad', marginBottom: 24, textAlign: 'center' },
+  
+  stepsContainer: { marginBottom: 24 },
+  stepItem: { flexDirection: 'row', alignItems: 'center', marginBottom: 8 },
+  stepNumberCircle: { width: 32, height: 32, borderRadius: 16, backgroundColor: '#fff', borderWidth: 2, borderColor: '#e0e0e0', justifyContent: 'center', alignItems: 'center', marginRight: 12 },
+  stepNumber: { fontSize: 16, fontWeight: '700', color: '#6b7280' },
+  stepContent: { flex: 1, flexDirection: 'row', alignItems: 'center' },
+  stepText: { fontSize: 15, color: '#374957', fontWeight: '500' },
+  stepIcon: { width: 20, height: 20, marginLeft: 4 },
+  stepConnector: { width: 2, height: 20, backgroundColor: '#e0e0e0', marginLeft: 16, marginBottom: 8, marginTop: -4 },
+  
+  rewardsContainer: { marginBottom: 24 },
+  rewardItem: { flexDirection: 'row', alignItems: 'center', marginBottom: 16 },
+  rewardIcon: { width: 24, height: 24, marginRight: 12 },
+  rewardTextContainer: { flex: 1 },
+  rewardLabel: { fontSize: 14, color: '#6b7280', marginBottom: 4 },
+  rewardValue: { fontSize: 16, fontWeight: '700', color: '#374957' },
+  
+  referralCodeContainer: { flexDirection: 'row', alignItems: 'center', marginTop: 8 },
+  referralCodeBox: { flex: 1, backgroundColor: '#f3f4f6', borderRadius: 8, paddingHorizontal: 16, paddingVertical: 14, marginRight: 12 },
+  referralCodeText: { fontSize: 16, fontWeight: '700', color: '#374957', letterSpacing: 1 },
+  referralCopyButton: { backgroundColor: '#fff', borderRadius: 8, paddingHorizontal: 20, paddingVertical: 14, borderWidth: 1, borderColor: '#e6e6e6' },
+  referralCopyButtonText: { fontSize: 16, fontWeight: '600', color: '#374957' },
 });
 
