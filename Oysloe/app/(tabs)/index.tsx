@@ -23,6 +23,7 @@ const vh = (percent: number) => (height * percent) / 100;
 type Category = { id: number; name: string; icon?: any; isPlaceholder?: boolean };
 type Filter = { name: string; count: string; progress: number };
 type AdItem = { id: number; title: string; price: string; image: any; location: string };
+type SearchFilter = { id: string; label: string; icon?: any };
 
 const categories: Category[] = [
   { id: 1, name: 'Electronics', icon: require('@/oysloe-assets/Category icons/electronics.png') },
@@ -77,6 +78,33 @@ const ads: AdItem[] = [
     image: require('@/oysloe-assets/Ad images/grey-ocar.png'),
     location: 'Santamaria-kotobabi',
   },
+  {
+    id: 5,
+    title: 'Modern house',
+    price: '120',
+    image: require('@/oysloe-assets/Ad images/3d-car-city-street.jpg'),
+    location: 'Santamaria',
+  },
+  {
+    id: 6,
+    title: 'Spacious interior',
+    price: '1,670,000',
+    image: require('@/oysloe-assets/Ad images/storey.png'),
+    location: 'Kotobabi',
+  },
+];
+
+const exploreAds: AdItem[] = ads.slice(0, 4);
+
+const searchFiltersData: SearchFilter[] = [
+  { id: 'category', label: 'Category', icon: require('@/oysloe-assets/Ad details screen/category.png') },
+  { id: 'locations', label: 'Locations', icon: require('@/oysloe-assets/Ad details screen/map.png') },
+  { id: 'ad-purpose', label: 'Ad Purpose', icon: require('@/oysloe-assets/Ad details screen/ad-purpose.png') },
+  { id: 'highlights', label: 'Highlights', icon: require('@/oysloe-assets/Ad details screen/highlight.png') },
+  { id: 'pricing', label: 'Pricing', icon: require('@/oysloe-assets/Ad details screen/Pricing filter.png') },
+  { id: 'parameter-1', label: 'Parameter 1', icon: require('@/oysloe-assets/Ad details screen/parameter.png') },
+  { id: 'parameter-2', label: 'Parameter 2', icon: require('@/oysloe-assets/Ad details screen/parameter.png') },
+  { id: 'parameter-3', label: 'Parameter 3', icon: require('@/oysloe-assets/Ad details screen/parameter.png') },
 ];
 
 // (Removed filter buttons grid)
@@ -292,7 +320,7 @@ export default function HomeScreen(): React.ReactElement {
     <TouchableOpacity
       style={styles.adCard}
       onPress={() => {
-        router.push('/ad-details');
+        router.push('/(tabs)/ad-details');
       }}
     >
       <Image source={item.image} style={styles.adImage} />
@@ -368,22 +396,81 @@ export default function HomeScreen(): React.ReactElement {
           </Animated.View>
         </View>
 
-        <View style={styles.categoriesContainer}>
-            <FlatList data={categories} renderItem={renderCategory} keyExtractor={(item) => item.id.toString()} numColumns={4} scrollEnabled={false} contentContainerStyle={styles.categoriesGrid} />
-        </View>
+        {!isSearchFocused ? (
+          <>
+            <View style={styles.categoriesContainer}>
+              <FlatList
+                data={categories}
+                renderItem={renderCategory}
+                keyExtractor={(item) => item.id.toString()}
+                numColumns={4}
+                scrollEnabled={false}
+                contentContainerStyle={styles.categoriesGrid}
+              />
+            </View>
 
-        <View style={styles.exploreSection}>
-          <View style={styles.exploreHeader}>
-            <Text style={styles.exploreTitle}>Explore Ads</Text>
-            <TouchableOpacity style={styles.showAllButton}>
-              <Text style={styles.showAllText}>Show All</Text>
-            </TouchableOpacity>
+            <View style={styles.exploreSection}>
+              <View style={styles.exploreHeader}>
+                <Text style={styles.exploreTitle}>Explore Ads</Text>
+                <TouchableOpacity style={styles.showAllButton}>
+                  <Text style={styles.showAllText}>Show All</Text>
+                </TouchableOpacity>
+              </View>
+
+              <FlatList
+                data={filters}
+                renderItem={renderFilter}
+                keyExtractor={(_, i) => i.toString()}
+                horizontal
+                showsHorizontalScrollIndicator={false}
+                style={styles.filtersContainer}
+                contentContainerStyle={styles.filtersContent}
+              />
+
+              <FlatList
+                data={exploreAds}
+                renderItem={renderAd}
+                keyExtractor={(item) => item.id.toString()}
+                numColumns={2}
+                scrollEnabled={false}
+                contentContainerStyle={styles.adsGrid}
+                columnWrapperStyle={styles.adRow}
+              />
+            </View>
+          </>
+        ) : (
+          <View style={styles.searchResultsContainer}>
+            <View style={styles.searchFiltersContainer}>
+              {searchFiltersData.map((filter) => (
+                <TouchableOpacity 
+                  key={filter.id} 
+                  style={styles.searchFilterPill} 
+                  activeOpacity={0.85}
+                  onPress={() => {
+                    if (filter.id === 'category') {
+                      setShowCategorySheet(true);
+                    }
+                  }}
+                >
+                  <Text style={styles.searchFilterLabel} numberOfLines={1}>
+                    {filter.label}
+                  </Text>
+                  {filter.icon ? <Image source={filter.icon} style={styles.searchFilterIcon} /> : null}
+                </TouchableOpacity>
+              ))}
+            </View>
+
+            <FlatList
+              data={ads}
+              renderItem={renderAd}
+              keyExtractor={(item) => item.id.toString()}
+              numColumns={2}
+              scrollEnabled={false}
+              contentContainerStyle={styles.searchResultsGrid}
+              columnWrapperStyle={styles.adRow}
+            />
           </View>
-
-          <FlatList data={filters} renderItem={renderFilter} keyExtractor={(_, i) => i.toString()} horizontal showsHorizontalScrollIndicator={false} style={styles.filtersContainer} contentContainerStyle={styles.filtersContent} />
-
-          <FlatList data={ads} renderItem={renderAd} keyExtractor={(item) => item.id.toString()} numColumns={2} scrollEnabled={false} contentContainerStyle={styles.adsGrid} columnWrapperStyle={styles.adRow} />
-        </View>
+        )}
   </Animated.ScrollView>
 
       {/* Category Selection Bottom Sheet */}
@@ -496,6 +583,45 @@ const styles = StyleSheet.create({
   locationText: { fontSize: vw(2.6), color: '#666', fontWeight: '400' },
   adTitle: { fontSize: 14, color: '#333', paddingHorizontal: 10, paddingTop: 4, paddingBottom: 4, fontWeight: '500' },
   adPrice: { fontSize: 12, color: '#666', paddingHorizontal: 10, paddingBottom: 10, fontWeight: '600' },
+  searchResultsContainer: { paddingHorizontal: 20, paddingBottom: 100 },
+  searchFiltersContainer: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    justifyContent: 'space-between',
+    marginBottom: 20,
+  },
+  searchFilterPill: {
+    width: '24%',
+    minWidth: vw(22),
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    backgroundColor: '#f5f7fa',
+    borderRadius: vw(4.2),
+    paddingVertical: vw(1.9),
+    paddingHorizontal: vw(2.2),
+    marginBottom: vw(2.2),
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.04,
+    shadowRadius: 4,
+    elevation: 1,
+  },
+  searchFilterIcon: {
+    width: vw(3.8),
+    height: vw(3.8),
+    marginLeft: vw(1),
+    resizeMode: 'contain',
+    tintColor: '#7A8699',
+  },
+  searchFilterLabel: {
+    flex: 1,
+    fontSize: vw(1.9),
+    color: '#374957',
+    fontWeight: '600',
+    marginRight: vw(0.8),
+  },
+  searchResultsGrid: { paddingBottom: 20 },
   
   // Filter buttons
   filterButtonsContainer: { 

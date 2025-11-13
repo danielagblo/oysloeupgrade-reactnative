@@ -155,6 +155,13 @@ export default function TabLayout() {
         } }
       ),
       _jsx(Tabs.Screen, {
+        name: "ad-details",
+        options: {
+          href: null,
+          headerShown: false
+        } }
+      ),
+      _jsx(Tabs.Screen, {
         name: "terms-and-conditions",
         options: {
           href: null,

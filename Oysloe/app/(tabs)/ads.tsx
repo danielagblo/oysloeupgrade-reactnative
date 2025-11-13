@@ -84,7 +84,7 @@ export default function AdsScreen() {
   function moveTo(adId: string, status: string) {
     setAds((prev) => prev.map((a) => a.id === adId ? { ...a, status } : a));
     setSelectedTab(status);
-    setSelectedAdId(adId);
+    setSelectedAdId(null);
   }
 
   return (
@@ -134,7 +134,7 @@ export default function AdsScreen() {
           keyExtractor: (item: any) => item.id,
           renderItem: ({ item, index }: { item: any; index: number }) =>
           _jsxs(View, { children: [
-            _jsxs(TouchableOpacity, { activeOpacity: 0.9, onPress: () => setSelectedAdId(item.id), style: styles.card, children: [
+            _jsxs(View, { style: styles.card, children: [
               _jsx(Image, { source: item.image, style: styles.cardImage, contentFit: "cover" }),
               _jsxs(View, { style: styles.cardBody, children: [
                 _jsxs(View, { style: styles.metricsRow, children: [
@@ -144,13 +144,18 @@ export default function AdsScreen() {
                 _jsx(Text, { style: styles.cardTitle, numberOfLines: 1, children: item.title }),
                 _jsxs(Text, { style: styles.cardPrice, children: ["\xA2 ", item.price] })] }
               ),
-              index === 0 ?
-              _jsx(TouchableOpacity, { style: styles.dotMenu, children:
-                _jsx(Text, { style: styles.dotMenuText, children: "\u22EF" }) }
-              ) :
-
-              _jsx(TouchableOpacity, { style: styles.closeBtn, children:
+              selectedAdId === item.id ?
+              _jsx(TouchableOpacity, { 
+                style: styles.closeBtn, 
+                onPress: () => setSelectedAdId(null),
+                children:
                 _jsx(Text, { style: styles.closeBtnText, children: "\xD7" }) }
+              ) :
+              _jsx(TouchableOpacity, { 
+                style: styles.dotMenu, 
+                onPress: () => setSelectedAdId(item.id),
+                children:
+                _jsx(Text, { style: styles.dotMenuText, children: "\u22EF" }) }
               )] }
 
             ),

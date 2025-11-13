@@ -135,10 +135,23 @@ export default function ChatScreen() {
           </ScrollView>
         ) : null}
 
-        {(isChat && chatData.length === 0) || (isSupport && supportCases.length === 0) ? (
-          <View style={styles.emptyState}>
-            <Image source={require('@/oysloe-assets/Ad details screen/no.png')} style={styles.emptyImage} />
-            <Text style={styles.emptyText}>No data to show</Text>
+        {isChat && chatData.length === 0 ? (
+          <View style={styles.chatEmptyState}>
+            <Image
+              source={require('@/oysloe-assets/Ad details screen/no-data.png')}
+              style={styles.chatEmptyImage}
+            />
+            <Text style={styles.emptyText}>No chats yet</Text>
+          </View>
+        ) : null}
+
+        {isSupport && supportCases.length === 0 ? (
+          <View style={styles.supportEmptyState}>
+            <Image
+              source={require('@/oysloe-assets/Ad details screen/no-data.png')}
+              style={styles.supportEmptyImage}
+            />
+            <Text style={styles.emptyText}>No open support cases</Text>
           </View>
         ) : null}
       </View>
@@ -271,19 +284,37 @@ const styles = StyleSheet.create({
     fontWeight: '700',
     marginBottom: 12
   },
-  emptyState: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center'
-  },
-  emptyImage: {
-    width: 120,
-    height: 120,
-    marginBottom: 14
-  },
   emptyText: {
     fontSize: 12,
     color: '#7d8b96'
+  },
+  chatEmptyState: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingVertical: 40
+  },
+  chatEmptyImage: {
+    width: width * 0.8,
+    height: width * 0.8,
+    maxWidth: 320,
+    maxHeight: 320,
+    marginBottom: 20,
+    resizeMode: 'contain'
+  },
+  supportEmptyState: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingVertical: 40
+  },
+  supportEmptyImage: {
+    width: width * 0.8,
+    height: width * 0.8,
+    maxWidth: 320,
+    maxHeight: 320,
+    marginBottom: 20,
+    resizeMode: 'contain'
   },
   chatList: {
     flex: 1,

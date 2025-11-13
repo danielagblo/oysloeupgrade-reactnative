@@ -45,7 +45,6 @@ export default function RootLayout() {
           _jsx(Stack.Screen, { name: "login", options: { headerShown: false } }),
           _jsx(Stack.Screen, { name: "signup", options: { headerShown: false } }),
           _jsx(Stack.Screen, { name: "reset-password", options: { headerShown: false } }),
-          _jsx(Stack.Screen, { name: "ad-details", options: { headerShown: false } }),
           _jsx(Stack.Screen, { name: "setup", options: { headerShown: false } }),
           _jsx(Stack.Screen, { name: "setup-payment", options: { headerShown: false } }),
           _jsx(Stack.Screen, { name: "edit-profile", options: { headerShown: false } }),
