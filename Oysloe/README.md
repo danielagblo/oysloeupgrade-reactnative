@@ -10,7 +10,6 @@
 
 2. Start the app
 
-3. ``bash
    cd Oysloe
 
    ```bash
