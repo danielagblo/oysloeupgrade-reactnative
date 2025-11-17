@@ -4,7 +4,8 @@ import { View, Text, StyleSheet, ScrollView, Dimensions, TouchableOpacity, TextI
 import { Image } from 'expo-image';
 import { router, useLocalSearchParams } from 'expo-router';
 import * as ImagePicker from 'expo-image-picker';
-import { useAudioRecorder, useAudioPlayer, RecordingPresets } from 'expo-audio';
+import { useAudioRecorder, RecordingPresets, setAudioModeAsync } from 'expo-audio';
+import { Audio } from 'expo-av';
 import { Ionicons } from '@expo/vector-icons';
 
 const { width, height } = Dimensions.get('window');
@@ -117,6 +118,9 @@ export default function ChatConversationScreen() {
           messageText={messageText}
           setMessageText={setMessageText}
           onSend={sendMessage}
+          messages={messages}
+          setMessages={setMessages}
+          scrollViewRef={scrollViewRef}
         />
       </KeyboardAvoidingView>
     </SafeAreaView>
@@ -176,16 +180,37 @@ type InputBarProps = {
   messageText: string;
   setMessageText: (text: string) => void;
   onSend: () => void;
+  messages: Message[];
+  setMessages: (messages: Message[]) => void;
+  scrollViewRef: React.RefObject<ScrollView | null>;
 };
 
-function InputBar({ selectedImage, setSelectedImage, messageText, setMessageText, onSend }: InputBarProps) {
+function InputBar({ selectedImage, setSelectedImage, messageText, setMessageText, onSend, messages, setMessages, scrollViewRef }: InputBarProps) {
   const [isRecording, setIsRecording] = useState(false);
   const [recordingUri, setRecordingUri] = useState<string | null>(null);
   const [recordingDuration, setRecordingDuration] = useState(0);
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [sound, setSound] = useState<Audio.Sound | null>(null);
   const waveAnimation = useRef(new Animated.Value(0)).current;
   
   const audioRecorder = useAudioRecorder(RecordingPresets.HIGH_QUALITY);
-  const audioPlayer = useAudioPlayer(recordingUri || '');
+
+  // Initialize audio mode for iOS on mount using expo-audio API
+  useEffect(() => {
+    const setupAudio = async () => {
+      try {
+        // Use expo-audio's setAudioModeAsync to enable recording on iOS
+        await setAudioModeAsync({
+          allowsRecording: true,
+          playsInSilentMode: true,
+        });
+        console.log('Audio mode configured for recording on mount');
+      } catch (err) {
+        console.error('Failed to configure audio mode', err);
+      }
+    };
+    setupAudio();
+  }, []);
 
   // Cleanup on unmount
   useEffect(() => {
@@ -193,8 +218,11 @@ function InputBar({ selectedImage, setSelectedImage, messageText, setMessageText
       if (audioRecorder.isRecording) {
         audioRecorder.stop();
       }
+      if (sound) {
+        sound.unloadAsync();
+      }
     };
-  }, []);
+  }, [sound]);
 
   // Animate recording waves
   useEffect(() => {
@@ -225,9 +253,8 @@ function InputBar({ selectedImage, setSelectedImage, messageText, setMessageText
       interval = setInterval(() => {
         setRecordingDuration((prev) => prev + 1);
       }, 1000);
-    } else {
-      setRecordingDuration(0);
     }
+    // Don't reset duration when stopping - keep it for preview
     return () => clearInterval(interval);
   }, [isRecording]);
 
@@ -249,6 +276,14 @@ function InputBar({ selectedImage, setSelectedImage, messageText, setMessageText
 
   const startRecording = async () => {
     try {
+      console.log('Preparing audio for recording...');
+      // Ensure audio mode allows recording before starting
+      await setAudioModeAsync({
+        allowsRecording: true,
+        playsInSilentMode: true,
+      });
+      console.log('Audio mode configured successfully');
+
       console.log('Starting recording..');
       await audioRecorder.record();
       setIsRecording(true);
@@ -270,7 +305,6 @@ function InputBar({ selectedImage, setSelectedImage, messageText, setMessageText
     }
 
     console.log('Stopping recording..');
-    setIsRecording(false);
     
     try {
       await audioRecorder.stop();
@@ -280,20 +314,42 @@ function InputBar({ selectedImage, setSelectedImage, messageText, setMessageText
       if (audioRecorder.uri) {
         console.log('Recording stored at', audioRecorder.uri);
         setRecordingUri(audioRecorder.uri);
+        
+        // Load the sound for playback
+        const { sound: playbackSound } = await Audio.Sound.createAsync(
+          { uri: audioRecorder.uri },
+          { shouldPlay: false }
+        );
+        setSound(playbackSound);
       }
+      
+      setIsRecording(false);
     } catch (err) {
       console.error('Failed to stop recording', err);
+      setIsRecording(false);
     }
   };
 
   const playRecording = async () => {
-    if (!recordingUri) return;
+    if (!sound || !recordingUri) return;
 
     try {
-      if (audioPlayer.playing) {
-        audioPlayer.pause();
-      } else {
-        audioPlayer.play();
+      const status = await sound.getStatusAsync();
+      if (status.isLoaded) {
+        if (isPlaying) {
+          await sound.pauseAsync();
+          setIsPlaying(false);
+        } else {
+          await sound.playAsync();
+          setIsPlaying(true);
+          
+          // Listen for playback finish
+          sound.setOnPlaybackStatusUpdate((status: any) => {
+            if (status.didJustFinish) {
+              setIsPlaying(false);
+            }
+          });
+        }
       }
     } catch (err) {
       console.error('Failed to play recording', err);
@@ -301,17 +357,43 @@ function InputBar({ selectedImage, setSelectedImage, messageText, setMessageText
     }
   };
 
-  const deleteRecording = () => {
-    if (audioPlayer.playing) {
-      audioPlayer.pause();
+  const deleteRecording = async () => {
+    if (sound) {
+      if (isPlaying) {
+        await sound.stopAsync();
+      }
+      await sound.unloadAsync();
+      setSound(null);
     }
+    setIsPlaying(false);
     setRecordingUri(null);
+    setRecordingDuration(0); // Reset duration
   };
 
-  const sendRecording = () => {
+  const sendRecording = async () => {
     if (recordingUri) {
-      Alert.alert('Voice Note', `Sending voice note: ${recordingUri}`);
-      deleteRecording();
+      const newMessage: Message = {
+        id: `m${Date.now()}`,
+        text: `🎤 Voice message (${formatDuration(recordingDuration)})`,
+        time: new Date().toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: false }),
+        from: 'you',
+        showAvatar: true
+      };
+
+      // Add the voice message to the chat
+      setMessages([...messages, newMessage]);
+      
+      // In a real app, you would upload the recording file here
+      console.log('Sending voice note:', recordingUri);
+      
+      // Clean up the recording preview
+      await deleteRecording();
+      setRecordingDuration(0); // Reset duration after sending
+      
+      // Scroll to bottom after sending
+      setTimeout(() => {
+        scrollViewRef.current?.scrollToEnd({ animated: true });
+      }, 100);
     }
   };
 
@@ -332,24 +414,26 @@ function InputBar({ selectedImage, setSelectedImage, messageText, setMessageText
         </View>
       )}
 
-      {/* Recording Preview */}
+      {/* Recording Preview - WhatsApp style */}
       {recordingUri && !isRecording && (
         <View style={styles.recordingPreview}>
           <TouchableOpacity style={styles.playBtn} onPress={playRecording}>
             <Ionicons 
-              name={audioPlayer.playing ? 'pause' : 'play'} 
+              name={isPlaying ? 'pause' : 'play'} 
               size={20} 
               color="#FFFFFF" 
             />
           </TouchableOpacity>
           <View style={styles.waveformPlaceholder}>
-            <Text style={styles.recordingLabel}>Voice Note • Tap to {audioPlayer.playing ? 'pause' : 'play'}</Text>
+            <Text style={styles.recordingLabel}>
+              🎤 Voice Note • {formatDuration(recordingDuration)} • {isPlaying ? 'Pause' : 'Play'}
+            </Text>
           </View>
           <TouchableOpacity style={styles.deleteBtn} onPress={deleteRecording}>
-            <Ionicons name="close" size={20} color="#EF4444" />
+            <Ionicons name="close-circle" size={28} color="#EF4444" />
           </TouchableOpacity>
           <TouchableOpacity style={styles.sendRecordingBtn} onPress={sendRecording}>
-            <Ionicons name="send" size={20} color="#FFFFFF" />
+            <Ionicons name="send" size={22} color="#FFFFFF" />
           </TouchableOpacity>
         </View>
       )}
@@ -733,10 +817,8 @@ const styles = StyleSheet.create({
     fontWeight: '500'
   },
   deleteBtn: {
-    width: 32,
-    height: 32,
-    borderRadius: 16,
-    backgroundColor: '#FEE2E2',
+    width: 36,
+    height: 36,
     alignItems: 'center',
     justifyContent: 'center'
   },

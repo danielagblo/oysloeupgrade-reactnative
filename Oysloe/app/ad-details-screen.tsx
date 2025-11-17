@@ -1,8 +1,9 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { StyleSheet, ScrollView, View, Text, TouchableOpacity, Dimensions, TextInput, Image as RNImage } from 'react-native';
+import { StyleSheet, ScrollView, View, Text, TouchableOpacity, Dimensions, TextInput, Image as RNImage, Modal, PanResponder, Animated } from 'react-native';
 import { Image } from 'expo-image';
 import { useRouter } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { Ionicons } from '@expo/vector-icons';
 
 const { width, height } = Dimensions.get('window');
 
@@ -11,14 +12,120 @@ const vh = (percent: number) => (height * percent) / 100;
 
 type Message = { author: string; text: string };
 
+type Review = {
+  id: number;
+  author: string;
+  date: string;
+  rating: number;
+  comment: string;
+  liked: boolean;
+  likes: number;
+};
+
 export default function AdDetailsScreen() {
   const router = useRouter();
   const [chatInput, setChatInput] = useState('');
   const [chatMessages, setChatMessages] = useState<Message[]>([]);
   const [isFavorited, setIsFavorited] = useState(false);
   const [isTaken, setIsTaken] = useState(false);
+  const [showOfferModal, setShowOfferModal] = useState(false);
+  const [showReviewsModal, setShowReviewsModal] = useState(false);
+  const [offerInput, setOfferInput] = useState('');
+  const [selectedCut, setSelectedCut] = useState<number | null>(null);
   const chatScrollRef = useRef<ScrollView>(null);
   const chatInputRef = useRef<TextInput | null>(null);
+  
+  const modalTranslateY = useRef(new Animated.Value(0)).current;
+  
+  const panResponder = useRef(
+    PanResponder.create({
+      onStartShouldSetPanResponder: () => true,
+      onMoveShouldSetPanResponder: (_, gestureState) => {
+        return Math.abs(gestureState.dy) > 5;
+      },
+      onPanResponderMove: (_, gestureState) => {
+        if (gestureState.dy > 0) {
+          modalTranslateY.setValue(gestureState.dy);
+        }
+      },
+      onPanResponderRelease: (_, gestureState) => {
+        if (gestureState.dy > 150) {
+          Animated.timing(modalTranslateY, {
+            toValue: 1000,
+            duration: 300,
+            useNativeDriver: true,
+          }).start(() => {
+            setShowReviewsModal(false);
+            modalTranslateY.setValue(0);
+          });
+        } else {
+          Animated.spring(modalTranslateY, {
+            toValue: 0,
+            useNativeDriver: true,
+          }).start();
+        }
+      },
+    })
+  ).current;
+  
+  const [reviews, setReviews] = useState<Review[]>([
+    {
+      id: 1,
+      author: 'Yasmine Takudzwa Efrem',
+      date: '1st April',
+      rating: 5,
+      comment: 'I have went with the seller to see this ad I must confess I was impressed and I am willing to pay for it in the coming month.',
+      liked: false,
+      likes: 20,
+    },
+    {
+      id: 2,
+      author: 'Sandra Blom',
+      date: '1st April',
+      rating: 4,
+      comment: 'I have went with the seller to see this ad I must confess I was impressed and I am willing to pay for it in the coming month.',
+      liked: false,
+      likes: 20,
+    },
+    {
+      id: 3,
+      author: 'Isi April',
+      date: '1st April',
+      rating: 5,
+      comment: 'I have went with the seller to see this ad I must confess I was impressed and I am willing to pay for it in the coming month.',
+      liked: false,
+      likes: 20,
+    },
+    {
+      id: 4,
+      author: 'Sandra Blom',
+      date: '1st April',
+      rating: 4,
+      comment: 'I have went with the seller to see this ad I must confess I was impressed and I am willing to pay for it in the coming month.',
+      liked: false,
+      likes: 20,
+    },
+  ]);
+  
+  const toggleReviewLike = (reviewId: number) => {
+    setReviews(prevReviews =>
+      prevReviews.map(review =>
+        review.id === reviewId
+          ? {
+              ...review,
+              liked: !review.liked,
+              likes: review.liked ? review.likes - 1 : review.likes + 1,
+            }
+          : review
+      )
+    );
+  };
+
+  // Calculate the cut percentage text
+  const getCutText = () => {
+    if (!selectedCut) return '';
+    return `${selectedCut}% cut off on overall price`;
+  };
 
   useEffect(() => {
     if (chatMessages.length > 0) {
@@ -176,7 +283,7 @@ export default function AdDetailsScreen() {
               <RNImage source={require('@/oysloe-assets/Ad details screen/out going call.png')} style={styles.actionButtonIcon} />
               <Text style={styles.actionButtonText}>Caller 2</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.actionButton}>
+            <TouchableOpacity style={styles.actionButton} onPress={() => setShowOfferModal(true)}>
               <RNImage source={require('@/oysloe-assets/Ad details screen/Make an offer.png')} style={styles.actionButtonIcon} />
               <Text style={styles.actionButtonText}>Make an offer</Text>
             </TouchableOpacity>
@@ -372,7 +479,7 @@ export default function AdDetailsScreen() {
               ))}
             </View>
 
-            <TouchableOpacity style={styles.sellerReviewsButton}>
+            <TouchableOpacity style={styles.sellerReviewsButton} onPress={() => setShowReviewsModal(true)}>
               <Text style={styles.sellerReviewsButtonText}>Seller reviews</Text>
             </TouchableOpacity>
           </View>
@@ -471,6 +578,237 @@ export default function AdDetailsScreen() {
           </View>
         </View>
       </ScrollView>
+
+      {/* Reviews Modal */}
+      <Modal
+        visible={showReviewsModal}
+        animationType="slide"
+        transparent={true}
+        onRequestClose={() => setShowReviewsModal(false)}
+      >
+        <View style={styles.modalOverlay}>
+          <TouchableOpacity 
+            style={styles.modalOverlayTouchable} 
+            activeOpacity={1} 
+            onPress={() => setShowReviewsModal(false)}
+          />
+          <Animated.View 
+            style={[
+              styles.reviewsModalContent,
+              {
+                transform: [{ translateY: modalTranslateY }]
+              }
+            ]}
+          >
+            <View {...panResponder.panHandlers} style={styles.reviewsModalHandleArea}>
+              <View style={styles.reviewsModalHandle} />
+            </View>
+            
+            {/* Rating Summary Section */}
+            <View style={styles.reviewsSummarySection}>
+              <View style={styles.reviewsRatingLeft}>
+                <Text style={styles.reviewsAvgNumber}>4.5</Text>
+                <View style={styles.reviewsStarsRow}>
+                  <RNImage source={require('@/oysloe-assets/Ad details screen/star.png')} style={styles.reviewsStarIcon} />
+                  <RNImage source={require('@/oysloe-assets/Ad details screen/star.png')} style={styles.reviewsStarIcon} />
+                  <RNImage source={require('@/oysloe-assets/Ad details screen/star.png')} style={styles.reviewsStarIcon} />
+                  <RNImage source={require('@/oysloe-assets/Ad details screen/star.png')} style={styles.reviewsStarIcon} />
+                  <RNImage source={require('@/oysloe-assets/Ad details screen/star.png')} style={[styles.reviewsStarIcon, { opacity: 0.5 }]} />
+                </View>
+                <Text style={styles.reviewsTotalCount}>234 Reviews</Text>
+              </View>
+
+              <View style={styles.reviewsRatingBarsSection}>
+                {[5, 4, 3, 2, 1].map((stars) => (
+                  <View key={stars} style={styles.reviewsBarRow}>
+                    <RNImage source={require('@/oysloe-assets/Ad details screen/star.png')} style={styles.reviewsBarStarIcon} />
+                    <Text style={styles.reviewsBarStarNumber}>{stars}</Text>
+                    <View style={styles.reviewsProgressBarContainer}>
+                      <View style={[styles.reviewsProgressBarFill, { width: '50%' }]} />
+                    </View>
+                    <Text style={styles.reviewsBarPercentage}>50%</Text>
+                  </View>
+                ))}
+              </View>
+            </View>
+
+            {/* Filter Buttons */}
+            <View style={styles.modalFilterRow}>
+              <TouchableOpacity style={[styles.modalFilterButton, styles.modalFilterButtonActive]}>
+                <RNImage source={require('@/oysloe-assets/Ad details screen/star.png')} style={styles.modalFilterStarIcon} />
+                <Text style={[styles.modalFilterText, styles.modalFilterTextActive]}>All</Text>
+              </TouchableOpacity>
+              {[1, 2, 3, 4, 5].map((num) => (
+                <TouchableOpacity key={num} style={styles.modalFilterButton}>
+                  <RNImage source={require('@/oysloe-assets/Ad details screen/star.png')} style={styles.modalFilterStarIcon} />
+                  <Text style={styles.modalFilterText}>{num}</Text>
+                </TouchableOpacity>
+              ))}
+            </View>
+
+            {/* Comments Header */}
+            <View style={styles.commentsHeaderRow}>
+              <Text style={styles.commentsTitle}>Comments</Text>
+              <TouchableOpacity 
+                style={styles.makeReviewButton} 
+                onPress={() => {
+                  setShowReviewsModal(false);
+                  setTimeout(() => {
+                    router.push('/make-review');
+                  }, 300);
+                }}
+              >
+                <RNImage source={require('@/oysloe-assets/Ad details screen/make-review.png')} style={styles.makeReviewIcon} />
+                <Text style={styles.makeReviewText}>Make review</Text>
+              </TouchableOpacity>
+            </View>
+
+            {/* Comments List */}
+            <ScrollView 
+              style={styles.commentsScrollView}
+              showsVerticalScrollIndicator={false}
+            >
+              {reviews.map((review) => (
+                <View key={review.id} style={styles.commentCard}>
+                  <View style={styles.commentHeader}>
+                    <RNImage source={require('@/oysloe-assets/Ad images/guy.jpg')} style={styles.commentAvatar} />
+                    <View style={styles.commentHeaderInfo}>
+                      <Text style={styles.commentAuthor}>{review.author}</Text>
+                      <View style={styles.commentStarsRow}>
+                        {[...Array(5)].map((_, index) => (
+                          <RNImage 
+                            key={index} 
+                            source={require('@/oysloe-assets/Ad details screen/star.png')} 
+                            style={[
+                              styles.commentStarIcon,
+                              index >= review.rating && { opacity: 0.3 }
+                            ]} 
+                          />
+                        ))}
+                      </View>
+                    </View>
+                  </View>
+                  <Text style={styles.commentText}>{review.comment}</Text>
+                  <View style={styles.commentFooter}>
+                    <Text style={styles.commentDate}>{review.date}</Text>
+                    <View style={styles.commentActions}>
+                      <TouchableOpacity 
+                        style={styles.commentLikeButton}
+                        onPress={() => toggleReviewLike(review.id)}
+                      >
+                        <RNImage 
+                          source={
+                            review.liked 
+                              ? require('@/oysloe-assets/Ad details screen/liked.png')
+                              : require('@/oysloe-assets/Ad details screen/like.png')
+                          } 
+                          style={styles.commentLikeIcon} 
+                        />
+                        <Text style={styles.commentLikeText}>{review.liked ? 'Liked' : 'Like'}</Text>
+                      </TouchableOpacity>
+                      <Text style={styles.commentLikeCount}>{review.likes}</Text>
+                    </View>
+                  </View>
+                </View>
+              ))}
+            </ScrollView>
+          </Animated.View>
+        </View>
+      </Modal>
+
+      {/* Make Offer Modal */}
+      <Modal
+        visible={showOfferModal}
+        animationType="slide"
+        transparent={true}
+        onRequestClose={() => setShowOfferModal(false)}
+      >
+        <TouchableOpacity 
+          style={styles.modalOverlay} 
+          activeOpacity={1} 
+          onPress={() => setShowOfferModal(false)}
+        >
+          <View style={styles.offerModalContent} onStartShouldSetResponder={() => true}>
+            <View style={styles.offerModalHeader}>
+              <Ionicons name="pricetag-outline" size={24} color="#3333333" />
+              <Text style={styles.offerModalTitle}>Make Offer</Text>
+            </View>
+
+            <View style={styles.cutButtonsRow}>
+              <TouchableOpacity 
+                style={[styles.cutButton, selectedCut === 5 && styles.cutButtonActive]}
+                onPress={() => {
+                  setSelectedCut(5);
+                  setOfferInput('');
+                }}
+              >
+                <Text style={[styles.cutButtonText, selectedCut === 5 && styles.cutButtonTextActive]}>~5% cut</Text>
+              </TouchableOpacity>
+
+              <TouchableOpacity 
+                style={[styles.cutButton, selectedCut === 10 && styles.cutButtonActive]}
+                onPress={() => {
+                  setSelectedCut(10);
+                  setOfferInput('');
+                }}
+              >
+                <Text style={[styles.cutButtonText, selectedCut === 10 && styles.cutButtonTextActive]}>~10% cut</Text>
+              </TouchableOpacity>
+
+              <TouchableOpacity 
+                style={[styles.cutButton, selectedCut === 15 && styles.cutButtonActive]}
+                onPress={() => {
+                  setSelectedCut(15);
+                  setOfferInput('');
+                }}
+              >
+                <Text style={[styles.cutButtonText, selectedCut === 15 && styles.cutButtonTextActive]}>~15% cut</Text>
+              </TouchableOpacity>
+
+              <TouchableOpacity 
+                style={[styles.cutButton, selectedCut === 20 && styles.cutButtonActive]}
+                onPress={() => {
+                  setSelectedCut(20);
+                  setOfferInput('');
+                }}
+              >
+                <Text style={[styles.cutButtonText, selectedCut === 20 && styles.cutButtonTextActive]}>~20% cut</Text>
+              </TouchableOpacity>
+            </View>
+
+            <View style={styles.offerInputRow}>
+              <View style={styles.offerInputContainer}>
+                {!selectedCut ? (
+                  <TextInput
+                    style={styles.offerTextInput}
+                    placeholder="Make an offer"
+                    placeholderTextColor="#9CA3AF"
+                    value={offerInput}
+                    onChangeText={setOfferInput}
+                  />
+                ) : (
+                  <Text style={styles.offerMainText}>~{selectedCut}% cut</Text>
+                )}
+                {selectedCut && (
+                  <Text style={styles.offerSubtext}>{getCutText()}</Text>
+                )}
+              </View>
+              <TouchableOpacity 
+                style={styles.offerSendButton}
+                onPress={() => {
+                  // Handle sending the offer
+                  console.log('Sending offer:', offerInput, 'Cut:', selectedCut);
+                  setShowOfferModal(false);
+                  setOfferInput('');
+                  setSelectedCut(null);
+                }}
+              >
+                <Ionicons name="send" size={20} color="#FFFFFF" />
+              </TouchableOpacity>
+            </View>
+          </View>
+        </TouchableOpacity>
+      </Modal>
     </SafeAreaView>
   );
 }
@@ -1106,6 +1444,336 @@ const styles = StyleSheet.create({
     marginBottom: vh(1),
     paddingHorizontal: vw(2.5),
   },
+
+  // Make Offer Modal Styles
+  modalOverlay: {
+    flex: 1,
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    justifyContent: 'flex-end',
+  },
+  modalOverlayTouchable: {
+    flex: 1,
+  },
+  offerModalContent: {
+    backgroundColor: '#FFFFFF',
+    borderTopLeftRadius: 24,
+    borderTopRightRadius: 24,
+    paddingHorizontal: vw(5),
+    paddingTop: vh(3),
+    paddingBottom: vh(4),
+    minHeight: vh(35),
+  },
+  offerModalHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: vh(2.5),
+    gap: 12,
+  },
+  offerModalTitle: {
+    fontSize: vw(5),
+    fontWeight: '600',
+    color: '#374957',
+  },
+  cutButtonsRow: {
+    flexDirection: 'row',
+    gap: 12,
+    marginBottom: vh(2.5),
+    flexWrap: 'wrap',
+  },
+  cutButton: {
+    backgroundColor: '#F3F4F6',
+    borderRadius: 20,
+    paddingVertical: vh(1.2),
+    paddingHorizontal: vw(5),
+    borderWidth: 1,
+    borderColor: 'transparent',
+  },
+  cutButtonActive: {
+    backgroundColor: '#E0F2FE',
+    borderColor: '#3B82F6',
+  },
+  cutButtonText: {
+    fontSize: vw(3.5),
+    fontWeight: '500',
+    color: '#6B7280',
+  },
+  cutButtonTextActive: {
+    color: '#3B82F6',
+    fontWeight: '600',
+  },
+  offerInputRow: {
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+    gap: 12,
+    marginBottom: vh(1.5),
+  },
+  offerInputContainer: {
+    flex: 1,
+    backgroundColor: '#F9FAFB',
+    borderRadius: 24,
+    borderWidth: 1,
+    borderColor: '#E5E7EB',
+    paddingHorizontal: vw(5),
+    paddingVertical: vh(1.8),
+  },
+  offerTextInput: {
+    fontSize: vw(3.8),
+    color: '#374957',
+    padding: 0,
+    margin: 0,
+  },
+  offerMainText: {
+    fontSize: vw(3.8),
+    color: '#374957',
+    fontWeight: '500',
+  },
+  offerSendButton: {
+    width: 48,
+    height: 48,
+    borderRadius: 24,
+    backgroundColor: '#9CA3AF',
+    alignItems: 'center',
+    justifyContent: 'center',
+    shadowColor: '#9CA3AF',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.3,
+    shadowRadius: 8,
+    elevation: 4,
+  },
+  offerSubtext: {
+    fontSize: vw(3),
+    color: '#9CA3AF',
+    marginTop: vh(0.5),
+  },
+
+  // Reviews Modal Styles
+  reviewsModalContent: {
+    backgroundColor: '#FFFFFF',
+    borderTopLeftRadius: 24,
+    borderTopRightRadius: 24,
+    paddingHorizontal: vw(4),
+    paddingTop: vh(1.5),
+    paddingBottom: vh(2),
+    maxHeight: vh(85),
+  },
+  reviewsModalHandle: {
+    width: 40,
+    height: 4,
+    backgroundColor: '#D1D5DB',
+    borderRadius: 2,
+    alignSelf: 'center',
+  },
+  reviewsModalHandleArea: {
+    paddingVertical: vh(1.5),
+    alignItems: 'center',
+  },
+  reviewsSummarySection: {
+    flexDirection: 'row',
+    paddingVertical: vh(2),
+    borderBottomWidth: 1,
+    borderBottomColor: '#F3F4F6',
+    marginBottom: vh(2),
+  },
+  reviewsRatingLeft: {
+    alignItems: 'center',
+    marginRight: vw(8),
+  },
+  reviewsAvgNumber: {
+    fontSize: vw(11),
+    fontWeight: 'bold',
+    color: '#374957',
+    marginBottom: vh(0.5),
+  },
+  reviewsStarsRow: {
+    flexDirection: 'row',
+    marginBottom: vh(0.5),
+  },
+  reviewsStarIcon: {
+    width: vw(4),
+    height: vw(4),
+    marginHorizontal: 1,
+  },
+  reviewsTotalCount: {
+    fontSize: vw(3.2),
+    color: '#374957',
+    fontWeight: '400',
+  },
+  reviewsRatingBarsSection: {
+    flex: 1,
+    justifyContent: 'center',
+  },
+  reviewsBarRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: vh(0.8),
+  },
+  reviewsBarStarIcon: {
+    width: vw(3.5),
+    height: vw(3.5),
+    marginRight: vw(1),
+  },
+  reviewsBarStarNumber: {
+    fontSize: vw(3.2),
+    fontWeight: '500',
+    color: '#374957',
+    width: vw(3),
+    marginRight: vw(2),
+  },
+  reviewsProgressBarContainer: {
+    flex: 1,
+    height: vh(1),
+    backgroundColor: '#E5E7EB',
+    borderRadius: 4,
+    marginRight: vw(2),
+  },
+  reviewsProgressBarFill: {
+    height: '100%',
+    backgroundColor: '#374957',
+    borderRadius: 4,
+  },
+  reviewsBarPercentage: {
+    fontSize: vw(3),
+    color: '#374957',
+    fontWeight: '400',
+    width: vw(9),
+    textAlign: 'right',
+  },
+  modalFilterRow: {
+    flexDirection: 'row',
+    marginBottom: vh(2.5),
+    gap: vw(2.5),
+  },
+  modalFilterButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: vw(3),
+    paddingVertical: vh(0.8),
+    borderRadius: 16,
+    backgroundColor: '#F9FAFB',
+    gap: vw(1),
+  },
+  modalFilterButtonActive: {
+    backgroundColor: '#374957',
+  },
+  modalFilterStarIcon: {
+    width: vw(3.5),
+    height: vw(3.5),
+  },
+  modalFilterText: {
+    fontSize: vw(3.2),
+    color: '#374957',
+    fontWeight: '500',
+  },
+  modalFilterTextActive: {
+    color: '#FFFFFF',
+  },
+  commentsHeaderRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginTop: vh(1),
+    marginBottom: vh(2.5),
+    paddingBottom: vh(1.5),
+    borderBottomWidth: 1,
+    borderBottomColor: '#F3F4F6',
+  },
+  commentsTitle: {
+    fontSize: vw(4.5),
+    fontWeight: '600',
+    color: '#374957',
+  },
+  makeReviewButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: vw(1.5),
+  },
+  makeReviewIcon: {
+    width: vw(5),
+    height: vw(5),
+  },
+  makeReviewText: {
+    fontSize: vw(3.5),
+    color: '#374957',
+    fontWeight: '500',
+  },
+  commentsScrollView: {
+    maxHeight: vh(45),
+  },
+  commentCard: {
+    marginBottom: vh(3),
+    paddingBottom: vh(2.5),
+    borderBottomWidth: 1,
+    borderBottomColor: '#F3F4F6',
+  },
+  commentHeader: {
+    flexDirection: 'row',
+    marginBottom: vh(1.5),
+  },
+  commentAvatar: {
+    width: vw(10),
+    height: vw(10),
+    borderRadius: vw(5),
+    marginRight: vw(3),
+  },
+  commentHeaderInfo: {
+    flex: 1,
+  },
+  commentAuthor: {
+    fontSize: vw(3.8),
+    fontWeight: '600',
+    color: '#374957',
+    marginBottom: vh(0.5),
+  },
+  commentStarsRow: {
+    flexDirection: 'row',
+    gap: vw(0.5),
+  },
+  commentStarIcon: {
+    width: vw(3.5),
+    height: vw(3.5),
+  },
+  commentText: {
+    fontSize: vw(3.5),
+    color: '#374957',
+    lineHeight: vw(5),
+    marginBottom: vh(1),
+  },
+  commentFooter: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  commentDate: {
+    fontSize: vw(3),
+    color: '#374957',
+    opacity: 0.6,
+  },
+  commentActions: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: vw(2),
+  },
+  commentLikeButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: vw(1),
+  },
+  commentLikeIcon: {
+    width: vw(4),
+    height: vw(4),
+  },
+  commentLikeText: {
+    fontSize: vw(3.2),
+    color: '#374957',
+    fontWeight: '500',
+  },
+  commentLikeCount: {
+    fontSize: vw(3.2),
+    color: '#374957',
+    fontWeight: '500',
+  },
 });
+
+
 
 

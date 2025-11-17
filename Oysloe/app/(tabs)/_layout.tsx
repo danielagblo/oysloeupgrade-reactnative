@@ -174,6 +174,13 @@ export default function TabLayout() {
           href: null,
           headerShown: false
         } }
+      ),
+      _jsx(Tabs.Screen, {
+        name: "make-review",
+        options: {
+          href: null,
+          headerShown: false
+        } }
       )] }
     ));
 
