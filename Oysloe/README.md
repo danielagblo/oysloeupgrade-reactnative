@@ -10,6 +10,8 @@
 
 2. Start the app
 
+   cd Oysloe
+
    ```bash
    npx expo start
    ```
