@@ -5,9 +5,13 @@ import 'react-native-reanimated';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import * as Network from 'expo-network';
 import React from 'react';
+import { LogBox } from 'react-native';
 
 import { useColorScheme } from '@/hooks/use-color-scheme';import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import SlidingPanelProvider from '@/components/SlidingPanelProvider';
+
+// Suppress known react-native-drax warning
+LogBox.ignoreLogs(['Warning: ref.measureLayout must be called with a ref to a native component']);
 
 export default function RootLayout() {
   const colorScheme = useColorScheme();

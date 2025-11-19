@@ -32,6 +32,10 @@ export default function AdDetailsScreen() {
   const [showReviewsModal, setShowReviewsModal] = useState(false);
   const [offerInput, setOfferInput] = useState('');
   const [selectedCut, setSelectedCut] = useState<number | null>(null);
+  const [currentImageIndex, setCurrentImageIndex] = useState(2);
+  const [totalImages] = useState(4);
+  const [favoriteCount] = useState(12); // Number of people who favorited this ad
+  const [reportCount] = useState(32); // Number of people who reported this ad
   const chatScrollRef = useRef<ScrollView>(null);
   const chatInputRef = useRef<TextInput | null>(null);
   
@@ -121,6 +125,26 @@ export default function AdDetailsScreen() {
     );
   };
 
+  // Editing reviews state
+  const [editingReviewId, setEditingReviewId] = useState<number | null>(null);
+  const [editingText, setEditingText] = useState('');
+
+  const startEditing = (reviewId: number, currentText: string) => {
+    setEditingReviewId(reviewId);
+    setEditingText(currentText);
+  };
+
+  const saveEdit = (reviewId: number) => {
+    setReviews(prev => prev.map(r => (r.id === reviewId ? { ...r, comment: editingText } : r)));
+    setEditingReviewId(null);
+    setEditingText('');
+  };
+
+  const cancelEdit = () => {
+    setEditingReviewId(null);
+    setEditingText('');
+  };
+
   // Calculate the cut percentage text
   const getCutText = () => {
     if (!selectedCut) return '';
@@ -150,15 +174,33 @@ export default function AdDetailsScreen() {
             <Text style={styles.backText}>←</Text>
             <Text style={styles.backLabel}>Back</Text>
           </TouchableOpacity>
+          
+          <TouchableOpacity style={styles.headerCenter}>
+            <Text style={styles.imageCounter}>{currentImageIndex}/{totalImages}</Text>
+          </TouchableOpacity>
+          
+          <View style={styles.headerRight}>
+            <View style={styles.headerStat}>
+              <Image 
+                source={require('@/oysloe-assets/Ad details screen/flag.png')} 
+                style={styles.headerIcon}
+              />
+              <Text style={styles.headerStatText}>{reportCount}</Text>
+            </View>
+            <View style={styles.headerStat}>
+              <Image 
+                source={require('@/oysloe-assets/Ad details screen/favorited.png')} 
+                style={styles.headerIcon}
+              />
+              <Text style={styles.headerStatText}>{favoriteCount}</Text>
+            </View>
+          </View>
         </View>
 
         <View style={styles.mainImageContainer}>
           <Image source={require('@/oysloe-assets/Ad images/storey.png')} style={styles.mainImage} contentFit="cover" />
           <View style={styles.imageOverlayBadge}>
             <Text style={styles.overlayText}>1.5x</Text>
-          </View>
-          <View style={styles.paginationContainer}>
-            <Text style={styles.paginationText}>2/4</Text>
           </View>
         </View>
 
@@ -607,15 +649,15 @@ export default function AdDetailsScreen() {
             {/* Rating Summary Section */}
             <View style={styles.reviewsSummarySection}>
               <View style={styles.reviewsRatingLeft}>
-                <Text style={styles.reviewsAvgNumber}>4.5</Text>
+                <Text style={styles.reviewsAvgNumber}>{reviews.length === 0 ? '0' : '4.5'}</Text>
                 <View style={styles.reviewsStarsRow}>
-                  <RNImage source={require('@/oysloe-assets/Ad details screen/star.png')} style={styles.reviewsStarIcon} />
-                  <RNImage source={require('@/oysloe-assets/Ad details screen/star.png')} style={styles.reviewsStarIcon} />
-                  <RNImage source={require('@/oysloe-assets/Ad details screen/star.png')} style={styles.reviewsStarIcon} />
-                  <RNImage source={require('@/oysloe-assets/Ad details screen/star.png')} style={styles.reviewsStarIcon} />
-                  <RNImage source={require('@/oysloe-assets/Ad details screen/star.png')} style={[styles.reviewsStarIcon, { opacity: 0.5 }]} />
+                  <RNImage source={require('@/oysloe-assets/Ad details screen/star.png')} style={[styles.reviewsStarIcon, reviews.length === 0 && { opacity: 0.3 }]} />
+                  <RNImage source={require('@/oysloe-assets/Ad details screen/star.png')} style={[styles.reviewsStarIcon, reviews.length === 0 && { opacity: 0.3 }]} />
+                  <RNImage source={require('@/oysloe-assets/Ad details screen/star.png')} style={[styles.reviewsStarIcon, reviews.length === 0 && { opacity: 0.3 }]} />
+                  <RNImage source={require('@/oysloe-assets/Ad details screen/star.png')} style={[styles.reviewsStarIcon, reviews.length === 0 && { opacity: 0.3 }]} />
+                  <RNImage source={require('@/oysloe-assets/Ad details screen/star.png')} style={[styles.reviewsStarIcon, reviews.length === 0 ? { opacity: 0.3 } : { opacity: 0.5 }]} />
                 </View>
-                <Text style={styles.reviewsTotalCount}>234 Reviews</Text>
+                <Text style={styles.reviewsTotalCount}>{reviews.length === 0 ? '0 Reviews' : '234 Reviews'}</Text>
               </View>
 
               <View style={styles.reviewsRatingBarsSection}>
@@ -624,9 +666,9 @@ export default function AdDetailsScreen() {
                     <RNImage source={require('@/oysloe-assets/Ad details screen/star.png')} style={styles.reviewsBarStarIcon} />
                     <Text style={styles.reviewsBarStarNumber}>{stars}</Text>
                     <View style={styles.reviewsProgressBarContainer}>
-                      <View style={[styles.reviewsProgressBarFill, { width: '50%' }]} />
+                      <View style={[styles.reviewsProgressBarFill, { width: reviews.length === 0 ? '0%' : '50%' }]} />
                     </View>
-                    <Text style={styles.reviewsBarPercentage}>50%</Text>
+                    <Text style={styles.reviewsBarPercentage}>{reviews.length === 0 ? '0%' : '50%'}</Text>
                   </View>
                 ))}
               </View>
@@ -668,49 +710,90 @@ export default function AdDetailsScreen() {
               style={styles.commentsScrollView}
               showsVerticalScrollIndicator={false}
             >
-              {reviews.map((review) => (
-                <View key={review.id} style={styles.commentCard}>
-                  <View style={styles.commentHeader}>
-                    <RNImage source={require('@/oysloe-assets/Ad images/guy.jpg')} style={styles.commentAvatar} />
-                    <View style={styles.commentHeaderInfo}>
-                      <Text style={styles.commentAuthor}>{review.author}</Text>
-                      <View style={styles.commentStarsRow}>
-                        {[...Array(5)].map((_, index) => (
-                          <RNImage 
-                            key={index} 
-                            source={require('@/oysloe-assets/Ad details screen/star.png')} 
-                            style={[
-                              styles.commentStarIcon,
-                              index >= review.rating && { opacity: 0.3 }
-                            ]} 
-                          />
-                        ))}
+              {reviews.length === 0 ? (
+                <View style={styles.noReviewsContainer}>
+                  <RNImage 
+                    source={require('@/oysloe-assets/Ad details screen/no-reviews.png')} 
+                    style={styles.noReviewsImage} 
+                  />
+                </View>
+              ) : (
+                reviews.map((review) => (
+                  <View key={review.id} style={styles.commentCard}>
+                    <View style={styles.commentHeader}>
+                      <RNImage source={require('@/oysloe-assets/Ad images/guy.jpg')} style={styles.commentAvatar} />
+                      <View style={styles.commentHeaderInfo}>
+                        <Text style={styles.commentAuthor}>{review.author}</Text>
+                        <View style={styles.commentStarsRow}>
+                          {[...Array(5)].map((_, index) => (
+                            <RNImage 
+                              key={index} 
+                              source={require('@/oysloe-assets/Ad details screen/star.png')} 
+                              style={[
+                                styles.commentStarIcon,
+                                index >= review.rating && { opacity: 0.3 }
+                              ]} 
+                            />
+                          ))}
+                        </View>
                       </View>
                     </View>
-                  </View>
-                  <Text style={styles.commentText}>{review.comment}</Text>
-                  <View style={styles.commentFooter}>
-                    <Text style={styles.commentDate}>{review.date}</Text>
-                    <View style={styles.commentActions}>
-                      <TouchableOpacity 
-                        style={styles.commentLikeButton}
-                        onPress={() => toggleReviewLike(review.id)}
-                      >
-                        <RNImage 
-                          source={
-                            review.liked 
-                              ? require('@/oysloe-assets/Ad details screen/liked.png')
-                              : require('@/oysloe-assets/Ad details screen/like.png')
-                          } 
-                          style={styles.commentLikeIcon} 
+                    {editingReviewId === review.id ? (
+                      <View>
+                        <TextInput
+                          style={styles.commentEditInput}
+                          value={editingText}
+                          onChangeText={setEditingText}
+                          multiline
+                          placeholder="Edit your comment"
                         />
-                        <Text style={styles.commentLikeText}>{review.liked ? 'Liked' : 'Like'}</Text>
-                      </TouchableOpacity>
-                      <Text style={styles.commentLikeCount}>{review.likes}</Text>
-                    </View>
+                        <View style={styles.commentEditActions}>
+                          <TouchableOpacity style={styles.commentSaveButton} onPress={() => saveEdit(review.id)}>
+                            <Text style={styles.commentSaveText}>Save</Text>
+                          </TouchableOpacity>
+                          <TouchableOpacity style={styles.commentCancelButton} onPress={cancelEdit}>
+                            <Text style={styles.commentCancelText}>Cancel</Text>
+                          </TouchableOpacity>
+                        </View>
+                      </View>
+                    ) : (
+                      <>
+                        <Text style={styles.commentText}>{review.comment}</Text>
+                        <View style={styles.commentFooter}>
+                          <Text style={styles.commentDate}>{review.date}</Text>
+                          <View style={styles.commentActions}>
+                            <TouchableOpacity 
+                              style={styles.commentEditButton}
+                              onPress={() => startEditing(review.id, review.comment)}
+                            >
+                              <RNImage 
+                                source={require('@/oysloe-assets/Ad details screen/editreview.png')}
+                                style={styles.commentEditIcon} 
+                              />
+                              <Text style={styles.commentEditText}>Edit</Text>
+                            </TouchableOpacity>
+                            <TouchableOpacity 
+                              style={styles.commentLikeButton}
+                              onPress={() => toggleReviewLike(review.id)}
+                            >
+                              <RNImage 
+                                source={
+                                  review.liked 
+                                    ? require('@/oysloe-assets/Ad details screen/liked.png')
+                                    : require('@/oysloe-assets/Ad details screen/like.png')
+                                } 
+                                style={styles.commentLikeIcon} 
+                              />
+                              <Text style={styles.commentLikeText}>{review.liked ? 'Liked' : 'Like'}</Text>
+                            </TouchableOpacity>
+                            <Text style={styles.commentLikeCount}>{review.likes}</Text>
+                          </View>
+                        </View>
+                      </>
+                    )}
                   </View>
-                </View>
-              ))}
+                ))
+              )}
             </ScrollView>
           </Animated.View>
         </View>
@@ -816,10 +899,51 @@ export default function AdDetailsScreen() {
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: '#f9f9f9' },
   scrollView: { paddingBottom: vh(0.5) },
-  header: { padding: vw(3), backgroundColor: '#fff' },
-  backButton: { flexDirection: 'row', alignItems: 'center' },
+  header: { 
+    flexDirection: 'row', 
+    alignItems: 'center', 
+    justifyContent: 'space-between',
+    padding: vw(3), 
+    backgroundColor: '#fff' 
+  },
+  backButton: { 
+    flexDirection: 'row', 
+    alignItems: 'center',
+    flex: 1,
+  },
   backText: { fontSize: vw(4.5), marginRight: vw(2) },
   backLabel: { fontSize: vw(4) },
+  headerCenter: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  imageCounter: {
+    fontSize: vw(4),
+    fontWeight: '600',
+    color: '#142032',
+  },
+  headerRight: {
+    flex: 1,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'flex-end',
+    gap: vw(4),
+  },
+  headerStat: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: vw(1),
+  },
+  headerIcon: {
+    width: vw(5),
+    height: vw(5),
+  },
+  headerStatText: {
+    fontSize: vw(3.5),
+    fontWeight: '600',
+    color: '#142032',
+  },
 
   mainImageContainer: { width: '100%', height: width * 0.6, backgroundColor: '#fff', justifyContent: 'center' },
   mainImage: { width: '100%', height: '100%' },
@@ -842,16 +966,6 @@ const styles = StyleSheet.create({
     color: '#333333',
     fontWeight: '700',
   },
-  paginationContainer: {
-    position: 'absolute',
-    bottom: vh(1.5),
-    right: vw(3),
-    backgroundColor: '#ffffffcc',
-    paddingHorizontal: vw(2),
-    paddingVertical: vh(0.5),
-    borderRadius: vw(2.5),
-  },
-  paginationText: { fontSize: vw(3), color: '#374957' },
 
   sectionCard: { backgroundColor: '#fff', margin: vh(1.2), borderRadius: vw(3), padding: vw(3) },
   locationRow: { flexDirection: 'row', alignItems: 'center', marginBottom: vh(1) },
@@ -1699,6 +1813,16 @@ const styles = StyleSheet.create({
   commentsScrollView: {
     maxHeight: vh(45),
   },
+  noReviewsContainer: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingVertical: vh(5),
+  },
+  noReviewsImage: {
+    width: vw(50),
+    height: vw(50),
+    resizeMode: 'contain',
+  },
   commentCard: {
     marginBottom: vh(3),
     paddingBottom: vh(2.5),
@@ -1753,14 +1877,28 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     gap: vw(2),
   },
+  commentEditButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: vw(1),
+  },
+  commentEditIcon: {
+    width: vw(3),
+    height: vw(3),
+  },
+  commentEditText: {
+    fontSize: vw(3.2),
+    color: '#374957',
+    fontWeight: '500',
+  },
   commentLikeButton: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: vw(1),
   },
   commentLikeIcon: {
-    width: vw(4),
-    height: vw(4),
+    width: vw(3),
+    height: vw(3),
   },
   commentLikeText: {
     fontSize: vw(3.2),
@@ -1771,6 +1909,46 @@ const styles = StyleSheet.create({
     fontSize: vw(3.2),
     color: '#374957',
     fontWeight: '500',
+  },
+  commentEditInput: {
+    backgroundColor: '#F8FAFB',
+    borderRadius: vw(1.5),
+    borderWidth: 1,
+    borderColor: '#E5E7EB',
+    paddingHorizontal: vw(2),
+    paddingVertical: vh(1),
+    fontSize: vw(3.4),
+    color: '#142032',
+    marginBottom: vh(1),
+  },
+  commentEditActions: {
+    flexDirection: 'row',
+    justifyContent: 'flex-end',
+    gap: vw(2),
+  },
+  commentSaveButton: {
+    backgroundColor: '#0F172A',
+    paddingHorizontal: vw(3),
+    paddingVertical: vh(0.6),
+    borderRadius: vw(2),
+  },
+  commentSaveText: {
+    color: '#fff',
+    fontSize: vw(3.2),
+    fontWeight: '600',
+  },
+  commentCancelButton: {
+    backgroundColor: '#FFFFFF',
+    borderWidth: 1,
+    borderColor: '#E5E7EB',
+    paddingHorizontal: vw(3),
+    paddingVertical: vh(0.6),
+    borderRadius: vw(2),
+  },
+  commentCancelText: {
+    color: '#374957',
+    fontSize: vw(3.2),
+    fontWeight: '600',
   },
 });
 

@@ -1,4 +1,4 @@
-﻿import React, { useEffect, useRef, useState } from 'react';
+﻿import React, { useEffect, useRef, useState, useMemo } from 'react';
 import {
   StyleSheet,
   ScrollView,
@@ -144,13 +144,15 @@ const CircularProgress: React.FC<CircularProgressProps> = () => null;
 const PriceSlider = ({ priceRange, setPriceRange }: { priceRange: { min: number; max: number }; setPriceRange: (fn: (prev: { min: number; max: number }) => { min: number; max: number }) => void }) => {
   const [sliderWidth, setSliderWidth] = useState(0);
   const [sliderX, setSliderX] = useState(0);
+  const sliderRef = useRef<View>(null);
   
   const MAX_VALUE = 1000000;
   
-  const minPanResponder = useRef(
-    PanResponder.create({
+  const minPanResponder = useMemo(
+    () => PanResponder.create({
       onStartShouldSetPanResponder: () => true,
       onMoveShouldSetPanResponder: () => true,
+      onPanResponderTerminationRequest: () => false,
       onPanResponderGrant: () => {},
       onPanResponderMove: (evt, gestureState) => {
         if (sliderWidth > 0) {
@@ -163,13 +165,15 @@ const PriceSlider = ({ priceRange, setPriceRange }: { priceRange: { min: number;
         }
       },
       onPanResponderRelease: () => {},
-    })
-  ).current;
+    }),
+    [sliderWidth, sliderX, priceRange.max, setPriceRange]
+  );
   
-  const maxPanResponder = useRef(
-    PanResponder.create({
+  const maxPanResponder = useMemo(
+    () => PanResponder.create({
       onStartShouldSetPanResponder: () => true,
       onMoveShouldSetPanResponder: () => true,
+      onPanResponderTerminationRequest: () => false,
       onPanResponderGrant: () => {},
       onPanResponderMove: (evt, gestureState) => {
         if (sliderWidth > 0) {
@@ -182,8 +186,9 @@ const PriceSlider = ({ priceRange, setPriceRange }: { priceRange: { min: number;
         }
       },
       onPanResponderRelease: () => {},
-    })
-  ).current;
+    }),
+    [sliderWidth, sliderX, priceRange.min, setPriceRange]
+  );
   
   const minPercentage = (priceRange.min / MAX_VALUE) * 100;
   const maxPercentage = (priceRange.max / MAX_VALUE) * 100;
@@ -213,10 +218,12 @@ const PriceSlider = ({ priceRange, setPriceRange }: { priceRange: { min: number;
       </View>
       <View 
         {...minPanResponder.panHandlers}
+        hitSlop={{ top: 20, bottom: 20, left: 20, right: 20 }}
         style={[styles.sliderThumb, { left: `${minPercentage}%` }]}
       />
       <View 
         {...maxPanResponder.panHandlers}
+        hitSlop={{ top: 20, bottom: 20, left: 20, right: 20 }}
         style={[styles.sliderThumb, { left: `${maxPercentage}%` }]}
       />
     </View>
@@ -246,6 +253,47 @@ export default function HomeScreen(): React.ReactElement {
   const [subLocationSearch, setSubLocationSearch] = React.useState('');
   const [canDismissModal, setCanDismissModal] = useState(false);
   const searchInputRef = React.useRef<TextInput | null>(null);
+  
+  // Animated values for draggable modals
+  const modalTranslateY = useRef(new Animated.Value(0)).current;
+  
+  // PanResponder for drag gesture
+  const panResponder = useRef(
+    PanResponder.create({
+      onStartShouldSetPanResponder: () => true,
+      onMoveShouldSetPanResponder: (_, gestureState) => {
+        return Math.abs(gestureState.dy) > 5;
+      },
+      onPanResponderMove: (_, gestureState) => {
+        if (gestureState.dy > 0) {
+          modalTranslateY.setValue(gestureState.dy);
+        }
+      },
+      onPanResponderRelease: (_, gestureState) => {
+        if (gestureState.dy > 150) {
+          Animated.timing(modalTranslateY, {
+            toValue: 1000,
+            duration: 300,
+            useNativeDriver: true,
+          }).start(() => {
+            // Close whichever modal is open
+            setShowMainFilterModal(false);
+            setShowCategoryModal(false);
+            setShowSubcategoryModal(false);
+            setShowLocationModal(false);
+            setShowSubLocationModal(false);
+            modalTranslateY.setValue(0);
+          });
+        } else {
+          Animated.spring(modalTranslateY, {
+            toValue: 0,
+            useNativeDriver: true,
+          }).start();
+        }
+      },
+    })
+  ).current;
+  
   const titleScale = scrollY.interpolate({ inputRange: [0, TITLE_SCROLL_DISTANCE], outputRange: [1, 0.92], extrapolate: 'clamp' });
   const titleTranslateX = scrollY.interpolate({ inputRange: [0, TITLE_SCROLL_DISTANCE], outputRange: [0, -(NAV_SEARCH_WIDTH / 2 + 18)], extrapolate: 'clamp' });
   const headerSearchOpacity = scrollY.interpolate({ inputRange: [0, TITLE_SCROLL_DISTANCE * 0.9], outputRange: [1, 0], extrapolate: 'clamp' });
@@ -394,8 +442,16 @@ export default function HomeScreen(): React.ReactElement {
             activeOpacity={1} 
             onPress={() => { if (canDismissModal) setShowMainFilterModal(false); }}
           >
-            <View style={styles.modalContent} onStartShouldSetResponder={() => true}>
-              <View style={styles.modalHandle} />
+            <Animated.View 
+              style={[
+                styles.modalContent, 
+                { transform: [{ translateY: modalTranslateY }] }
+              ]} 
+              onStartShouldSetResponder={() => true}
+            >
+              <View {...panResponder.panHandlers} style={{ alignItems: 'center', paddingVertical: 10 }}>
+                <View style={styles.modalHandle} />
+              </View>
               <View style={styles.modalHeader}>
                 <Text style={styles.modalTitle}>Filter</Text>
               </View>
@@ -542,7 +598,7 @@ export default function HomeScreen(): React.ReactElement {
                 <Text style={styles.viewAllText}>View all (456k)</Text>
               </TouchableOpacity>
             </View>
-          </View>
+          </Animated.View>
         </TouchableOpacity>
         </KeyboardAvoidingView>
       </Modal>
@@ -559,8 +615,16 @@ export default function HomeScreen(): React.ReactElement {
           activeOpacity={1} 
           onPress={() => { if (canDismissModal) setShowCategoryModal(false); }}
         >
-          <View style={styles.modalContent} onStartShouldSetResponder={() => true}>
-            <View style={styles.modalHandle} />
+          <Animated.View 
+            style={[
+              styles.modalContent, 
+              { transform: [{ translateY: modalTranslateY }] }
+            ]} 
+            onStartShouldSetResponder={() => true}
+          >
+            <View {...panResponder.panHandlers} style={{ alignItems: 'center', paddingVertical: 10 }}>
+              <View style={styles.modalHandle} />
+            </View>
             <View style={styles.subcategoryHeader}>
               <TouchableOpacity onPress={() => {
                 setShowCategoryModal(false);
@@ -610,7 +674,7 @@ export default function HomeScreen(): React.ReactElement {
                 <Text style={styles.viewAllText}>View all (456k)</Text>
               </TouchableOpacity>
             </View>
-          </View>
+          </Animated.View>
         </TouchableOpacity>
       </Modal>
 
@@ -626,8 +690,16 @@ export default function HomeScreen(): React.ReactElement {
           activeOpacity={1} 
           onPress={() => { if (canDismissModal) setShowLocationModal(false); }}
         >
-          <View style={styles.modalContent} onStartShouldSetResponder={() => true}>
-            <View style={styles.modalHandle} />
+          <Animated.View 
+            style={[
+              styles.modalContent, 
+              { transform: [{ translateY: modalTranslateY }] }
+            ]} 
+            onStartShouldSetResponder={() => true}
+          >
+            <View {...panResponder.panHandlers} style={{ alignItems: 'center', paddingVertical: 10 }}>
+              <View style={styles.modalHandle} />
+            </View>
             <View style={styles.subcategoryHeader}>
               <TouchableOpacity onPress={() => {
                 setShowLocationModal(false);
@@ -704,7 +776,7 @@ export default function HomeScreen(): React.ReactElement {
                 <Text style={styles.viewAllText}>View all (456k)</Text>
               </TouchableOpacity>
             </View>
-          </View>
+          </Animated.View>
         </TouchableOpacity>
       </Modal>
 
@@ -720,8 +792,16 @@ export default function HomeScreen(): React.ReactElement {
           activeOpacity={1} 
           onPress={() => { if (canDismissModal) setShowSubLocationModal(false); }}
         >
-          <View style={styles.modalContent} onStartShouldSetResponder={() => true}>
-            <View style={styles.modalHandle} />
+          <Animated.View 
+            style={[
+              styles.modalContent, 
+              { transform: [{ translateY: modalTranslateY }] }
+            ]} 
+            onStartShouldSetResponder={() => true}
+          >
+            <View {...panResponder.panHandlers} style={{ alignItems: 'center', paddingVertical: 10 }}>
+              <View style={styles.modalHandle} />
+            </View>
             <View style={styles.subcategoryHeader}>
               <TouchableOpacity onPress={() => {
                 setShowSubLocationModal(false);
@@ -836,7 +916,7 @@ export default function HomeScreen(): React.ReactElement {
                 <Text style={styles.viewAllText}>View all (456k)</Text>
               </TouchableOpacity>
             </View>
-          </View>
+          </Animated.View>
         </TouchableOpacity>
       </Modal>
 
@@ -852,8 +932,16 @@ export default function HomeScreen(): React.ReactElement {
           activeOpacity={1} 
           onPress={() => { if (canDismissModal) setShowSubcategoryModal(false); }}
         >
-          <View style={styles.modalContent} onStartShouldSetResponder={() => true}>
-            <View style={styles.modalHandle} />
+          <Animated.View 
+            style={[
+              styles.modalContent, 
+              { transform: [{ translateY: modalTranslateY }] }
+            ]} 
+            onStartShouldSetResponder={() => true}
+          >
+            <View {...panResponder.panHandlers} style={{ alignItems: 'center', paddingVertical: 10 }}>
+              <View style={styles.modalHandle} />
+            </View>
             <View style={styles.subcategoryHeader}>
               <TouchableOpacity onPress={() => {
                 setShowSubcategoryModal(false);
@@ -925,7 +1013,7 @@ export default function HomeScreen(): React.ReactElement {
                 <Text style={styles.viewAllText}>View all (46k)</Text>
               </TouchableOpacity>
             </View>
-          </View>
+          </Animated.View>
         </TouchableOpacity>
       </Modal>
     
@@ -1208,70 +1296,77 @@ const styles = StyleSheet.create({
   sliderContainer: {
     position: 'relative',
     height: 60,
-    marginVertical: 12,
+    marginVertical: 16,
     justifyContent: 'center',
+    paddingHorizontal: 4,
   },
   sliderTrack: {
     position: 'absolute',
-    left: 0,
-    right: 0,
-    height: 4,
+    left: 4,
+    right: 4,
+    height: 6,
     backgroundColor: '#E5E7EB',
-    borderRadius: 2,
+    borderRadius: 3,
     top: '50%',
-    marginTop: -2,
+    marginTop: -3,
   },
   sliderTrackActive: {
     position: 'absolute',
-    height: 4,
+    height: 6,
     backgroundColor: '#10B981',
-    borderRadius: 2,
+    borderRadius: 3,
   },
   sliderThumb: {
     position: 'absolute',
-    width: 20,
-    height: 20,
-    borderRadius: 10,
-    backgroundColor: '#142032',
-    marginLeft: -10,
-    marginTop: -8,
+    width: 24,
+    height: 24,
+    borderRadius: 12,
+    backgroundColor: '#FFFFFF',
+    marginLeft: -12,
+    marginTop: -9,
+    borderWidth: 3,
+    borderColor: '#10B981',
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.2,
-    shadowRadius: 3,
-    elevation: 3,
+    shadowOpacity: 0.15,
+    shadowRadius: 4,
+    elevation: 5,
   },
   priceInputs: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    marginTop: 8,
+    marginTop: 12,
   },
   priceInputContainer: {
     flex: 1,
     flexDirection: 'row',
     alignItems: 'center',
     backgroundColor: '#F9FAFB',
-    borderRadius: 8,
-    paddingHorizontal: 12,
-    paddingVertical: 10,
+    borderRadius: 10,
+    borderWidth: 1,
+    borderColor: '#E5E7EB',
+    paddingHorizontal: 14,
+    paddingVertical: 12,
   },
   currencySymbol: {
-    fontSize: 14,
-    fontWeight: '500',
-    color: '#142032',
-    marginRight: 4,
+    fontSize: 15,
+    fontWeight: '600',
+    color: '#374151',
+    marginRight: 6,
   },
   priceInput: {
     flex: 1,
-    fontSize: 14,
+    fontSize: 15,
+    fontWeight: '500',
     color: '#142032',
     padding: 0,
   },
   priceSeparator: {
-    fontSize: 16,
+    fontSize: 18,
+    fontWeight: '500',
     color: '#9CA3AF',
-    marginHorizontal: 12,
+    marginHorizontal: 16,
   },
   noDataContainer: {
     flex: 1,

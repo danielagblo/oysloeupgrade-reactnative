@@ -10,7 +10,9 @@ import {
 'react-native';
 import { Image } from 'expo-image';
 import { router, useLocalSearchParams } from 'expo-router';
-import { SafeAreaView } from 'react-native-safe-area-context';import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
+import { SafeAreaView } from 'react-native-safe-area-context';
+import * as ImagePicker from 'expo-image-picker';
+import AsyncStorage from '@react-native-async-storage/async-storage';import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 
 const { width } = Dimensions.get('window');
 
@@ -25,12 +27,70 @@ export default function EditProfileScreen() {
   const [accountName, setAccountName] = useState('');
   const [accountNumber, setAccountNumber] = useState('');
   const [selectedNetwork, setSelectedNetwork] = useState('');
+  const [profileImage, setProfileImage] = useState<string | null>(null);
+  const [businessLogo, setBusinessLogo] = useState<string | null>(null);
+  const [idFrontImage, setIdFrontImage] = useState<string | null>(null);
+  const [idBackImage, setIdBackImage] = useState<string | null>(null);
 
   useEffect(() => {
     if (network) {
       setSelectedNetwork(Array.isArray(network) ? network[0] : network);
     }
   }, [network]);
+
+  useEffect(() => {
+    const loadProfileImage = async () => {
+      try {
+        const savedImage = await AsyncStorage.getItem('profileImage');
+        if (savedImage) {
+          setProfileImage(savedImage);
+        }
+        const savedLogo = await AsyncStorage.getItem('businessLogo');
+        if (savedLogo) {
+          setBusinessLogo(savedLogo);
+        }
+      } catch (error) {
+        console.log('Error loading images:', error);
+      }
+    };
+    loadProfileImage();
+  }, []);
+
+  const pickImage = async (type: 'profile' | 'business' | 'idFront' | 'idBack') => {
+    // Request permission
+    const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+    if (status !== 'granted') {
+      alert('Sorry, we need camera roll permissions to upload images!');
+      return;
+    }
+
+    const result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.All,
+      allowsEditing: true,
+      aspect: type === 'profile' || type === 'business' ? [1, 1] : [4, 3],
+      quality: 1,
+    });
+
+    if (!result.canceled) {
+      const imageUri = result.assets[0].uri;
+      switch (type) {
+        case 'profile':
+          setProfileImage(imageUri);
+          await AsyncStorage.setItem('profileImage', imageUri);
+          break;
+        case 'business':
+          setBusinessLogo(imageUri);
+          await AsyncStorage.setItem('businessLogo', imageUri);
+          break;
+        case 'idFront':
+          setIdFrontImage(imageUri);
+          break;
+        case 'idBack':
+          setIdBackImage(imageUri);
+          break;
+      }
+    }
+  };
 
   return (
     _jsxs(SafeAreaView, { style: styles.container, children: [
@@ -72,10 +132,10 @@ export default function EditProfileScreen() {
 
 
         _jsxs(View, { style: styles.imageSection, children: [
-          _jsxs(TouchableOpacity, { style: styles.imageUpload, children: [
+          _jsxs(TouchableOpacity, { style: styles.imageUpload, onPress: () => pickImage('profile'), children: [
             _jsx(View, { style: styles.imageUploadCircle, children:
               _jsx(Image, {
-                source: require('@/oysloe-assets/side menu/profile.png'),
+                source: profileImage ? { uri: profileImage } : require('@/oysloe-assets/side menu/profile.png'),
                 style: styles.uploadIcon,
                 contentFit: "cover",
                 onError: () => {} }
@@ -84,10 +144,10 @@ export default function EditProfileScreen() {
             _jsx(Text, { style: styles.imageUploadText, children: "Profile image" })] }
           ),
 
-          _jsxs(TouchableOpacity, { style: styles.imageUpload, children: [
+          _jsxs(TouchableOpacity, { style: styles.imageUpload, onPress: () => pickImage('business'), children: [
             _jsx(View, { style: styles.imageUploadCircle, children:
               _jsx(Image, {
-                source: require('@/oysloe-assets/account set up/upload.png'),
+                source: businessLogo ? { uri: businessLogo } : require('@/oysloe-assets/account set up/upload.png'),
                 style: styles.uploadIcon,
                 contentFit: "cover",
                 onError: () => {} }
@@ -170,6 +230,21 @@ export default function EditProfileScreen() {
               onChangeText: setIdNumber,
               placeholder: "AgHDKFL34658",
               placeholderTextColor: "#999" }
+            )] }
+          ),
+
+          _jsxs(View, { style: styles.idUploadContainer, children: [
+            _jsxs(View, { style: styles.idUploadSection, children: [
+              _jsx(Text, { style: styles.idUploadLabel, children: "Front" }),
+              _jsx(TouchableOpacity, { style: styles.idUploadButton, onPress: () => pickImage('idFront'), children:
+                _jsx(Image, { source: idFrontImage ? { uri: idFrontImage } : require('@/oysloe-assets/Ad details screen/front.png'), style: styles.idUploadIcon }) }
+              )] }
+            ),
+            _jsxs(View, { style: styles.idUploadSection, children: [
+              _jsx(Text, { style: styles.idUploadLabel, children: "Back" }),
+              _jsx(TouchableOpacity, { style: styles.idUploadButton, onPress: () => pickImage('idBack'), children:
+                _jsx(Image, { source: idBackImage ? { uri: idBackImage } : require('@/oysloe-assets/Ad details screen/back.png'), style: styles.idUploadIcon }) }
+              )] }
             )] }
           ),
 
@@ -380,13 +455,45 @@ const styles = StyleSheet.create({
     marginBottom: 10
   },
   uploadIcon: {
-    width: 50,
-    height: 50
+    width: '100%',
+    height: '100%',
+    borderRadius: 50
   },
   imageUploadText: {
     fontSize: 14,
     color: '#666',
     textAlign: 'center'
+  },
+  idUploadContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginTop: 15,
+    marginBottom: 20
+  },
+  idUploadSection: {
+    flex: 1,
+    marginHorizontal: 5
+  },
+  idUploadLabel: {
+    fontSize: 14,
+    color: '#666',
+    marginBottom: 10
+  },
+  idUploadButton: {
+    height: 120,
+    borderRadius: 10,
+    borderWidth: 2,
+    borderColor: '#66FF99',
+    backgroundColor: '#f8f8f8',
+    justifyContent: 'center',
+    alignItems: 'center',
+    overflow: 'hidden'
+  },
+  idUploadIcon: {
+    width: '100%',
+    height: '100%',
+    resizeMode: 'cover',
+    borderRadius: 10
   },
   section: {
     paddingHorizontal: 20,

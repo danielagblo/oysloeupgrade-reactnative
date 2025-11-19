@@ -12,6 +12,7 @@ import {
 import { Image } from 'expo-image';
 import { router } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 type Props = {
   onClose?: () => void;
@@ -22,7 +23,22 @@ const DRAWER_WIDTH = Math.round(SCREEN_WIDTH * 0.6);
 
 function ProfilePanelContent({ onClose }: Props) {
   const [showLogoutModal, setShowLogoutModal] = React.useState(false);
-  const CLOSE_DELAY = 260; // ms to wait for panel close animation before navigating
+  const [profileImage, setProfileImage] = React.useState<string | null>(null);
+  const CLOSE_DELAY = 260; 
+
+  React.useEffect(() => {
+    const loadProfileImage = async () => {
+      try {
+        const savedImage = await AsyncStorage.getItem('profileImage');
+        if (savedImage) {
+          setProfileImage(savedImage);
+        }
+      } catch (error) {
+        console.log('Error loading profile image:', error);
+      }
+    };
+    loadProfileImage();
+  }, []);
 
   const navigateAndClose = (path: string) => {
     if (onClose) {

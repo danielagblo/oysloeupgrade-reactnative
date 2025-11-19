@@ -4,8 +4,64 @@ import { router } from 'expo-router';import { jsx as _jsx, jsxs as _jsxs } from 
 
 
 
+type PlanKey = 'basic' | 'business' | 'platinum';
+
+const PLAN_STATUS: Record<PlanKey, {
+  badge: string;
+  badgeColor: string;
+  badgeTextColor: string;
+  expiry: string;
+  expiryBg: string;
+  expiryTextColor: string;
+  heading: string;
+  body: string;
+  cardBg: string;
+  textColor: string;
+  subTextColor: string;
+}> = {
+  basic: {
+    heading: "You're currently subscribed",
+    body: 'Switch your plan at anytime',
+    badge: 'Basic package',
+    badgeColor: '#34D399',
+    badgeTextColor: '#064E3B',
+    expiry: 'Expires in 7 days',
+    expiryBg: '#F3F4F6',
+    expiryTextColor: '#4B5563',
+    cardBg: '#FFFFFF',
+    textColor: '#111827',
+    subTextColor: '#6B7280'
+  },
+  business: {
+    heading: 'Thanks for upgrading',
+    body: "You're enjoying the Business plan benefits",
+    badge: 'Business',
+    badgeColor: '#00FFF2',
+    badgeTextColor: '#00332F',
+    expiry: 'Expires in 14 days',
+    expiryBg: '#153956',
+    expiryTextColor: '#C7EBFF',
+    cardBg: '#0F172A',
+    textColor: '#F8FAFC',
+    subTextColor: '#CBD5F5'
+  },
+  platinum: {
+    heading: 'Top tier status',
+    body: "You're riding the Platinum wave",
+    badge: 'Platinum',
+    badgeColor: '#FF6B6B',
+    badgeTextColor: '#480909',
+    expiry: 'Expires in 30 days',
+    expiryBg: '#3B1C24',
+    expiryTextColor: '#FFD3DD',
+    cardBg: '#1B1120',
+    textColor: '#FFF7F7',
+    subTextColor: '#E5D0D0'
+  }
+};
+
 export default function SubscriptionScreen() {
-  const [selected, setSelected] = React.useState('basic');
+  const [selected, setSelected] = React.useState<PlanKey>('basic');
   const [showPaid, setShowPaid] = React.useState(false);
 
   const PlanCard = ({
@@ -55,6 +111,31 @@ export default function SubscriptionScreen() {
   );
 
 
+  const PlanStatusCard = ({ plan }: { plan: PlanKey }) => {
+    const config = PLAN_STATUS[plan];
+    const isLightCard = plan === 'basic';
+    return (
+      _jsxs(View, { style: [styles.statusCard, { backgroundColor: config.cardBg }], children: [
+        _jsxs(View, { style: { flex: 1 }, children: [
+          _jsx(Text, { style: [styles.statusHeading, { color: config.textColor }], children: config.heading }),
+          _jsx(Text, { style: [styles.statusBody, { color: config.subTextColor }], children: config.body }),
+          _jsxs(View, { style: styles.statusBadgeRow, children: [
+            _jsx(View, { style: [styles.statusBadge, { backgroundColor: config.badgeColor }], children:
+              _jsx(Text, { style: [styles.statusBadgeText, { color: config.badgeTextColor }], children: config.badge })
+            }),
+            _jsx(View, { style: [styles.statusExpiry, { backgroundColor: config.expiryBg }], children:
+              _jsx(Text, { style: [styles.statusExpiryText, { color: config.expiryTextColor }], children: config.expiry })
+            })] }
+          )] }
+        ),
+        _jsxs(View, { style: [styles.statusDecor, isLightCard ? styles.statusDecorLight : null], children: [
+          _jsx(View, { style: [styles.statusCircleLarge, isLightCard ? styles.statusCircleLightBorder : null] }),
+          _jsx(View, { style: [styles.statusCircleSmall, isLightCard ? styles.statusCircleLight : null] })] }
+        )] }
+      )
+    );
+  };
+
   return (
     _jsxs(SafeAreaView, { style: styles.safe, children: [
       _jsxs(View, { style: styles.header, children: [
@@ -68,6 +149,8 @@ export default function SubscriptionScreen() {
 
       _jsxs(ScrollView, { contentContainerStyle: styles.content, showsVerticalScrollIndicator: false, children: [
         _jsx(Text, { style: styles.subtitle, children: "Choose a monthly plan that works for you" }),
+
+        _jsx(PlanStatusCard, { plan: selected }),
 
         _jsx(PlanCard, {
           title: "Basic",
@@ -142,6 +225,20 @@ const styles = StyleSheet.create({
   headerTitle: { fontSize: 14, color: '#6b7280' },
   content: { paddingHorizontal: 12, paddingTop: 28, paddingBottom: 12 },
   subtitle: { color: '#9aa3af', fontSize: 12, marginBottom: 18, marginLeft: 4 },
+  statusCard: { flexDirection: 'row', alignItems: 'center', borderRadius: 18, padding: 18, marginBottom: 20 },
+  statusHeading: { fontSize: 14, fontWeight: '600', marginBottom: 6 },
+  statusBody: { fontSize: 12, marginBottom: 14 },
+  statusBadgeRow: { flexDirection: 'row', alignItems: 'center' },
+  statusBadge: { paddingHorizontal: 14, paddingVertical: 6, borderRadius: 999 },
+  statusBadgeText: { fontWeight: '600', fontSize: 11 },
+  statusExpiry: { paddingHorizontal: 14, paddingVertical: 6, borderRadius: 999, marginLeft: 10 },
+  statusExpiryText: { fontWeight: '500', fontSize: 11 },
+  statusDecor: { width: 76, height: 76, borderRadius: 38, backgroundColor: 'rgba(255,255,255,0.2)', alignItems: 'center', justifyContent: 'center', marginLeft: 12 },
+  statusCircleLarge: { width: 64, height: 64, borderRadius: 32, borderWidth: 2, borderColor: 'rgba(255,255,255,0.4)', position: 'absolute' },
+  statusCircleSmall: { width: 24, height: 24, borderRadius: 12, backgroundColor: 'rgba(255,255,255,0.65)', position: 'absolute', bottom: 12, right: 22 },
+  statusDecorLight: { backgroundColor: '#ECFDF5' },
+  statusCircleLightBorder: { borderColor: '#D1FAE5' },
+  statusCircleLight: { backgroundColor: '#34D399' },
 
   card: { backgroundColor: '#fff', borderRadius: 16, padding: 14, marginBottom: 12, borderWidth: 1, borderColor: '#eef0f2', position: 'relative' },
   cardSelected: { borderColor: '#333' },
