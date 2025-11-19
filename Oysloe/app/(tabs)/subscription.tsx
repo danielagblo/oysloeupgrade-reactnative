@@ -1,6 +1,7 @@
 import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, ScrollView, SafeAreaView, Modal } from 'react-native';
 import { router } from 'expo-router';import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
+import { Image } from 'expo-image';
 
 
 
@@ -39,11 +40,11 @@ const PLAN_STATUS: Record<PlanKey, {
     badgeColor: '#00FFF2',
     badgeTextColor: '#00332F',
     expiry: 'Expires in 14 days',
-    expiryBg: '#153956',
-    expiryTextColor: '#C7EBFF',
-    cardBg: '#0F172A',
-    textColor: '#F8FAFC',
-    subTextColor: '#CBD5F5'
+    expiryBg: '#F3F4F6',
+    expiryTextColor: '#4B5563',
+    cardBg: '#FFFFFF',
+    textColor: '#111827',
+    subTextColor: '#6B7280'
   },
   platinum: {
     heading: 'Top tier status',
@@ -52,11 +53,11 @@ const PLAN_STATUS: Record<PlanKey, {
     badgeColor: '#FF6B6B',
     badgeTextColor: '#480909',
     expiry: 'Expires in 30 days',
-    expiryBg: '#3B1C24',
-    expiryTextColor: '#FFD3DD',
-    cardBg: '#1B1120',
-    textColor: '#FFF7F7',
-    subTextColor: '#E5D0D0'
+    expiryBg: '#F3F4F6',
+    expiryTextColor: '#4B5563',
+    cardBg: '#FFFFFF',
+    textColor: '#111827',
+    subTextColor: '#6B7280'
   }
 };
 
@@ -128,9 +129,8 @@ export default function SubscriptionScreen() {
             })] }
           )] }
         ),
-        _jsxs(View, { style: [styles.statusDecor, isLightCard ? styles.statusDecorLight : null], children: [
-          _jsx(View, { style: [styles.statusCircleLarge, isLightCard ? styles.statusCircleLightBorder : null] }),
-          _jsx(View, { style: [styles.statusCircleSmall, isLightCard ? styles.statusCircleLight : null] })] }
+        _jsxs(View, { style: [styles.statusDecor], children: [
+          _jsx(Image, { source: require('@/oysloe-assets/Ad details screen/sub-logo.png'), style: styles.statusLogo, contentFit: "contain" })] }
         )] }
       )
     );
@@ -193,8 +193,6 @@ export default function SubscriptionScreen() {
 
 }
 
-import { Image } from 'expo-image';
-
 function SuccessPopup({ visible, onClose }: { visible: boolean; onClose: () => void }) {
   return (
     _jsx(Modal, { transparent: true, visible: visible, animationType: "fade", onRequestClose: onClose, children:
@@ -203,7 +201,10 @@ function SuccessPopup({ visible, onClose }: { visible: boolean; onClose: () => v
           _jsx(Image, { source: require('@/oysloe-assets/Ads/success.png'), style: { width: 70, height: 70, marginBottom: 10 } }),
           _jsx(Text, { style: styles.modalTitle, children: "Payment sent" }),
           _jsxs(View, { style: styles.modalBtnRow, children: [
-            _jsx(TouchableOpacity, { style: [styles.modalBtn, styles.modalBtnGhost], onPress: () => router.replace('/(tabs)'), children:
+            _jsx(TouchableOpacity, { style: [styles.modalBtn, styles.modalBtnGhost], onPress: () => {
+              onClose();
+              router.replace('/(tabs)');
+            }, children:
               _jsx(Text, { style: styles.modalBtnGhostText, children: "Home" }) }
             ),
             _jsx(TouchableOpacity, { style: [styles.modalBtn, styles.modalBtnGhost], onPress: onClose, children:
@@ -239,6 +240,7 @@ const styles = StyleSheet.create({
   statusDecorLight: { backgroundColor: '#ECFDF5' },
   statusCircleLightBorder: { borderColor: '#D1FAE5' },
   statusCircleLight: { backgroundColor: '#34D399' },
+  statusLogo: { width: 56, height: 56, borderRadius: 8 },
 
   card: { backgroundColor: '#fff', borderRadius: 16, padding: 14, marginBottom: 12, borderWidth: 1, borderColor: '#eef0f2', position: 'relative' },
   cardSelected: { borderColor: '#333' },

@@ -13,6 +13,7 @@ import {
   PanResponder,
   KeyboardAvoidingView,
   Platform,
+  Easing,
 } from 'react-native';
 import { Image } from 'expo-image';
 import { router } from 'expo-router';
@@ -137,8 +138,69 @@ const ads: AdItem[] = [
   },
 ];
 
-type CircularProgressProps = { progress: number; size?: number; item?: any };
-const CircularProgress: React.FC<CircularProgressProps> = () => null;
+const categoryStats = [
+  { label: 'Electronics', value: '45k+', progress: 0.8 },
+  { label: 'Vehicle', value: '200+', progress: 0.45 },
+  { label: 'Furniture', value: '158+', progress: 0.62 },
+  { label: 'Sporting', value: '100+', progress: 0.5 },
+  { label: 'Fashion', value: '35+', progress: 0.28 },
+];
+
+type CircularProgressProps = {
+  progress: number;
+  size?: number;
+  label: string;
+  value: string;
+  trigger?: number;
+  onPress?: () => void;
+};
+
+const CircularProgress: React.FC<CircularProgressProps> = ({ progress, size = 64, label, value, trigger, onPress }) => {
+  const animatedProgress = React.useRef(new Animated.Value(0)).current;
+  const strokeWidth = 5;
+  const radius = (size - strokeWidth) / 2;
+  const circumference = 2 * Math.PI * radius;
+
+  React.useEffect(() => {
+    animatedProgress.setValue(0);
+    Animated.timing(animatedProgress, {
+      toValue: progress,
+      duration: 1200,
+      easing: Easing.out(Easing.ease),
+      useNativeDriver: false,
+    }).start();
+  }, [progress, trigger, animatedProgress]);
+
+  const strokeDashoffset = animatedProgress.interpolate({
+    inputRange: [0, 1],
+    outputRange: [circumference, 0],
+  });
+
+  return (
+    <TouchableOpacity style={styles.statCard} activeOpacity={0.85} onPress={onPress}>
+      <View style={[styles.statCircleWrapper, { width: size, height: size }]}>
+        <Svg width={size} height={size}>
+          <Circle cx={size / 2} cy={size / 2} r={radius} stroke="#E4E9F2" strokeWidth={strokeWidth} fill="none" strokeLinecap="round" />
+          <AnimatedCircle
+            cx={size / 2}
+            cy={size / 2}
+            r={radius}
+            stroke="#1F344D"
+            strokeWidth={strokeWidth}
+            strokeDasharray={`${circumference} ${circumference}`}
+            strokeDashoffset={strokeDashoffset}
+            strokeLinecap="round"
+            fill="none"
+          />
+        </Svg>
+        <View style={styles.statValueWrapper}>
+          <Text style={styles.statLabel}>{label}</Text>
+          <Text style={styles.statValue}>{value}</Text>
+        </View>
+      </View>
+    </TouchableOpacity>
+  );
+};
 
 // Custom Price Slider Component
 const PriceSlider = ({ priceRange, setPriceRange }: { priceRange: { min: number; max: number }; setPriceRange: (fn: (prev: { min: number; max: number }) => { min: number; max: number }) => void }) => {
@@ -252,7 +314,10 @@ export default function HomeScreen(): React.ReactElement {
   const [selectedSubLocations, setSelectedSubLocations] = React.useState<string[]>([]);
   const [subLocationSearch, setSubLocationSearch] = React.useState('');
   const [canDismissModal, setCanDismissModal] = useState(false);
+  const [isNavSearchVisible, setIsNavSearchVisible] = React.useState(false);
+  const [searchQuery, setSearchQuery] = React.useState('');
   const searchInputRef = React.useRef<TextInput | null>(null);
+  const navSearchInputRef = React.useRef<TextInput | null>(null);
   
   // Animated values for draggable modals
   const modalTranslateY = useRef(new Animated.Value(0)).current;
@@ -305,6 +370,13 @@ export default function HomeScreen(): React.ReactElement {
     return () => clearInterval(interval);
   }, []);
 
+  useEffect(() => {
+    const listenerId = scrollY.addListener(({ value }) => {
+      setIsNavSearchVisible(value > TITLE_SCROLL_DISTANCE * 0.6);
+    });
+    return () => scrollY.removeListener(listenerId);
+  }, [scrollY]);
+
   const renderCategory = ({ item }: { item: Category }) => {
     if (item.isPlaceholder) {
       return <View style={[styles.categoryItem, { opacity: 0 }]} key={item.id} />;
@@ -349,6 +421,10 @@ export default function HomeScreen(): React.ReactElement {
     setTimeout(() => setCanDismissModal(true), 200);
   };
 
+  const handleStatPress = (label: string) => {
+    setSelectedCategory(label);
+  };
+
   return (
     <>
     <View style={styles.container}>
@@ -364,15 +440,26 @@ export default function HomeScreen(): React.ReactElement {
           Oysloe
         </Animated.Text>
 
-        <Animated.View style={[styles.navSearchContainer, { opacity: navSearchOpacity, transform: [{ scale: navSearchScale }] }] as any}>
-          <TouchableOpacity activeOpacity={0.85} onPress={() => searchInputRef.current?.focus()}>
-            <LinearGradient colors={["#60F7A3", "#FF6D6D"]} start={{ x: 0, y: 0 }} end={{ x: 1, y: 0 }} style={styles.navSearchGradient}>
-              <View style={styles.navSearchInner}>
-                <Image source={require('@/oysloe-assets/Ad details screen/search.png')} style={[styles.searchIcon, { marginRight: 8, width: 16, height: 16 }]} />
-                <Text style={styles.navSearchText} numberOfLines={1}>Search anything up for good</Text>
-              </View>
-            </LinearGradient>
-          </TouchableOpacity>
+        <Animated.View
+          pointerEvents={isNavSearchVisible ? 'auto' : 'none'}
+          style={[styles.navSearchContainer, { opacity: navSearchOpacity, transform: [{ scale: navSearchScale }] }] as any}
+        >
+          <LinearGradient colors={["#60F7A3", "#FF6D6D"]} start={{ x: 0, y: 0 }} end={{ x: 1, y: 0 }} style={styles.navSearchGradient}>
+            <View style={styles.navSearchInner}>
+              <Image source={require('@/oysloe-assets/Ad details screen/search.png')} style={[styles.searchIcon, { marginRight: 8, width: 16, height: 16 }]} />
+              <TextInput
+                ref={navSearchInputRef}
+                style={styles.navSearchInput}
+                placeholder="Search anything up for good"
+                placeholderTextColor="#7A8699"
+                value={searchQuery}
+                onChangeText={setSearchQuery}
+                onFocus={() => setSearchFocused(true)}
+                onBlur={() => setSearchFocused(false)}
+                returnKeyType="search"
+              />
+            </View>
+          </LinearGradient>
         </Animated.View>
       </Animated.View>
 
@@ -384,7 +471,7 @@ export default function HomeScreen(): React.ReactElement {
         onScroll={Animated.event([{ nativeEvent: { contentOffset: { y: scrollY } } }], { useNativeDriver: true })}
       >
         <View style={styles.header}>
-          <Animated.View style={[styles.searchWrapper, { opacity: headerSearchOpacity }]}>
+          <Animated.View pointerEvents={isNavSearchVisible ? 'none' : 'auto'} style={[styles.searchWrapper, { opacity: headerSearchOpacity }]}>
             <LinearGradient
               colors={["#60F7A3", "#FF6D6D"]}
               start={{ x: 0, y: 0 }}
@@ -393,7 +480,16 @@ export default function HomeScreen(): React.ReactElement {
             >
               <View style={styles.searchContainer}>
                 <Image source={require('@/oysloe-assets/Ad details screen/search.png')} style={styles.searchIcon} />
-                <TextInput ref={searchInputRef} style={styles.searchInput} placeholder="Search anything up for good" placeholderTextColor="#7A8699" onFocus={() => setSearchFocused(true)} onBlur={() => setSearchFocused(false)} />
+                <TextInput
+                  ref={searchInputRef}
+                  style={styles.searchInput}
+                  placeholder="Search anything up for good"
+                  placeholderTextColor="#7A8699"
+                  value={searchQuery}
+                  onChangeText={setSearchQuery}
+                  onFocus={() => setSearchFocused(true)}
+                  onBlur={() => setSearchFocused(false)}
+                />
               </View>
             </LinearGradient>
           </Animated.View>
@@ -409,6 +505,19 @@ export default function HomeScreen(): React.ReactElement {
             <TouchableOpacity style={styles.showAllButton}>
               <Text style={styles.showAllText}>Show All</Text>
             </TouchableOpacity>
+          </View>
+
+          <View style={styles.statsRow}>
+            {categoryStats.map((stat) => (
+              <CircularProgress
+                key={`${stat.label}-${animationKey}`}
+                progress={stat.progress}
+                label={stat.label}
+                value={stat.value}
+                trigger={animationKey}
+                onPress={() => handleStatPress(stat.label)}
+              />
+            ))}
           </View>
 
           {ads.length === 0 ? (
@@ -1038,7 +1147,7 @@ const styles = StyleSheet.create({
   navSearchContainer: { position: 'absolute', right: 16, top: 40, width: 220, height: 40, alignItems: 'flex-end', justifyContent: 'center' },
   navSearchGradient: { borderRadius: 20, padding: 2, width: 220, height: 40 },
   navSearchInner: { flex: 1, borderRadius: 18, backgroundColor: '#fff', alignItems: 'center', justifyContent: 'flex-start', flexDirection: 'row', paddingHorizontal: 10 },
-  navSearchText: { flex: 1, fontSize: 13, color: '#7A8699' },
+  navSearchInput: { flex: 1, fontSize: 13, color: '#1F2933', paddingVertical: 0 },
   searchWrapper: { marginTop: 28, paddingBottom: 18 },
   // pill-style filters removed
 
@@ -1060,6 +1169,12 @@ const styles = StyleSheet.create({
   exploreTitle: { fontSize: 18, fontWeight: 'bold', color: '#333' },
   showAllButton: { backgroundColor: '#f0f0f0', paddingHorizontal: 12, paddingVertical: 6, borderRadius: 15 },
   showAllText: { fontSize: 12, color: '#666' },
+  statsRow: { flexDirection: 'row', justifyContent: 'space-between', marginBottom: 25 },
+  statCard: { alignItems: 'center', marginHorizontal: 4, width: (width - 60) / 5 },
+  statCircleWrapper: { justifyContent: 'center', alignItems: 'center', position: 'relative' },
+  statValueWrapper: { position: 'absolute', alignItems: 'center', justifyContent: 'center', top: 0, left: 0, right: 0, bottom: 0 },
+  statLabel: { fontSize: 9, color: '#6B7280', textAlign: 'center', marginBottom: 2 },
+  statValue: { fontSize: 12, fontWeight: '700', color: '#1F344D' },
   // filtersContainer/filtersContent removed (filters UI deleted)
   adsGrid: { paddingBottom: 20 },
   adRow: { justifyContent: 'space-between', marginBottom: 15 },

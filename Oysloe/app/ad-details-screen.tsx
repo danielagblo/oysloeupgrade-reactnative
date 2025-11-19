@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { StyleSheet, ScrollView, View, Text, TouchableOpacity, Dimensions, TextInput, Image as RNImage, Modal, PanResponder, Animated } from 'react-native';
+import { StyleSheet, ScrollView, View, Text, TouchableOpacity, Dimensions, TextInput, Image as RNImage, Modal, PanResponder, Animated, KeyboardAvoidingView, Platform } from 'react-native';
 import { Image } from 'expo-image';
 import { useRouter } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -128,6 +128,15 @@ export default function AdDetailsScreen() {
   // Editing reviews state
   const [editingReviewId, setEditingReviewId] = useState<number | null>(null);
   const [editingText, setEditingText] = useState('');
+  const editingInputRef = useRef<TextInput | null>(null);
+
+  useEffect(() => {
+    if (editingReviewId !== null) {
+      // small delay to ensure the modal layout is updated before focusing
+      const t = setTimeout(() => editingInputRef.current?.focus(), 100);
+      return () => clearTimeout(t);
+    }
+  }, [editingReviewId]);
 
   const startEditing = (reviewId: number, currentText: string) => {
     setEditingReviewId(reviewId);
@@ -634,14 +643,18 @@ export default function AdDetailsScreen() {
             activeOpacity={1} 
             onPress={() => setShowReviewsModal(false)}
           />
-          <Animated.View 
-            style={[
-              styles.reviewsModalContent,
-              {
-                transform: [{ translateY: modalTranslateY }]
-              }
-            ]}
+          <KeyboardAvoidingView
+            behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+            keyboardVerticalOffset={Platform.OS === 'ios' ? 90 : 60}
           >
+            <Animated.View 
+              style={[
+                styles.reviewsModalContent,
+                {
+                  transform: [{ translateY: modalTranslateY }]
+                }
+              ]}
+            >
             <View {...panResponder.panHandlers} style={styles.reviewsModalHandleArea}>
               <View style={styles.reviewsModalHandle} />
             </View>
@@ -795,7 +808,8 @@ export default function AdDetailsScreen() {
                 ))
               )}
             </ScrollView>
-          </Animated.View>
+            </Animated.View>
+          </KeyboardAvoidingView>
         </View>
       </Modal>
 
