@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Dimensions } from 'react-native';
-import { Image } from 'expo-image';
+import LottieView from 'lottie-react-native';
 import { router } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Animated, { useSharedValue, useAnimatedStyle, withTiming, runOnJS } from 'react-native-reanimated';
@@ -9,21 +9,25 @@ import { GestureDetector, Gesture } from 'react-native-gesture-handler';import {
 const { width, height } = Dimensions.get('window');
 
 const onboardingData = [
-{
-  gif: require('@/gifs/onboarding1.gif'),
-  title: 'User Safety\nGuarantee',
-  description: 'Buyers and sellers undergo strict checks and verification to ensure authenticity and reliability'
-},
-{
-  gif: require('@/gifs/onboarding2.gif'),
-  title: 'Scale you\nto Success',
-  description: 'Watch your business grow with our designed marketing tools, and automated processes.'
-},
-{
-  gif: require('@/gifs/onboarding3.gif'),
-  title: 'Your journey\nbegins now',
-  description: 'Optimized for all business owners with seamless experience for everyone'
-}];
+  {
+    animation: require('@/oysloe-assets/Boarding/User safety guarantee.json'),
+    title: 'User Safety\nGuarantee',
+    description: 'Buyers and sellers undergo strict checks and verification to ensure authenticity and reliability',
+    colors: ['#60F7A3', '#FF6D6D'],
+  },
+  {
+    animation: require('@/oysloe-assets/Boarding/scale to success.json'),
+    title: 'Scale you\nto Success',
+    description: 'Watch your business grow with our designed marketing tools, and automated processes.',
+    colors: ['#FFE08C', '#FF8C8C'],
+  },
+  {
+    animation: require('@/oysloe-assets/Boarding/journeybeginsnow.json'),
+    title: 'Your journey\nbegins now',
+    description: 'Optimized for all business owners with seamless experience for everyone',
+    colors: ['#9AD8FF', '#846BFF'],
+  },
+];
 
 
 export default function OnboardingScreen() {
@@ -73,7 +77,12 @@ export default function OnboardingScreen() {
         _jsx(View, { style: styles.content, children:
           _jsxs(Animated.View, { style: [styles.screenContainer, animatedStyle], children: [
             _jsx(View, { style: styles.animationContainer, children:
-              _jsx(Image, { source: currentData.gif, style: styles.animation, contentFit: "contain" }) }
+              _jsx(LottieView, {
+                source: currentData.animation,
+                autoPlay: true,
+                loop: true,
+                style: styles.animation,
+              }) }
             ),
 
             _jsxs(View, { style: styles.textContainer, children: [
@@ -114,16 +123,16 @@ const styles = StyleSheet.create({
     alignItems: 'center'
   },
   animationContainer: {
-    flex: 0.5,
+    flex: 0.6,
     width: '100%',
     justifyContent: 'center',
     alignItems: 'center',
     paddingHorizontal: 20,
-    paddingBottom: 20
+    paddingBottom: 10
   },
   animation: {
-    width: width,
-    height: height * 0.45
+    width: width * 0.9,
+    height: height * 0.5
   },
   textContainer: {
     flex: 0.5,
